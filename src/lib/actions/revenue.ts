@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+import { getAppUrl } from "@/lib/app-url";
 import { revalidatePath } from "next/cache";
 import Stripe from "stripe";
 
@@ -262,11 +263,12 @@ export async function createStripeCheckoutSession(planId: string) {
     });
   }
 
+  const appUrl = getAppUrl();
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
     line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/dashboard/revenue?success=1`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/dashboard/revenue`,
+    success_url: `${appUrl}/dashboard/revenue?success=1`,
+    cancel_url: `${appUrl}/dashboard/revenue`,
     metadata: { userId: user.id, planId: plan.id },
   });
 

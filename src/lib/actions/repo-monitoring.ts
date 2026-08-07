@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+import { getAppUrl } from "@/lib/app-url";
 import { revalidatePath } from "next/cache";
 import { parseGithubRepoUrl, resolveEnvironment } from "@/lib/github/repo-utils";
 import { getGithubTokenForProject } from "@/lib/github/token";
@@ -144,7 +145,7 @@ export async function getRepoMonitoringSnapshot(
     }),
   ]);
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = getAppUrl();
 
   return {
     branchHealth: mainBuild
