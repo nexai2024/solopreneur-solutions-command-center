@@ -1,0 +1,631 @@
+datasource db {
+  provider = "postgresql"
+  schemas  = ["app"]
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+model User {
+  id                 String              @id @default(cuid())
+  clerkId            String              @unique
+  email              String              @unique
+  name               String?
+  role               String              @default("admin")
+  stripeCustomerId   String?             @unique
+  subscriptionStatus String?             @default("free")
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  projects              Project[]
+  ideas                 Idea[]
+  brainstormSessions    BrainstormSession[]
+  leads                 Lead[]
+  marketingCampaigns    MarketingCampaign[]
+  transactions          Transaction[]
+  revenueCustomers      RevenueCustomer[]
+  revenuePlans          RevenuePlan[]
+  revenueSubscriptions  RevenueSubscription[]
+  githubConnections     GithubConnection[]
+  buildReleases         BuildRelease[]
+  vercelConnections     VercelConnection[]
+
+  @@schema("app")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  repoUrl     String?
+  status      String   @default("planning")
+  currentVersion  String?
+  productionUrl   String?
+  hostingProvider String?
+  techStack       Json?
+  toolsUsed       Json?
+  devNotes        String?  @db.Text
+  aiNotes         String?  @db.Text
+  brandVoiceTone  Json?
+  brandVoiceAvoid Json?
+  brandAudience   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  milestones           Milestone[]
+  tasks                Task[]
+  leads                Lead[]
+  ideas                Idea[]
+  seoKeywords          SeoKeyword[]
+  contentItems         ContentItem[]
+  growthWeeklyPlans    GrowthWeeklyPlan[]
+  launchPlaybooks      LaunchPlaybookProgress[]
+  marketingCampaigns   MarketingCampaign[]
+  githubConnection     GithubConnection?
+  vercelConnection     VercelConnection?
+  repoCommits          RepoCommit[]
+  repoBuilds           RepoBuild[]
+  repoReleases         RepoRelease[]
+  repoPullRequests     RepoPullRequest[]
+  buildReleases        BuildRelease[]
+  envVars              ProjectEnvVar[]
+  deployments          ProjectDeployment[]
+
+  @@index([userId])
+  @@schema("app")
+}
+
+model Idea {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  title       String
+  description String
+
+  feasibility  Int    @default(0)
+  impact       Int    @default(0)
+  speed        Int    @default(0)
+  cost         Int    @default(0)
+  overallScore Float  @default(0.0)
+
+  aiScore     Float?
+  scoringData Json?
+
+  status    String   @default("draft")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([projectId])
+  @@schema("app")
+}
+
+model BrainstormSession {
+  id              String                     @id @default(cuid())
+  userId          String
+  user            User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  status          String                     @default("active")
+  nodes           BrainstormNode[]
+  copilotMessages BrainstormCopilotMessage[]
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+
+  @@index([userId])
+  @@schema("app")
+}
+
+model BrainstormCopilotMessage {
+  id        String            @id @default(cuid())
+  sessionId String
+  session   BrainstormSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String
+  content   String
+  focusNode String?
+  createdAt DateTime          @default(now())
+
+  @@index([sessionId, createdAt])
+  @@schema("app")
+}
+
+model BrainstormNode {
+  id                 String            @id @default(cuid())
+  sessionId          String
+  session            BrainstormSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  parentId           String?
+  label              String
+  content            String?
+  type               String            @default("user_input")
+  nodeType           String            @default("Idea")
+  status             String            @default("active")
+  metadata           Json?
+  positionX          Float             @default(0)
+  positionY          Float             @default(0)
+  coreProblem        String?
+  proposedSolution   String?
+  targetUserPersona  String?
+  viabilityScore     Float?
+  createdAt          DateTime          @default(now())
+
+  @@index([sessionId])
+  @@index([parentId])
+  @@schema("app")
+}
+
+model Lead {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  title       String
+  description String?
+  contactName String?
+  email       String?
+  company     String?
+  source      String?
+  url         String?
+  status      String   @default("new")
+  metadata    Json?
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([userId, createdAt])
+  @@schema("app")
+}
+
+model Task {
+  id             String    @id @default(cuid())
+  projectId      String
+  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  ideaId         String?
+  title          String
+  description    String?   @db.Text
+  status         String    @default("todo")
+  priority       String    @default("medium")
+  order          Int       @default(0)
+  dueDate        DateTime?
+  estimatedHours Float?
+  labels         Json?
+  checklist      Json?
+  completedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now()) @updatedAt
+
+  @@index([projectId])
+  @@index([projectId, status])
+  @@schema("app")
+}
+
+model Milestone {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  targetDate  DateTime
+  isCompleted Boolean  @default(false)
+
+  @@index([projectId])
+  @@schema("app")
+}
+
+model SeoKeyword {
+  id           String   @id @default(cuid())
+  projectId    String
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  keyword      String
+  targetUrl    String?
+  difficulty   Int      @default(0)
+  searchVolume Int      @default(0)
+  rank         Int?
+  createdAt    DateTime @default(now())
+
+  @@index([projectId])
+  @@schema("app")
+}
+
+model ContentItem {
+  id          String    @id @default(cuid())
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  type        String    @default("blog")
+  channel     String?
+  status      String    @default("draft")
+  scheduledAt DateTime?
+  contentBody String?   @db.Text
+  hashtags    Json?
+  parentId    String?
+  parent      ContentItem?  @relation("ContentFanOut", fields: [parentId], references: [id], onDelete: SetNull)
+  children    ContentItem[] @relation("ContentFanOut")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+
+  @@index([projectId])
+  @@index([projectId, scheduledAt])
+  @@index([parentId])
+  @@schema("app")
+}
+
+model GrowthWeeklyPlan {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  weekStart DateTime
+  summary   String   @db.Text
+  actions   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([projectId, weekStart])
+  @@schema("app")
+}
+
+model LaunchPlaybookProgress {
+  id             String    @id @default(cuid())
+  projectId      String
+  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  playbookId     String
+  buildReleaseId String?
+  launchDate     DateTime?
+  checklist      Json
+  copyPacks      Json?
+  status         String    @default("active")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now()) @updatedAt
+
+  @@unique([projectId, playbookId])
+  @@index([projectId])
+  @@schema("app")
+}
+
+model MarketingCampaign {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  title       String
+  channel     String
+  content     String?   @db.Text
+  status      String    @default("draft")
+  budget      Float     @default(0)
+  scheduledAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+
+  @@index([userId])
+  @@index([projectId])
+  @@schema("app")
+}
+
+model RevenueCustomer {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  email     String
+  name      String?
+  createdAt DateTime @default(now())
+
+  subscriptions RevenueSubscription[]
+  transactions  Transaction[]
+
+  @@index([userId])
+  @@schema("app")
+}
+
+model RevenuePlan {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  amount        Float
+  currency      String   @default("USD")
+  interval      String   @default("month")
+  stripePriceId String?
+  createdAt     DateTime @default(now())
+
+  subscriptions RevenueSubscription[]
+
+  @@index([userId])
+  @@schema("app")
+}
+
+model RevenueSubscription {
+  id                   String          @id @default(cuid())
+  userId               String
+  user                 User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customerId           String
+  customer             RevenueCustomer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  planId               String
+  plan                 RevenuePlan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+  status               String          @default("active")
+  stripeSubscriptionId String?         @unique
+  currentPeriodStart   DateTime        @default(now())
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime        @default(now())
+
+  @@index([userId])
+  @@index([customerId])
+  @@schema("app")
+}
+
+model Transaction {
+  id         String           @id @default(cuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customerId String?
+  customer   RevenueCustomer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  amount     Float
+  currency   String           @default("USD")
+  source     String
+  type       String           @default("payment")
+  status     String           @default("succeeded")
+  stripePaymentId String?     @unique
+  createdAt  DateTime         @default(now())
+
+  @@index([userId])
+  @@index([userId, createdAt])
+  @@schema("app")
+}
+
+model StripeWebhookEvent {
+  id          String   @id @default(cuid())
+  eventId     String   @unique
+  eventType   String
+  processedAt DateTime @default(now())
+
+  @@schema("app")
+}
+
+model GithubConnection {
+  id                   String   @id @default(cuid())
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId            String   @unique
+  project              Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  provider             String   @default("github")
+  repoUrl              String
+  repoOwner            String?
+  repoName             String?
+  repoFullName         String?
+  defaultBranch        String   @default("main")
+  accessTokenEncrypted String?
+  createdAt            DateTime @default(now())
+
+  @@index([userId])
+  @@index([repoFullName])
+  @@schema("app")
+}
+
+model RepoWebhookDelivery {
+  id           String    @id @default(cuid())
+  deliveryId   String    @unique
+  eventType    String
+  projectId    String?
+  payload      Json
+  status       String    @default("pending")
+  errorMessage String?
+  attempts     Int       @default(0)
+  processedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([status, createdAt])
+  @@index([projectId])
+  @@schema("app")
+}
+
+model RepoCommit {
+  id           String     @id @default(cuid())
+  projectId    String
+  project      Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sha          String
+  shortSha     String
+  message      String
+  authorName   String
+  authorEmail  String
+  authorAvatar String?
+  branch       String
+  environment  String?
+  htmlUrl      String
+  committedAt  DateTime
+  createdAt    DateTime   @default(now())
+  builds       RepoBuild[]
+
+  @@unique([projectId, sha])
+  @@index([projectId, branch])
+  @@index([projectId, committedAt])
+  @@schema("app")
+}
+
+model RepoBuild {
+  id               String      @id @default(cuid())
+  projectId        String
+  project          Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  commitSha        String
+  commitRecordId   String?
+  commitRecord     RepoCommit? @relation(fields: [commitRecordId], references: [id], onDelete: SetNull)
+  branch           String
+  environment      String
+  status           String      @default("pending")
+  context          String      @default("solopreneur-cc/build")
+  previewUrl       String?
+  changelog        String?
+  prNumber         Int?
+  buildBreakerSha  String?
+  buildBreakerName String?
+  startedAt        DateTime    @default(now())
+  finishedAt       DateTime?
+
+  @@index([projectId, branch, startedAt])
+  @@index([projectId, environment])
+  @@index([projectId, commitSha])
+  @@schema("app")
+}
+
+model RepoRelease {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tag       String
+  name      String?
+  sha       String
+  htmlUrl   String
+  changelog String?
+  createdAt DateTime @default(now())
+
+  @@unique([projectId, tag])
+  @@index([projectId, createdAt])
+  @@schema("app")
+}
+
+model RepoPullRequest {
+  id                  String   @id @default(cuid())
+  projectId           String
+  project             Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  number              Int
+  title               String
+  state               String
+  authorLogin         String
+  authorAvatar        String?
+  headBranch          String
+  baseBranch          String
+  htmlUrl             String
+  previewUrl          String?
+  buildStatus         String?
+  headSha             String?
+  approvalsCount      Int      @default(0)
+  changesRequested    Int      @default(0)
+  commentsCount       Int      @default(0)
+  reviewCommentsCount Int      @default(0)
+  mergeable           Boolean?
+  updatedAt           DateTime @updatedAt
+  createdAt           DateTime @default(now())
+
+  @@unique([projectId, number])
+  @@index([projectId, state])
+  @@schema("app")
+}
+
+model BuildRelease {
+  id                  String          @id @default(cuid())
+  projectId           String
+  project             Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdByUserId     String
+  createdByUser       User            @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  appName             String
+  platform            String
+  version             String
+  buildNumber         Int
+  environment         String
+  pipelineStatus      String          @default("queued")
+  branch              String?
+  commitSha           String?
+  commitUrl           String?
+  releaseNotes        String?
+  testingInstructions String?
+  knownIssues         String?
+  previewUrl          String?
+  buildDurationMs     Int?
+  artifactSizeBytes   BigInt?
+  previousSizeBytes   BigInt?
+  testPassRate        Float?
+  testFailedCount     Int?
+  testTotalCount      Int?
+  repoBuildId         String?
+  ciProvider          String?
+  source              String          @default("manual")
+  artifacts           BuildArtifact[]
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  @@index([projectId, pipelineStatus])
+  @@index([projectId, environment])
+  @@index([projectId, createdAt])
+  @@schema("app")
+}
+
+model BuildArtifact {
+  id             String       @id @default(cuid())
+  buildReleaseId String
+  buildRelease   BuildRelease @relation(fields: [buildReleaseId], references: [id], onDelete: Cascade)
+  name           String
+  artifactType   String
+  downloadUrl    String
+  sizeBytes      BigInt?
+  createdAt      DateTime     @default(now())
+
+  @@index([buildReleaseId])
+  @@schema("app")
+}
+
+model VercelConnection {
+  id                   String   @id @default(cuid())
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId            String   @unique
+  project              Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  vercelTeamId         String?
+  vercelProjectId      String
+  vercelProjectName    String?
+  accessTokenEncrypted String
+  productionDomain     String?
+  framework            String?
+  nodeVersion          String?
+  lastSyncedAt         DateTime?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([userId])
+  @@index([vercelProjectId])
+  @@schema("app")
+}
+
+model ProjectEnvVar {
+  id              String   @id @default(cuid())
+  projectId       String
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  key             String
+  valueEncrypted  String?
+  environment     String   @default("production")
+  isSecret        Boolean  @default(true)
+  source          String   @default("manual")
+  vercelEnvId     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([projectId, key, environment])
+  @@index([projectId])
+  @@schema("app")
+}
+
+model ProjectDeployment {
+  id                 String    @id @default(cuid())
+  projectId          String
+  project            Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  vercelDeploymentId String?   @unique
+  url                String
+  environment        String
+  status             String
+  version            String?
+  commitSha          String?
+  commitMessage      String?
+  branch             String?
+  builder            String?
+  deployedAt         DateTime?
+  syncedAt           DateTime  @default(now())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([projectId, deployedAt])
+  @@index([projectId, environment])
+  @@schema("app")
+}
