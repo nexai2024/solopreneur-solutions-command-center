@@ -132,6 +132,8 @@ export type ProjectTimelineEvent = {
   title: string;
   description?: string;
   timestamp: string;
+  /** Deep link into the related product area */
+  href?: string;
 };
 
 export type ProjectTimeline = {
@@ -203,6 +205,13 @@ export async function getProjectTimelines(): Promise<ProjectTimeline[]> {
 
     const events: ProjectTimelineEvent[] = [];
 
+    const buildHref = (tab: "tasks" | "builds" | "repository" | "profile" = "tasks") =>
+      `/dashboard/build-tracker?projectId=${project.id}&tab=${tab}`;
+    const growthCampaignsHref = `/dashboard/growth-engine?projectId=${project.id}&tab=campaigns`;
+    const leadsHref = `/dashboard/lead-finder`;
+    const brainstormHref = `/dashboard/brainstorm`;
+    const repoHref = `/dashboard/repository?projectId=${project.id}`;
+
     if (idea) {
       events.push({
         id: `idea-${idea.id}`,
@@ -213,6 +222,7 @@ export async function getProjectTimelines(): Promise<ProjectTimeline[]> {
             ? `AI score ${idea.aiScore.toFixed(1)} · ${idea.status}`
             : idea.status,
         timestamp: idea.updatedAt.toISOString(),
+        href: brainstormHref,
       });
     }
 
@@ -222,6 +232,7 @@ export async function getProjectTimelines(): Promise<ProjectTimeline[]> {
       title: `Project launched: ${project.name}`,
       description: project.description?.slice(0, 120) ?? undefined,
       timestamp: project.createdAt.toISOString(),
+      href: buildHref("tasks"),
     });
 
     for (const lead of project.leads) {
@@ -231,6 +242,7 @@ export async function getProjectTimelines(): Promise<ProjectTimeline[]> {
         title: `Lead added: ${lead.title}`,
         description: lead.status,
         timestamp: lead.createdAt.toISOString(),
+        href: leadsHref,
       });
     }
 
@@ -241,6 +253,7 @@ export async function getProjectTimelines(): Promise<ProjectTimeline[]> {
         title: "Repository linked",
         description: project.githubConnection.repoUrl,
         timestamp: project.githubConnection.createdAt.toISOString(),
+        href: repoHref,
       });
     } else if (project.repoUrl) {
       events.push({
@@ -249,6 +262,7 @@ export async function getProjectTimelines(): Promise<ProjectTimeline[]> {
         title: "Repository linked",
         description: project.repoUrl,
         timestamp: project.updatedAt.toISOString(),
+        href: repoHref,
       });
     }
 
@@ -259,6 +273,7 @@ export async function getProjectTimelines(): Promise<ProjectTimeline[]> {
         title: `Campaign: ${campaign.title}`,
         description: `${campaign.status} · $${campaign.budget} budget`,
         timestamp: campaign.createdAt.toISOString(),
+        href: growthCampaignsHref,
       });
     }
 
@@ -268,6 +283,7 @@ export async function getProjectTimelines(): Promise<ProjectTimeline[]> {
         type: "milestone",
         title: `Milestone completed: ${milestone.title}`,
         timestamp: milestone.targetDate.toISOString(),
+        href: buildHref("tasks"),
       });
     }
 
@@ -278,6 +294,7 @@ export async function getProjectTimelines(): Promise<ProjectTimeline[]> {
         title: `Up next: ${nextMilestone.title}`,
         description: `Due ${nextMilestone.targetDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`,
         timestamp: nextMilestone.targetDate.toISOString(),
+        href: buildHref("tasks"),
       });
     }
 
@@ -290,6 +307,7 @@ export async function getProjectTimelines(): Promise<ProjectTimeline[]> {
         type: "task",
         title: `Task completed: ${task.title}`,
         timestamp: task.createdAt.toISOString(),
+        href: buildHref("tasks"),
       });
     }
 
@@ -303,6 +321,7 @@ export async function getProjectTimelines(): Promise<ProjectTimeline[]> {
             ? `${project.tasks.length - tasksDone} remaining`
             : "All tasks complete",
         timestamp: project.updatedAt.toISOString(),
+        href: buildHref("tasks"),
       });
     }
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { GitBranch, Lightbulb, Rocket, Target, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,16 @@ import {
   type UserRole,
 } from "@/lib/build-rbac";
 import { HowDoILink } from "@/components/help/how-do-i-link";
+
+const BUILD_TABS = ["tasks", "builds", "repository", "profile"] as const;
+type BuildTab = (typeof BUILD_TABS)[number];
+
+function parseBuildTab(value: string | undefined): BuildTab {
+  if (value && (BUILD_TABS as readonly string[]).includes(value)) {
+    return value as BuildTab;
+  }
+  return "tasks";
+}
 
 export type BoardMilestone = {
   id: string;
@@ -78,16 +89,59 @@ export type BoardProject = {
 export function BuildTracker({
   projects: initialProjects,
   userRole = "admin",
+  initialProjectId,
+  initialTab,
 }: {
   projects: BoardProject[];
   userRole?: UserRole;
+  initialProjectId?: string;
+  initialTab?: string;
 }) {
+  const router = useRouter();
   const [projects, setProjects] = useState(initialProjects);
-  const [selectedId, setSelectedId] = useState(initialProjects[0]?.id ?? "");
+  const resolvedInitialId =
+    (initialProjectId &&
+      initialProjects.some((p) => p.id === initialProjectId) &&
+      initialProjectId) ||
+    initialProjects[0]?.id ||
+    "";
+  const [selectedId, setSelectedId] = useState(resolvedInitialId);
+  const [tab, setTab] = useState<BuildTab>(parseBuildTab(initialTab));
   const role = userRole;
   const canUpload = canUploadBuilds(role);
   const canDelete = canDeleteBuilds(role);
   const canDragPipeline = role === "admin" || role === "dev" || role === "qa";
+
+  useEffect(() => {
+    if (initialProjectId && projects.some((p) => p.id === initialProjectId)) {
+      setSelectedId(initialProjectId);
+    }
+  }, [initialProjectId, projects]);
+
+  useEffect(() => {
+    if (initialTab) setTab(parseBuildTab(initialTab));
+  }, [initialTab]);
+
+  const syncUrl = (projectId: string, nextTab: BuildTab) => {
+    const params = new URLSearchParams();
+    if (projectId) params.set("projectId", projectId);
+    if (nextTab !== "tasks") params.set("tab", nextTab);
+    const qs = params.toString();
+    router.replace(qs ? `/dashboard/build-tracker?${qs}` : "/dashboard/build-tracker", {
+      scroll: false,
+    });
+  };
+
+  const selectProject = (projectId: string) => {
+    setSelectedId(projectId);
+    syncUrl(projectId, tab);
+  };
+
+  const selectTab = (next: string) => {
+    const nextTab = parseBuildTab(next);
+    setTab(nextTab);
+    if (selectedId) syncUrl(selectedId, nextTab);
+  };
 
   const selected = projects.find((p) => p.id === selectedId) ?? projects[0];
 
@@ -142,7 +196,7 @@ export function BuildTracker({
             key={project.id}
             variant={project.id === selected?.id ? "default" : "outline"}
             size="sm"
-            onClick={() => setSelectedId(project.id)}
+            onClick={() => selectProject(project.id)}
           >
             {project.name}
             {project.githubConnection && (
@@ -170,19 +224,23 @@ export function BuildTracker({
                 {(selected.ideas.length > 0 || selected.leads.length > 0) && (
                   <div className="flex flex-wrap gap-2 mt-3">
                     {selected.ideas.map((idea) => (
-                      <Badge key={idea.id} variant="secondary" className="gap-1">
-                        <Lightbulb className="h-3 w-3" />
-                        {idea.title}
-                        {idea.aiScore != null && (
-                          <span className="opacity-70">· {Math.round(idea.aiScore)}</span>
-                        )}
-                      </Badge>
+                      <Link key={idea.id} href="/dashboard/brainstorm">
+                        <Badge variant="secondary" className="gap-1 hover:bg-secondary/80">
+                          <Lightbulb className="h-3 w-3" />
+                          {idea.title}
+                          {idea.aiScore != null && (
+                            <span className="opacity-70">· {Math.round(idea.aiScore)}</span>
+                          )}
+                        </Badge>
+                      </Link>
                     ))}
                     {selected.leads.map((lead) => (
-                      <Badge key={lead.id} variant="outline" className="gap-1">
-                        <Users className="h-3 w-3" />
-                        {lead.title}
-                      </Badge>
+                      <Link key={lead.id} href="/dashboard/lead-finder">
+                        <Badge variant="outline" className="gap-1 hover:bg-accent">
+                          <Users className="h-3 w-3" />
+                          {lead.title}
+                        </Badge>
+                      </Link>
                     ))}
                   </div>
                 )}
@@ -212,7 +270,7 @@ export function BuildTracker({
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
-            <Tabs defaultValue="tasks">
+            <Tabs value={tab} onValueChange={selectTab}>
               <TabsList className="flex flex-wrap h-auto gap-1">
                 <TabsTrigger value="tasks">Tasks & milestones</TabsTrigger>
                 <TabsTrigger value="builds">Builds & releases</TabsTrigger>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ExternalLink, GitBranch, Link2, Loader2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -34,11 +35,46 @@ type RepoProject = {
   monitoring: RepoMonitoringSnapshot | null;
 };
 
-export function RepositoryWorkspace({ projects }: { projects: RepoProject[] }) {
-  const [selectedId, setSelectedId] = useState(projects[0]?.id ?? "");
-  const [repoInput, setRepoInput] = useState("");
+export function RepositoryWorkspace({
+  projects,
+  initialProjectId,
+}: {
+  projects: RepoProject[];
+  initialProjectId?: string;
+}) {
+  const router = useRouter();
+  const resolvedInitial =
+    (initialProjectId &&
+      projects.some((p) => p.id === initialProjectId) &&
+      initialProjectId) ||
+    projects[0]?.id ||
+    "";
+  const [selectedId, setSelectedId] = useState(resolvedInitial);
+  const initialProject = projects.find((p) => p.id === resolvedInitial);
+  const [repoInput, setRepoInput] = useState(
+    initialProject?.repoUrl ?? initialProject?.githubConnection?.repoUrl ?? ""
+  );
   const [tokenInput, setTokenInput] = useState("");
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (initialProjectId && projects.some((p) => p.id === initialProjectId)) {
+      setSelectedId(initialProjectId);
+      const project = projects.find((p) => p.id === initialProjectId);
+      setRepoInput(
+        project?.repoUrl ?? project?.githubConnection?.repoUrl ?? ""
+      );
+    }
+  }, [initialProjectId, projects]);
+
+  const selectProject = (projectId: string) => {
+    const project = projects.find((p) => p.id === projectId);
+    setSelectedId(projectId);
+    setRepoInput(project?.repoUrl ?? project?.githubConnection?.repoUrl ?? "");
+    router.replace(`/dashboard/repository?projectId=${projectId}`, {
+      scroll: false,
+    });
+  };
 
   const selected = projects.find((p) => p.id === selectedId);
 
@@ -78,10 +114,7 @@ export function RepositoryWorkspace({ projects }: { projects: RepoProject[] }) {
             key={p.id}
             size="sm"
             variant={p.id === selectedId ? "default" : "outline"}
-            onClick={() => {
-              setSelectedId(p.id);
-              setRepoInput(p.repoUrl ?? p.githubConnection?.repoUrl ?? "");
-            }}
+            onClick={() => selectProject(p.id)}
           >
             {p.name}
           </Button>

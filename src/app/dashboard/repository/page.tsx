@@ -7,7 +7,12 @@ import { getRepoMonitoringSnapshot } from "@/lib/actions/repo-monitoring";
 
 export const dynamic = "force-dynamic";
 
-export default async function RepositoryPage() {
+export default async function RepositoryPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ projectId?: string }>;
+}) {
+  const params = await searchParams;
   const projects = await getProjectsForRepository();
 
   const withStats = await Promise.all(
@@ -43,7 +48,10 @@ export default async function RepositoryPage() {
           Link GitHub repos, monitor branches, PRs, builds, and releases in real time via webhooks.
         </p>
       </div>
-      <RepositoryWorkspace projects={withStats} />
+      <RepositoryWorkspace
+        projects={withStats}
+        initialProjectId={params.projectId}
+      />
     </div>
   );
 }

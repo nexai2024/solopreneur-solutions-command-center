@@ -10,7 +10,12 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
-export default async function BuildTrackerPage() {
+export default async function BuildTrackerPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ projectId?: string; tab?: string }>;
+}) {
+  const params = await searchParams;
   const user = await requireAuth();
   const userRole = getUserRole(user) as UserRole;
   const projects = await getProjectsWithTasks();
@@ -83,7 +88,12 @@ export default async function BuildTrackerPage() {
           </CardContent>
         </Card>
       ) : (
-        <BuildTracker projects={boardProjects} userRole={userRole} />
+        <BuildTracker
+          projects={boardProjects}
+          userRole={userRole}
+          initialProjectId={params.projectId}
+          initialTab={params.tab}
+        />
       )}
     </div>
   );

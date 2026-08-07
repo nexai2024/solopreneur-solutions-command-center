@@ -271,7 +271,7 @@ export const HELP_SECTIONS: HelpSection[] = [
       },
       {
         type: "callout",
-        text: "Arriving from Launch Mode shows a banner with coach + playbooks tuned for that release version.",
+        text: "Deep links: /dashboard/growth-engine?projectId=…&tab=campaigns (also coach, calendar, playbooks, seo). Panels collapse and remember your preference. Launch Mode opens playbooks for that project.",
       },
     ],
   },
