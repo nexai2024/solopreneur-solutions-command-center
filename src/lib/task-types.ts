@@ -11,6 +11,7 @@ export type ChecklistItem = {
 export type BoardTask = {
   id: string;
   projectId: string;
+  milestoneId: string | null;
   title: string;
   description: string | null;
   status: TaskStatus;
@@ -127,6 +128,7 @@ export function parseLegacyTaskMeta(description: string | null): {
 export function toBoardTask(task: {
   id: string;
   projectId: string;
+  milestoneId?: string | null;
   title: string;
   description: string | null;
   status: string;
@@ -149,6 +151,7 @@ export function toBoardTask(task: {
   return {
     id: task.id,
     projectId: task.projectId,
+    milestoneId: task.milestoneId ?? null,
     title: task.title,
     description: legacy.cleanDescription ?? task.description,
     status: normalizeTaskStatus(task.status),

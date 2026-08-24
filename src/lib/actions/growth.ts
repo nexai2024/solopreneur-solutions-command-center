@@ -780,9 +780,24 @@ export async function startLaunchMode(
     releaseVersion: opts?.version,
   });
 
+  // Seed a full multi-channel launch campaign (assets + checklist + timeline)
+  let campaignId: string | null = null;
+  try {
+    const { createLaunchCampaignPack } = await import("@/lib/actions/campaigns");
+    const campaign = await createLaunchCampaignPack(projectId, {
+      version: opts?.version,
+      title: opts?.version
+        ? `${project.name} v${opts.version} Launch`
+        : `${project.name} Launch Campaign`,
+    });
+    campaignId = campaign.id;
+  } catch (err) {
+    console.error("Launch campaign pack failed:", err);
+  }
+
   revalidatePath("/dashboard/growth-engine");
   revalidatePath("/dashboard/build-tracker");
-  return { plan, playbookCount: coreIds.length };
+  return { plan, playbookCount: coreIds.length, campaignId };
 }
 
 export async function getGrowthCampaigns(projectId: string): Promise<GrowthCampaignDTO[]> {

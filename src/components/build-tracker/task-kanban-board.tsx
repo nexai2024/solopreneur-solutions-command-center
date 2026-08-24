@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -254,6 +254,10 @@ export function TaskKanbanBoard({
   const [newPriority, setNewPriority] = useState<TaskPriority>("medium");
   const [priorityFilter, setPriorityFilter] = useState<TaskPriority | "all">("all");
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    setTasks(initialTasks);
+  }, [initialTasks]);
 
   const filteredTasks = useMemo(() => {
     if (priorityFilter === "all") return tasks;

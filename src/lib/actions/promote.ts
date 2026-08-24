@@ -2,8 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
-import { createStarterMilestonesForProject } from "@/lib/actions/milestones";
-import { createStarterTasksForProject } from "@/lib/actions/tasks";
+import { createStarterPackForProject } from "@/lib/actions/milestones";
 import { revalidatePath } from "next/cache";
 import type { Prisma } from "../../../generated/prisma/client";
 
@@ -203,21 +202,14 @@ export async function promoteToProjectBundle(
   let milestonesCreated = 0;
 
   if (withStarterPack) {
-    const taskResult = await createStarterTasksForProject(
+    const pack = await createStarterPackForProject(
       project.id,
       project.name,
       project.description ?? description,
-      ideaId ?? undefined
+      { ideaId: ideaId ?? undefined, aiScore }
     );
-    tasksCreated = taskResult.created;
-
-    const milestoneResult = await createStarterMilestonesForProject(
-      project.id,
-      project.name,
-      project.description ?? description,
-      aiScore
-    );
-    milestonesCreated = milestoneResult.created;
+    tasksCreated = pack.tasksCreated;
+    milestonesCreated = pack.milestonesCreated;
   }
 
   revalidatePromotePaths();

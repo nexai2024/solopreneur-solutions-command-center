@@ -730,7 +730,6 @@ ALTER TABLE "app"."BuildRelease" ADD CONSTRAINT "BuildRelease_createdByUserId_fk
 -- AddForeignKey
 ALTER TABLE "app"."BuildArtifact" ADD CONSTRAINT "BuildArtifact_buildReleaseId_fkey" FOREIGN KEY ("buildReleaseId") REFERENCES "app"."BuildRelease"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- AddForeignKey
 ALTER TABLE "app"."VercelConnection" ADD CONSTRAINT "VercelConnection_userId_fkey" FOREIGN KEY ("userId") REFERENCES "app"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey

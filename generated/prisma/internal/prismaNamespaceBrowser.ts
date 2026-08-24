@@ -65,6 +65,7 @@ export const ModelName = {
   GrowthWeeklyPlan: 'GrowthWeeklyPlan',
   LaunchPlaybookProgress: 'LaunchPlaybookProgress',
   MarketingCampaign: 'MarketingCampaign',
+  CampaignAsset: 'CampaignAsset',
   RevenueCustomer: 'RevenueCustomer',
   RevenuePlan: 'RevenuePlan',
   RevenueSubscription: 'RevenueSubscription',
@@ -228,6 +229,7 @@ export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof Lead
 export const TaskScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
+  milestoneId: 'milestoneId',
   ideaId: 'ideaId',
   title: 'title',
   description: 'description',
@@ -324,15 +326,45 @@ export const MarketingCampaignScalarFieldEnum = {
   projectId: 'projectId',
   title: 'title',
   channel: 'channel',
+  channels: 'channels',
+  campaignType: 'campaignType',
+  goal: 'goal',
+  audience: 'audience',
+  offer: 'offer',
+  positioning: 'positioning',
   content: 'content',
   status: 'status',
   budget: 'budget',
+  spent: 'spent',
   scheduledAt: 'scheduledAt',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  metrics: 'metrics',
+  checklist: 'checklist',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type MarketingCampaignScalarFieldEnum = (typeof MarketingCampaignScalarFieldEnum)[keyof typeof MarketingCampaignScalarFieldEnum]
+
+
+export const CampaignAssetScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  channel: 'channel',
+  assetType: 'assetType',
+  title: 'title',
+  body: 'body',
+  dayOffset: 'dayOffset',
+  status: 'status',
+  sortOrder: 'sortOrder',
+  metadata: 'metadata',
+  publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CampaignAssetScalarFieldEnum = (typeof CampaignAssetScalarFieldEnum)[keyof typeof CampaignAssetScalarFieldEnum]
 
 
 export const RevenueCustomerScalarFieldEnum = {

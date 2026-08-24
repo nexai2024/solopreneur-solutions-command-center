@@ -10,6 +10,7 @@ import {
   Layers,
   Loader2,
   RefreshCw,
+  Rocket,
   Sparkles,
   Wrench,
   X,
@@ -34,6 +35,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CollapsibleWidget } from "@/components/dashboard/collapsible-widget";
 import type { ProjectProfileDTO } from "@/lib/actions/project-profile";
 import {
   updateProjectProfile,
@@ -434,136 +436,162 @@ export function ProjectProfileSection({
       </Card>
 
       {profile.deployments.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Recent deployments</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Environment</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Branch</TableHead>
-                  <TableHead>Commit</TableHead>
-                  <TableHead>Deployed</TableHead>
-                  <TableHead>URL</TableHead>
+        <CollapsibleWidget
+          id={`profile-deployments-${projectId}`}
+          title={
+            <span className="flex items-center gap-2 text-sm">
+              <Rocket className="h-4 w-4" />
+              Recent deployments
+              <Badge variant="secondary" className="font-normal">
+                {profile.deployments.length}
+              </Badge>
+            </span>
+          }
+          defaultOpen={false}
+          collapsedSummary={
+            (() => {
+              const latest = profile.deployments[0];
+              if (!latest) return `${profile.deployments.length} deployments`;
+              return `Latest: ${latest.environment} · ${latest.status}${
+                latest.branch ? ` · ${latest.branch}` : ""
+              }`;
+            })()
+          }
+        >
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Environment</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Branch</TableHead>
+                <TableHead>Commit</TableHead>
+                <TableHead>Deployed</TableHead>
+                <TableHead>URL</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {profile.deployments.map((d) => (
+                <TableRow key={d.id}>
+                  <TableCell>{d.environment}</TableCell>
+                  <TableCell>{deploymentStatusBadge(d.status)}</TableCell>
+                  <TableCell className="text-xs">{d.branch ?? "—"}</TableCell>
+                  <TableCell className="text-xs font-mono">
+                    {d.commitSha?.slice(0, 7) ?? "—"}
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    {d.deployedAt ? new Date(d.deployedAt).toLocaleString() : "—"}
+                  </TableCell>
+                  <TableCell>
+                    <a
+                      href={d.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-primary hover:underline flex items-center gap-1"
+                    >
+                      Open
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {profile.deployments.map((d) => (
-                  <TableRow key={d.id}>
-                    <TableCell>{d.environment}</TableCell>
-                    <TableCell>{deploymentStatusBadge(d.status)}</TableCell>
-                    <TableCell className="text-xs">{d.branch ?? "—"}</TableCell>
-                    <TableCell className="text-xs font-mono">
-                      {d.commitSha?.slice(0, 7) ?? "—"}
-                    </TableCell>
-                    <TableCell className="text-xs text-muted-foreground">
-                      {d.deployedAt ? new Date(d.deployedAt).toLocaleString() : "—"}
-                    </TableCell>
-                    <TableCell>
-                      <a
-                        href={d.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-primary hover:underline flex items-center gap-1"
-                      >
-                        Open
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+              ))}
+            </TableBody>
+          </Table>
+        </CollapsibleWidget>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm flex items-center gap-2">
+      <CollapsibleWidget
+        id={`profile-env-vars-${projectId}`}
+        title={
+          <span className="flex items-center gap-2 text-sm">
             <Key className="h-4 w-4" />
             Environment variables
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {profile.envVars.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Key</TableHead>
-                  <TableHead>Environment</TableHead>
-                  <TableHead>Source</TableHead>
-                  <TableHead>Value</TableHead>
-                  <TableHead />
+            <Badge variant="secondary" className="font-normal">
+              {profile.envVars.length}
+            </Badge>
+          </span>
+        }
+        defaultOpen={false}
+        collapsedSummary={
+          profile.envVars.length === 0
+            ? "No env vars tracked yet — expand to add"
+            : `${profile.envVars.length} variable${profile.envVars.length !== 1 ? "s" : ""} · expand to view or add`
+        }
+        contentClassName="space-y-4"
+      >
+        {profile.envVars.length > 0 ? (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Key</TableHead>
+                <TableHead>Environment</TableHead>
+                <TableHead>Source</TableHead>
+                <TableHead>Value</TableHead>
+                <TableHead />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {profile.envVars.map((env) => (
+                <TableRow key={env.id}>
+                  <TableCell className="font-mono text-xs">{env.key}</TableCell>
+                  <TableCell>{env.environment}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-xs capitalize">
+                      {env.source}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    {env.isSecret ? "••••••••" : (env.displayValue ?? "—")}
+                  </TableCell>
+                  <TableCell>
+                    {env.source === "manual" && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-destructive h-7"
+                        onClick={() => handleDeleteEnvVar(env.id)}
+                        disabled={isPending}
+                      >
+                        Remove
+                      </Button>
+                    )}
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {profile.envVars.map((env) => (
-                  <TableRow key={env.id}>
-                    <TableCell className="font-mono text-xs">{env.key}</TableCell>
-                    <TableCell>{env.environment}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="text-xs capitalize">
-                        {env.source}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-xs text-muted-foreground">
-                      {env.isSecret ? "••••••••" : (env.displayValue ?? "—")}
-                    </TableCell>
-                    <TableCell>
-                      {env.source === "manual" && (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-destructive h-7"
-                          onClick={() => handleDeleteEnvVar(env.id)}
-                          disabled={isPending}
-                        >
-                          Remove
-                        </Button>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <p className="text-sm text-muted-foreground">No env vars tracked yet.</p>
-          )}
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <p className="text-sm text-muted-foreground">No env vars tracked yet.</p>
+        )}
 
-          <div className="grid gap-2 sm:grid-cols-4 border-t pt-4">
-            <Input
-              placeholder="KEY"
-              value={envKey}
-              onChange={(e) => setEnvKey(e.target.value)}
-              disabled={isPending}
-            />
-            <Input
-              placeholder="Value"
-              type={envSecret ? "password" : "text"}
-              value={envValue}
-              onChange={(e) => setEnvValue(e.target.value)}
-              disabled={isPending}
-            />
-            <Select value={envEnvironment} onValueChange={setEnvEnvironment}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="production">Production</SelectItem>
-                <SelectItem value="preview">Preview</SelectItem>
-                <SelectItem value="development">Development</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button onClick={handleAddEnvVar} disabled={isPending || !envKey.trim()} size="sm">
-              Add variable
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        <div className="grid gap-2 sm:grid-cols-4 border-t pt-4">
+          <Input
+            placeholder="KEY"
+            value={envKey}
+            onChange={(e) => setEnvKey(e.target.value)}
+            disabled={isPending}
+          />
+          <Input
+            placeholder="Value"
+            type={envSecret ? "password" : "text"}
+            value={envValue}
+            onChange={(e) => setEnvValue(e.target.value)}
+            disabled={isPending}
+          />
+          <Select value={envEnvironment} onValueChange={setEnvEnvironment}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="production">Production</SelectItem>
+              <SelectItem value="preview">Preview</SelectItem>
+              <SelectItem value="development">Development</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button onClick={handleAddEnvVar} disabled={isPending || !envKey.trim()} size="sm">
+            Add variable
+          </Button>
+        </div>
+      </CollapsibleWidget>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <TagEditor

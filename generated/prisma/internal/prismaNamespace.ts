@@ -411,6 +411,7 @@ export const ModelName = {
   GrowthWeeklyPlan: 'GrowthWeeklyPlan',
   LaunchPlaybookProgress: 'LaunchPlaybookProgress',
   MarketingCampaign: 'MarketingCampaign',
+  CampaignAsset: 'CampaignAsset',
   RevenueCustomer: 'RevenueCustomer',
   RevenuePlan: 'RevenuePlan',
   RevenueSubscription: 'RevenueSubscription',
@@ -442,7 +443,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "project" | "idea" | "brainstormSession" | "brainstormCopilotMessage" | "brainstormNode" | "lead" | "task" | "milestone" | "seoKeyword" | "contentItem" | "growthWeeklyPlan" | "launchPlaybookProgress" | "marketingCampaign" | "revenueCustomer" | "revenuePlan" | "revenueSubscription" | "transaction" | "stripeWebhookEvent" | "githubConnection" | "repoWebhookDelivery" | "repoCommit" | "repoBuild" | "repoRelease" | "repoPullRequest" | "buildRelease" | "buildArtifact" | "vercelConnection" | "projectEnvVar" | "projectDeployment"
+    modelProps: "user" | "project" | "idea" | "brainstormSession" | "brainstormCopilotMessage" | "brainstormNode" | "lead" | "task" | "milestone" | "seoKeyword" | "contentItem" | "growthWeeklyPlan" | "launchPlaybookProgress" | "marketingCampaign" | "campaignAsset" | "revenueCustomer" | "revenuePlan" | "revenueSubscription" | "transaction" | "stripeWebhookEvent" | "githubConnection" | "repoWebhookDelivery" | "repoCommit" | "repoBuild" | "repoRelease" | "repoPullRequest" | "buildRelease" | "buildArtifact" | "vercelConnection" | "projectEnvVar" | "projectDeployment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1479,6 +1480,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.MarketingCampaignCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.MarketingCampaignCountAggregateOutputType> | number
+        }
+      }
+    }
+    CampaignAsset: {
+      payload: Prisma.$CampaignAssetPayload<ExtArgs>
+      fields: Prisma.CampaignAssetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CampaignAssetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignAssetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CampaignAssetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignAssetPayload>
+        }
+        findFirst: {
+          args: Prisma.CampaignAssetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignAssetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CampaignAssetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignAssetPayload>
+        }
+        findMany: {
+          args: Prisma.CampaignAssetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignAssetPayload>[]
+        }
+        create: {
+          args: Prisma.CampaignAssetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignAssetPayload>
+        }
+        createMany: {
+          args: Prisma.CampaignAssetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CampaignAssetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignAssetPayload>[]
+        }
+        delete: {
+          args: Prisma.CampaignAssetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignAssetPayload>
+        }
+        update: {
+          args: Prisma.CampaignAssetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignAssetPayload>
+        }
+        deleteMany: {
+          args: Prisma.CampaignAssetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CampaignAssetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CampaignAssetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignAssetPayload>[]
+        }
+        upsert: {
+          args: Prisma.CampaignAssetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignAssetPayload>
+        }
+        aggregate: {
+          args: Prisma.CampaignAssetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCampaignAsset>
+        }
+        groupBy: {
+          args: Prisma.CampaignAssetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CampaignAssetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CampaignAssetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CampaignAssetCountAggregateOutputType> | number
         }
       }
     }
@@ -2834,6 +2909,7 @@ export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof Lead
 export const TaskScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
+  milestoneId: 'milestoneId',
   ideaId: 'ideaId',
   title: 'title',
   description: 'description',
@@ -2930,15 +3006,45 @@ export const MarketingCampaignScalarFieldEnum = {
   projectId: 'projectId',
   title: 'title',
   channel: 'channel',
+  channels: 'channels',
+  campaignType: 'campaignType',
+  goal: 'goal',
+  audience: 'audience',
+  offer: 'offer',
+  positioning: 'positioning',
   content: 'content',
   status: 'status',
   budget: 'budget',
+  spent: 'spent',
   scheduledAt: 'scheduledAt',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  metrics: 'metrics',
+  checklist: 'checklist',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type MarketingCampaignScalarFieldEnum = (typeof MarketingCampaignScalarFieldEnum)[keyof typeof MarketingCampaignScalarFieldEnum]
+
+
+export const CampaignAssetScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  channel: 'channel',
+  assetType: 'assetType',
+  title: 'title',
+  body: 'body',
+  dayOffset: 'dayOffset',
+  status: 'status',
+  sortOrder: 'sortOrder',
+  metadata: 'metadata',
+  publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CampaignAssetScalarFieldEnum = (typeof CampaignAssetScalarFieldEnum)[keyof typeof CampaignAssetScalarFieldEnum]
 
 
 export const RevenueCustomerScalarFieldEnum = {
@@ -3531,6 +3637,7 @@ export type GlobalOmitConfig = {
   growthWeeklyPlan?: Prisma.GrowthWeeklyPlanOmit
   launchPlaybookProgress?: Prisma.LaunchPlaybookProgressOmit
   marketingCampaign?: Prisma.MarketingCampaignOmit
+  campaignAsset?: Prisma.CampaignAssetOmit
   revenueCustomer?: Prisma.RevenueCustomerOmit
   revenuePlan?: Prisma.RevenuePlanOmit
   revenueSubscription?: Prisma.RevenueSubscriptionOmit

@@ -29,7 +29,6 @@ import {
   deleteKeyword,
   getBrandVoice,
   getContentItems,
-  getGrowthCampaigns,
   getKeywords,
   getLaunchPlaybooks,
   getWeeklyGrowthPlan,
@@ -37,11 +36,14 @@ import {
   suggestKeywordsForProject,
   type BrandVoiceDTO,
   type ContentItemDTO,
-  type GrowthCampaignDTO,
   type GrowthPlanDTO,
   type LaunchPlaybookDTO,
   type SeoKeywordDTO,
 } from "@/lib/actions/growth";
+import {
+  listCampaigns,
+  type CampaignDTO,
+} from "@/lib/actions/campaigns";
 
 type ProjectOption = {
   id: string;
@@ -106,7 +108,7 @@ export function GrowthEngineWorkspace({ projects }: { projects: ProjectOption[] 
   const [content, setContent] = useState<ContentItemDTO[]>([]);
   const [plan, setPlan] = useState<GrowthPlanDTO | null>(null);
   const [playbooks, setPlaybooks] = useState<LaunchPlaybookDTO[]>([]);
-  const [campaigns, setCampaigns] = useState<GrowthCampaignDTO[]>([]);
+  const [campaigns, setCampaigns] = useState<CampaignDTO[]>([]);
   const [brandVoice, setBrandVoice] = useState<BrandVoiceDTO>({
     tone: [],
     avoid: [],
@@ -156,7 +158,7 @@ export function GrowthEngineWorkspace({ projects }: { projects: ProjectOption[] 
       getContentItems(selectedId),
       getWeeklyGrowthPlan(selectedId),
       getLaunchPlaybooks(selectedId),
-      getGrowthCampaigns(selectedId),
+      listCampaigns(selectedId),
       getBrandVoice(selectedId),
     ])
       .then(([kw, items, weekly, pb, camps, voice]) => {
@@ -182,10 +184,21 @@ export function GrowthEngineWorkspace({ projects }: { projects: ProjectOption[] 
         });
         setPlan(result.plan);
         setPlaybooks(await getLaunchPlaybooks(selectedId));
+        setCampaigns(await listCampaigns(selectedId));
         setLaunchMode(true);
-        setTab("playbooks");
-        toast.success("Launch Mode activated — playbooks + coach ready");
-        router.replace(buildGrowthUrl(selectedId, "playbooks"), { scroll: false });
+        setTab(result.campaignId ? "campaigns" : "playbooks");
+        toast.success(
+          result.campaignId
+            ? "Launch Mode on — playbooks + full campaign pack ready"
+            : "Launch Mode activated — playbooks + coach ready"
+        );
+        router.replace(
+          buildGrowthUrl(
+            selectedId,
+            result.campaignId ? "campaigns" : "playbooks"
+          ),
+          { scroll: false }
+        );
       } catch {
         toast.error("Failed to start Launch Mode");
       }
@@ -213,17 +226,26 @@ export function GrowthEngineWorkspace({ projects }: { projects: ProjectOption[] 
             <Rocket className="h-4 w-4 text-primary" />
             <span className="font-medium">Launch Mode</span>
             <span className="text-muted-foreground">
-              Coach + playbooks tuned for shipping
-              {version ? ` ${version}` : ""}.
+              Coach, playbooks, and a full multi-channel campaign pack
+              {version ? ` for ${version}` : ""}.
             </span>
           </div>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => selectTab("playbooks")}
-          >
-            Open playbooks
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => selectTab("campaigns")}
+            >
+              Open campaign
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => selectTab("playbooks")}
+            >
+              Open playbooks
+            </Button>
+          </div>
         </div>
       )}
 
@@ -358,7 +380,7 @@ export function GrowthEngineWorkspace({ projects }: { projects: ProjectOption[] 
               collapsedSummary={
                 campaigns.length === 0
                   ? "No campaigns yet"
-                  : `${campaigns.length} campaign${campaigns.length !== 1 ? "s" : ""}`
+                  : `${campaigns.length} campaign${campaigns.length !== 1 ? "s" : ""} · ${campaigns.reduce((n, c) => n + c.asset_stats.total, 0)} assets`
               }
             >
               <CampaignsPanel

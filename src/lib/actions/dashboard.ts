@@ -44,19 +44,34 @@ export async function getDashboardStats() {
   const projectsWithMilestones = await prisma.project.findMany({
     where: { userId: user.id },
     include: {
-      milestones: { orderBy: { targetDate: "asc" } },
+      milestones: {
+        orderBy: { targetDate: "asc" },
+        include: {
+          tasks: { select: { id: true, status: true } },
+        },
+      },
     },
     orderBy: { updatedAt: "desc" },
   });
 
+  // Task-driven completion: if a milestone has linked tasks, it's complete
+  // only when all of them are done.
+  const resolveCompleted = (m: {
+    isCompleted: boolean;
+    tasks: { status: string }[];
+  }) => {
+    if (m.tasks.length === 0) return m.isCompleted;
+    return m.tasks.every((t) => t.status === "done");
+  };
+
   const allMilestones = projectsWithMilestones.flatMap((p) => p.milestones);
-  const completedMilestones = allMilestones.filter((m) => m.isCompleted).length;
+  const completedMilestones = allMilestones.filter(resolveCompleted).length;
 
   const projectProgress = projectsWithMilestones
     .filter((p) => p.milestones.length > 0)
     .map((p) => {
-      const completed = p.milestones.filter((m) => m.isCompleted).length;
-      const next = p.milestones.find((m) => !m.isCompleted);
+      const completed = p.milestones.filter(resolveCompleted).length;
+      const next = p.milestones.find((m) => !resolveCompleted(m));
       return {
         projectId: p.id,
         projectName: p.name,
@@ -64,13 +79,25 @@ export async function getDashboardStats() {
         completed,
         percent: Math.round((completed / p.milestones.length) * 100),
         nextMilestone: next
-          ? { id: next.id, title: next.title, targetDate: next.targetDate.toISOString() }
+          ? {
+              id: next.id,
+              title: next.title,
+              targetDate: next.targetDate.toISOString(),
+            }
           : null,
+        milestones: p.milestones.map((m) => ({
+          id: m.id,
+          title: m.title,
+          targetDate: m.targetDate.toISOString(),
+          isCompleted: resolveCompleted(m),
+          taskTotal: m.tasks.length,
+          taskDone: m.tasks.filter((t) => t.status === "done").length,
+        })),
       };
     });
 
   const upcomingMilestones = allMilestones
-    .filter((m) => !m.isCompleted)
+    .filter((m) => !resolveCompleted(m))
     .sort((a, b) => a.targetDate.getTime() - b.targetDate.getTime())
     .slice(0, 5)
     .map((m) => {
@@ -83,6 +110,8 @@ export async function getDashboardStats() {
         targetDate: m.targetDate.toISOString(),
         projectName: project?.name ?? "Unknown",
         projectId: m.projectId,
+        taskTotal: m.tasks.length,
+        taskDone: m.tasks.filter((t) => t.status === "done").length,
       };
     });
 

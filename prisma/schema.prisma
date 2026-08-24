@@ -176,6 +176,7 @@ model Lead {
   notes       String?
   createdAt   DateTime @default(now())
 
+  @@unique([userId, url])
   @@index([userId])
   @@index([projectId])
   @@index([userId, createdAt])
@@ -183,25 +184,28 @@ model Lead {
 }
 
 model Task {
-  id             String    @id @default(cuid())
+  id             String     @id @default(cuid())
   projectId      String
-  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project        Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  milestoneId    String?
+  milestone      Milestone? @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
   ideaId         String?
   title          String
-  description    String?   @db.Text
-  status         String    @default("todo")
-  priority       String    @default("medium")
-  order          Int       @default(0)
+  description    String?    @db.Text
+  status         String     @default("todo")
+  priority       String     @default("medium")
+  order          Int        @default(0)
   dueDate        DateTime?
   estimatedHours Float?
   labels         Json?
   checklist      Json?
   completedAt    DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now()) @updatedAt
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
 
   @@index([projectId])
   @@index([projectId, status])
+  @@index([milestoneId])
   @@schema("app")
 }
 
@@ -212,6 +216,7 @@ model Milestone {
   title       String
   targetDate  DateTime
   isCompleted Boolean  @default(false)
+  tasks       Task[]
 
   @@index([projectId])
   @@schema("app")
@@ -288,22 +293,64 @@ model LaunchPlaybookProgress {
 }
 
 model MarketingCampaign {
-  id          String    @id @default(cuid())
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  projectId   String?
-  project     Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  title       String
-  channel     String
-  content     String?   @db.Text
-  status      String    @default("draft")
-  budget      Float     @default(0)
-  scheduledAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now()) @updatedAt
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId    String?
+  project      Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  title        String
+  /// Primary channel (legacy + display); full list lives in `channels`
+  channel      String
+  channels     Json?
+  /// launch | feature | content | outreach | ads | retention
+  campaignType String    @default("launch")
+  goal         String?   @db.Text
+  audience     String?   @db.Text
+  offer        String?   @db.Text
+  /// { tagline, oneLiner, angles: string[] }
+  positioning  Json?
+  content      String?   @db.Text
+  status       String    @default("draft")
+  budget       Float     @default(0)
+  spent        Float     @default(0)
+  scheduledAt  DateTime?
+  startsAt     DateTime?
+  endsAt       DateTime?
+  /// { impressions, clicks, signups, conversions, notes }
+  metrics      Json?
+  /// [{ id, label, done }]
+  checklist    Json?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
+
+  assets CampaignAsset[]
 
   @@index([userId])
   @@index([projectId])
+  @@index([userId, status])
+  @@schema("app")
+}
+
+model CampaignAsset {
+  id          String            @id @default(cuid())
+  campaignId  String
+  campaign    MarketingCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  channel     String
+  /// post | thread | email | ad | landing | outreach
+  assetType   String
+  title       String
+  body        String            @db.Text
+  dayOffset   Int               @default(0)
+  /// draft | ready | copied | published | skipped
+  status      String            @default("draft")
+  sortOrder   Int               @default(0)
+  metadata    Json?
+  publishedAt DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @default(now()) @updatedAt
+
+  @@index([campaignId])
+  @@index([campaignId, dayOffset])
   @@schema("app")
 }
 

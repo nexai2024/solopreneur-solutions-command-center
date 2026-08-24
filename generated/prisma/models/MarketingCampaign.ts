@@ -28,10 +28,12 @@ export type AggregateMarketingCampaign = {
 
 export type MarketingCampaignAvgAggregateOutputType = {
   budget: number | null
+  spent: number | null
 }
 
 export type MarketingCampaignSumAggregateOutputType = {
   budget: number | null
+  spent: number | null
 }
 
 export type MarketingCampaignMinAggregateOutputType = {
@@ -40,10 +42,17 @@ export type MarketingCampaignMinAggregateOutputType = {
   projectId: string | null
   title: string | null
   channel: string | null
+  campaignType: string | null
+  goal: string | null
+  audience: string | null
+  offer: string | null
   content: string | null
   status: string | null
   budget: number | null
+  spent: number | null
   scheduledAt: Date | null
+  startsAt: Date | null
+  endsAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,10 +63,17 @@ export type MarketingCampaignMaxAggregateOutputType = {
   projectId: string | null
   title: string | null
   channel: string | null
+  campaignType: string | null
+  goal: string | null
+  audience: string | null
+  offer: string | null
   content: string | null
   status: string | null
   budget: number | null
+  spent: number | null
   scheduledAt: Date | null
+  startsAt: Date | null
+  endsAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,10 +84,21 @@ export type MarketingCampaignCountAggregateOutputType = {
   projectId: number
   title: number
   channel: number
+  channels: number
+  campaignType: number
+  goal: number
+  audience: number
+  offer: number
+  positioning: number
   content: number
   status: number
   budget: number
+  spent: number
   scheduledAt: number
+  startsAt: number
+  endsAt: number
+  metrics: number
+  checklist: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -80,10 +107,12 @@ export type MarketingCampaignCountAggregateOutputType = {
 
 export type MarketingCampaignAvgAggregateInputType = {
   budget?: true
+  spent?: true
 }
 
 export type MarketingCampaignSumAggregateInputType = {
   budget?: true
+  spent?: true
 }
 
 export type MarketingCampaignMinAggregateInputType = {
@@ -92,10 +121,17 @@ export type MarketingCampaignMinAggregateInputType = {
   projectId?: true
   title?: true
   channel?: true
+  campaignType?: true
+  goal?: true
+  audience?: true
+  offer?: true
   content?: true
   status?: true
   budget?: true
+  spent?: true
   scheduledAt?: true
+  startsAt?: true
+  endsAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -106,10 +142,17 @@ export type MarketingCampaignMaxAggregateInputType = {
   projectId?: true
   title?: true
   channel?: true
+  campaignType?: true
+  goal?: true
+  audience?: true
+  offer?: true
   content?: true
   status?: true
   budget?: true
+  spent?: true
   scheduledAt?: true
+  startsAt?: true
+  endsAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -120,10 +163,21 @@ export type MarketingCampaignCountAggregateInputType = {
   projectId?: true
   title?: true
   channel?: true
+  channels?: true
+  campaignType?: true
+  goal?: true
+  audience?: true
+  offer?: true
+  positioning?: true
   content?: true
   status?: true
   budget?: true
+  spent?: true
   scheduledAt?: true
+  startsAt?: true
+  endsAt?: true
+  metrics?: true
+  checklist?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -221,10 +275,21 @@ export type MarketingCampaignGroupByOutputType = {
   projectId: string | null
   title: string
   channel: string
+  channels: runtime.JsonValue | null
+  campaignType: string
+  goal: string | null
+  audience: string | null
+  offer: string | null
+  positioning: runtime.JsonValue | null
   content: string | null
   status: string
   budget: number
+  spent: number
   scheduledAt: Date | null
+  startsAt: Date | null
+  endsAt: Date | null
+  metrics: runtime.JsonValue | null
+  checklist: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
   _count: MarketingCampaignCountAggregateOutputType | null
@@ -258,14 +323,26 @@ export type MarketingCampaignWhereInput = {
   projectId?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
   title?: Prisma.StringFilter<"MarketingCampaign"> | string
   channel?: Prisma.StringFilter<"MarketingCampaign"> | string
+  channels?: Prisma.JsonNullableFilter<"MarketingCampaign">
+  campaignType?: Prisma.StringFilter<"MarketingCampaign"> | string
+  goal?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
+  audience?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
+  offer?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
+  positioning?: Prisma.JsonNullableFilter<"MarketingCampaign">
   content?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
   status?: Prisma.StringFilter<"MarketingCampaign"> | string
   budget?: Prisma.FloatFilter<"MarketingCampaign"> | number
+  spent?: Prisma.FloatFilter<"MarketingCampaign"> | number
   scheduledAt?: Prisma.DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+  startsAt?: Prisma.DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+  endsAt?: Prisma.DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+  metrics?: Prisma.JsonNullableFilter<"MarketingCampaign">
+  checklist?: Prisma.JsonNullableFilter<"MarketingCampaign">
   createdAt?: Prisma.DateTimeFilter<"MarketingCampaign"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MarketingCampaign"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  assets?: Prisma.CampaignAssetListRelationFilter
 }
 
 export type MarketingCampaignOrderByWithRelationInput = {
@@ -274,14 +351,26 @@ export type MarketingCampaignOrderByWithRelationInput = {
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  channels?: Prisma.SortOrderInput | Prisma.SortOrder
+  campaignType?: Prisma.SortOrder
+  goal?: Prisma.SortOrderInput | Prisma.SortOrder
+  audience?: Prisma.SortOrderInput | Prisma.SortOrder
+  offer?: Prisma.SortOrderInput | Prisma.SortOrder
+  positioning?: Prisma.SortOrderInput | Prisma.SortOrder
   content?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   budget?: Prisma.SortOrder
+  spent?: Prisma.SortOrder
   scheduledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  metrics?: Prisma.SortOrderInput | Prisma.SortOrder
+  checklist?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
+  assets?: Prisma.CampaignAssetOrderByRelationAggregateInput
 }
 
 export type MarketingCampaignWhereUniqueInput = Prisma.AtLeast<{
@@ -293,14 +382,26 @@ export type MarketingCampaignWhereUniqueInput = Prisma.AtLeast<{
   projectId?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
   title?: Prisma.StringFilter<"MarketingCampaign"> | string
   channel?: Prisma.StringFilter<"MarketingCampaign"> | string
+  channels?: Prisma.JsonNullableFilter<"MarketingCampaign">
+  campaignType?: Prisma.StringFilter<"MarketingCampaign"> | string
+  goal?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
+  audience?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
+  offer?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
+  positioning?: Prisma.JsonNullableFilter<"MarketingCampaign">
   content?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
   status?: Prisma.StringFilter<"MarketingCampaign"> | string
   budget?: Prisma.FloatFilter<"MarketingCampaign"> | number
+  spent?: Prisma.FloatFilter<"MarketingCampaign"> | number
   scheduledAt?: Prisma.DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+  startsAt?: Prisma.DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+  endsAt?: Prisma.DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+  metrics?: Prisma.JsonNullableFilter<"MarketingCampaign">
+  checklist?: Prisma.JsonNullableFilter<"MarketingCampaign">
   createdAt?: Prisma.DateTimeFilter<"MarketingCampaign"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MarketingCampaign"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  assets?: Prisma.CampaignAssetListRelationFilter
 }, "id">
 
 export type MarketingCampaignOrderByWithAggregationInput = {
@@ -309,10 +410,21 @@ export type MarketingCampaignOrderByWithAggregationInput = {
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  channels?: Prisma.SortOrderInput | Prisma.SortOrder
+  campaignType?: Prisma.SortOrder
+  goal?: Prisma.SortOrderInput | Prisma.SortOrder
+  audience?: Prisma.SortOrderInput | Prisma.SortOrder
+  offer?: Prisma.SortOrderInput | Prisma.SortOrder
+  positioning?: Prisma.SortOrderInput | Prisma.SortOrder
   content?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   budget?: Prisma.SortOrder
+  spent?: Prisma.SortOrder
   scheduledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  startsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  endsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  metrics?: Prisma.SortOrderInput | Prisma.SortOrder
+  checklist?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MarketingCampaignCountOrderByAggregateInput
@@ -331,10 +443,21 @@ export type MarketingCampaignScalarWhereWithAggregatesInput = {
   projectId?: Prisma.StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
   title?: Prisma.StringWithAggregatesFilter<"MarketingCampaign"> | string
   channel?: Prisma.StringWithAggregatesFilter<"MarketingCampaign"> | string
+  channels?: Prisma.JsonNullableWithAggregatesFilter<"MarketingCampaign">
+  campaignType?: Prisma.StringWithAggregatesFilter<"MarketingCampaign"> | string
+  goal?: Prisma.StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
+  audience?: Prisma.StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
+  offer?: Prisma.StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
+  positioning?: Prisma.JsonNullableWithAggregatesFilter<"MarketingCampaign">
   content?: Prisma.StringNullableWithAggregatesFilter<"MarketingCampaign"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"MarketingCampaign"> | string
   budget?: Prisma.FloatWithAggregatesFilter<"MarketingCampaign"> | number
+  spent?: Prisma.FloatWithAggregatesFilter<"MarketingCampaign"> | number
   scheduledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
+  startsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
+  endsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"MarketingCampaign"> | Date | string | null
+  metrics?: Prisma.JsonNullableWithAggregatesFilter<"MarketingCampaign">
+  checklist?: Prisma.JsonNullableWithAggregatesFilter<"MarketingCampaign">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MarketingCampaign"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"MarketingCampaign"> | Date | string
 }
@@ -343,14 +466,26 @@ export type MarketingCampaignCreateInput = {
   id?: string
   title: string
   channel: string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: string
+  goal?: string | null
+  audience?: string | null
+  offer?: string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: string | null
   status?: string
   budget?: number
+  spent?: number
   scheduledAt?: Date | string | null
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMarketingCampaignsInput
   project?: Prisma.ProjectCreateNestedOneWithoutMarketingCampaignsInput
+  assets?: Prisma.CampaignAssetCreateNestedManyWithoutCampaignInput
 }
 
 export type MarketingCampaignUncheckedCreateInput = {
@@ -359,26 +494,50 @@ export type MarketingCampaignUncheckedCreateInput = {
   projectId?: string | null
   title: string
   channel: string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: string
+  goal?: string | null
+  audience?: string | null
+  offer?: string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: string | null
   status?: string
   budget?: number
+  spent?: number
   scheduledAt?: Date | string | null
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  assets?: Prisma.CampaignAssetUncheckedCreateNestedManyWithoutCampaignInput
 }
 
 export type MarketingCampaignUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
   scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMarketingCampaignsNestedInput
   project?: Prisma.ProjectUpdateOneWithoutMarketingCampaignsNestedInput
+  assets?: Prisma.CampaignAssetUpdateManyWithoutCampaignNestedInput
 }
 
 export type MarketingCampaignUncheckedUpdateInput = {
@@ -387,12 +546,24 @@ export type MarketingCampaignUncheckedUpdateInput = {
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
   scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assets?: Prisma.CampaignAssetUncheckedUpdateManyWithoutCampaignNestedInput
 }
 
 export type MarketingCampaignCreateManyInput = {
@@ -401,10 +572,21 @@ export type MarketingCampaignCreateManyInput = {
   projectId?: string | null
   title: string
   channel: string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: string
+  goal?: string | null
+  audience?: string | null
+  offer?: string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: string | null
   status?: string
   budget?: number
+  spent?: number
   scheduledAt?: Date | string | null
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -413,10 +595,21 @@ export type MarketingCampaignUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
   scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -427,10 +620,21 @@ export type MarketingCampaignUncheckedUpdateManyInput = {
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
   scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -451,16 +655,28 @@ export type MarketingCampaignCountOrderByAggregateInput = {
   projectId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  channels?: Prisma.SortOrder
+  campaignType?: Prisma.SortOrder
+  goal?: Prisma.SortOrder
+  audience?: Prisma.SortOrder
+  offer?: Prisma.SortOrder
+  positioning?: Prisma.SortOrder
   content?: Prisma.SortOrder
   status?: Prisma.SortOrder
   budget?: Prisma.SortOrder
+  spent?: Prisma.SortOrder
   scheduledAt?: Prisma.SortOrder
+  startsAt?: Prisma.SortOrder
+  endsAt?: Prisma.SortOrder
+  metrics?: Prisma.SortOrder
+  checklist?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type MarketingCampaignAvgOrderByAggregateInput = {
   budget?: Prisma.SortOrder
+  spent?: Prisma.SortOrder
 }
 
 export type MarketingCampaignMaxOrderByAggregateInput = {
@@ -469,10 +685,17 @@ export type MarketingCampaignMaxOrderByAggregateInput = {
   projectId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  campaignType?: Prisma.SortOrder
+  goal?: Prisma.SortOrder
+  audience?: Prisma.SortOrder
+  offer?: Prisma.SortOrder
   content?: Prisma.SortOrder
   status?: Prisma.SortOrder
   budget?: Prisma.SortOrder
+  spent?: Prisma.SortOrder
   scheduledAt?: Prisma.SortOrder
+  startsAt?: Prisma.SortOrder
+  endsAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -483,16 +706,29 @@ export type MarketingCampaignMinOrderByAggregateInput = {
   projectId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   channel?: Prisma.SortOrder
+  campaignType?: Prisma.SortOrder
+  goal?: Prisma.SortOrder
+  audience?: Prisma.SortOrder
+  offer?: Prisma.SortOrder
   content?: Prisma.SortOrder
   status?: Prisma.SortOrder
   budget?: Prisma.SortOrder
+  spent?: Prisma.SortOrder
   scheduledAt?: Prisma.SortOrder
+  startsAt?: Prisma.SortOrder
+  endsAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type MarketingCampaignSumOrderByAggregateInput = {
   budget?: Prisma.SortOrder
+  spent?: Prisma.SortOrder
+}
+
+export type MarketingCampaignScalarRelationFilter = {
+  is?: Prisma.MarketingCampaignWhereInput
+  isNot?: Prisma.MarketingCampaignWhereInput
 }
 
 export type MarketingCampaignCreateNestedManyWithoutUserInput = {
@@ -579,17 +815,43 @@ export type MarketingCampaignUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.MarketingCampaignScalarWhereInput | Prisma.MarketingCampaignScalarWhereInput[]
 }
 
+export type MarketingCampaignCreateNestedOneWithoutAssetsInput = {
+  create?: Prisma.XOR<Prisma.MarketingCampaignCreateWithoutAssetsInput, Prisma.MarketingCampaignUncheckedCreateWithoutAssetsInput>
+  connectOrCreate?: Prisma.MarketingCampaignCreateOrConnectWithoutAssetsInput
+  connect?: Prisma.MarketingCampaignWhereUniqueInput
+}
+
+export type MarketingCampaignUpdateOneRequiredWithoutAssetsNestedInput = {
+  create?: Prisma.XOR<Prisma.MarketingCampaignCreateWithoutAssetsInput, Prisma.MarketingCampaignUncheckedCreateWithoutAssetsInput>
+  connectOrCreate?: Prisma.MarketingCampaignCreateOrConnectWithoutAssetsInput
+  upsert?: Prisma.MarketingCampaignUpsertWithoutAssetsInput
+  connect?: Prisma.MarketingCampaignWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MarketingCampaignUpdateToOneWithWhereWithoutAssetsInput, Prisma.MarketingCampaignUpdateWithoutAssetsInput>, Prisma.MarketingCampaignUncheckedUpdateWithoutAssetsInput>
+}
+
 export type MarketingCampaignCreateWithoutUserInput = {
   id?: string
   title: string
   channel: string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: string
+  goal?: string | null
+  audience?: string | null
+  offer?: string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: string | null
   status?: string
   budget?: number
+  spent?: number
   scheduledAt?: Date | string | null
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   project?: Prisma.ProjectCreateNestedOneWithoutMarketingCampaignsInput
+  assets?: Prisma.CampaignAssetCreateNestedManyWithoutCampaignInput
 }
 
 export type MarketingCampaignUncheckedCreateWithoutUserInput = {
@@ -597,12 +859,24 @@ export type MarketingCampaignUncheckedCreateWithoutUserInput = {
   projectId?: string | null
   title: string
   channel: string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: string
+  goal?: string | null
+  audience?: string | null
+  offer?: string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: string | null
   status?: string
   budget?: number
+  spent?: number
   scheduledAt?: Date | string | null
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  assets?: Prisma.CampaignAssetUncheckedCreateNestedManyWithoutCampaignInput
 }
 
 export type MarketingCampaignCreateOrConnectWithoutUserInput = {
@@ -640,10 +914,21 @@ export type MarketingCampaignScalarWhereInput = {
   projectId?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
   title?: Prisma.StringFilter<"MarketingCampaign"> | string
   channel?: Prisma.StringFilter<"MarketingCampaign"> | string
+  channels?: Prisma.JsonNullableFilter<"MarketingCampaign">
+  campaignType?: Prisma.StringFilter<"MarketingCampaign"> | string
+  goal?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
+  audience?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
+  offer?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
+  positioning?: Prisma.JsonNullableFilter<"MarketingCampaign">
   content?: Prisma.StringNullableFilter<"MarketingCampaign"> | string | null
   status?: Prisma.StringFilter<"MarketingCampaign"> | string
   budget?: Prisma.FloatFilter<"MarketingCampaign"> | number
+  spent?: Prisma.FloatFilter<"MarketingCampaign"> | number
   scheduledAt?: Prisma.DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+  startsAt?: Prisma.DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+  endsAt?: Prisma.DateTimeNullableFilter<"MarketingCampaign"> | Date | string | null
+  metrics?: Prisma.JsonNullableFilter<"MarketingCampaign">
+  checklist?: Prisma.JsonNullableFilter<"MarketingCampaign">
   createdAt?: Prisma.DateTimeFilter<"MarketingCampaign"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MarketingCampaign"> | Date | string
 }
@@ -652,13 +937,25 @@ export type MarketingCampaignCreateWithoutProjectInput = {
   id?: string
   title: string
   channel: string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: string
+  goal?: string | null
+  audience?: string | null
+  offer?: string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: string | null
   status?: string
   budget?: number
+  spent?: number
   scheduledAt?: Date | string | null
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMarketingCampaignsInput
+  assets?: Prisma.CampaignAssetCreateNestedManyWithoutCampaignInput
 }
 
 export type MarketingCampaignUncheckedCreateWithoutProjectInput = {
@@ -666,12 +963,24 @@ export type MarketingCampaignUncheckedCreateWithoutProjectInput = {
   userId: string
   title: string
   channel: string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: string
+  goal?: string | null
+  audience?: string | null
+  offer?: string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: string | null
   status?: string
   budget?: number
+  spent?: number
   scheduledAt?: Date | string | null
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  assets?: Prisma.CampaignAssetUncheckedCreateNestedManyWithoutCampaignInput
 }
 
 export type MarketingCampaignCreateOrConnectWithoutProjectInput = {
@@ -700,15 +1009,142 @@ export type MarketingCampaignUpdateManyWithWhereWithoutProjectInput = {
   data: Prisma.XOR<Prisma.MarketingCampaignUpdateManyMutationInput, Prisma.MarketingCampaignUncheckedUpdateManyWithoutProjectInput>
 }
 
+export type MarketingCampaignCreateWithoutAssetsInput = {
+  id?: string
+  title: string
+  channel: string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: string
+  goal?: string | null
+  audience?: string | null
+  offer?: string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: string | null
+  status?: string
+  budget?: number
+  spent?: number
+  scheduledAt?: Date | string | null
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutMarketingCampaignsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutMarketingCampaignsInput
+}
+
+export type MarketingCampaignUncheckedCreateWithoutAssetsInput = {
+  id?: string
+  userId: string
+  projectId?: string | null
+  title: string
+  channel: string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: string
+  goal?: string | null
+  audience?: string | null
+  offer?: string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: string | null
+  status?: string
+  budget?: number
+  spent?: number
+  scheduledAt?: Date | string | null
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type MarketingCampaignCreateOrConnectWithoutAssetsInput = {
+  where: Prisma.MarketingCampaignWhereUniqueInput
+  create: Prisma.XOR<Prisma.MarketingCampaignCreateWithoutAssetsInput, Prisma.MarketingCampaignUncheckedCreateWithoutAssetsInput>
+}
+
+export type MarketingCampaignUpsertWithoutAssetsInput = {
+  update: Prisma.XOR<Prisma.MarketingCampaignUpdateWithoutAssetsInput, Prisma.MarketingCampaignUncheckedUpdateWithoutAssetsInput>
+  create: Prisma.XOR<Prisma.MarketingCampaignCreateWithoutAssetsInput, Prisma.MarketingCampaignUncheckedCreateWithoutAssetsInput>
+  where?: Prisma.MarketingCampaignWhereInput
+}
+
+export type MarketingCampaignUpdateToOneWithWhereWithoutAssetsInput = {
+  where?: Prisma.MarketingCampaignWhereInput
+  data: Prisma.XOR<Prisma.MarketingCampaignUpdateWithoutAssetsInput, Prisma.MarketingCampaignUncheckedUpdateWithoutAssetsInput>
+}
+
+export type MarketingCampaignUpdateWithoutAssetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
+  scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutMarketingCampaignsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutMarketingCampaignsNestedInput
+}
+
+export type MarketingCampaignUncheckedUpdateWithoutAssetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
+  scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type MarketingCampaignCreateManyUserInput = {
   id?: string
   projectId?: string | null
   title: string
   channel: string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: string
+  goal?: string | null
+  audience?: string | null
+  offer?: string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: string | null
   status?: string
   budget?: number
+  spent?: number
   scheduledAt?: Date | string | null
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -717,13 +1153,25 @@ export type MarketingCampaignUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
   scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneWithoutMarketingCampaignsNestedInput
+  assets?: Prisma.CampaignAssetUpdateManyWithoutCampaignNestedInput
 }
 
 export type MarketingCampaignUncheckedUpdateWithoutUserInput = {
@@ -731,12 +1179,24 @@ export type MarketingCampaignUncheckedUpdateWithoutUserInput = {
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
   scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assets?: Prisma.CampaignAssetUncheckedUpdateManyWithoutCampaignNestedInput
 }
 
 export type MarketingCampaignUncheckedUpdateManyWithoutUserInput = {
@@ -744,10 +1204,21 @@ export type MarketingCampaignUncheckedUpdateManyWithoutUserInput = {
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
   scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -757,10 +1228,21 @@ export type MarketingCampaignCreateManyProjectInput = {
   userId: string
   title: string
   channel: string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: string
+  goal?: string | null
+  audience?: string | null
+  offer?: string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: string | null
   status?: string
   budget?: number
+  spent?: number
   scheduledAt?: Date | string | null
+  startsAt?: Date | string | null
+  endsAt?: Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -769,13 +1251,25 @@ export type MarketingCampaignUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
   scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMarketingCampaignsNestedInput
+  assets?: Prisma.CampaignAssetUpdateManyWithoutCampaignNestedInput
 }
 
 export type MarketingCampaignUncheckedUpdateWithoutProjectInput = {
@@ -783,12 +1277,24 @@ export type MarketingCampaignUncheckedUpdateWithoutProjectInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
   scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assets?: Prisma.CampaignAssetUncheckedUpdateManyWithoutCampaignNestedInput
 }
 
 export type MarketingCampaignUncheckedUpdateManyWithoutProjectInput = {
@@ -796,14 +1302,54 @@ export type MarketingCampaignUncheckedUpdateManyWithoutProjectInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
+  channels?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  campaignType?: Prisma.StringFieldUpdateOperationsInput | string
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  offer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  positioning?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   budget?: Prisma.FloatFieldUpdateOperationsInput | number
+  spent?: Prisma.FloatFieldUpdateOperationsInput | number
   scheduledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  startsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  metrics?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  checklist?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type MarketingCampaignCountOutputType
+ */
+
+export type MarketingCampaignCountOutputType = {
+  assets: number
+}
+
+export type MarketingCampaignCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  assets?: boolean | MarketingCampaignCountOutputTypeCountAssetsArgs
+}
+
+/**
+ * MarketingCampaignCountOutputType without action
+ */
+export type MarketingCampaignCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MarketingCampaignCountOutputType
+   */
+  select?: Prisma.MarketingCampaignCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * MarketingCampaignCountOutputType without action
+ */
+export type MarketingCampaignCountOutputTypeCountAssetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CampaignAssetWhereInput
+}
 
 
 export type MarketingCampaignSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -812,14 +1358,27 @@ export type MarketingCampaignSelect<ExtArgs extends runtime.Types.Extensions.Int
   projectId?: boolean
   title?: boolean
   channel?: boolean
+  channels?: boolean
+  campaignType?: boolean
+  goal?: boolean
+  audience?: boolean
+  offer?: boolean
+  positioning?: boolean
   content?: boolean
   status?: boolean
   budget?: boolean
+  spent?: boolean
   scheduledAt?: boolean
+  startsAt?: boolean
+  endsAt?: boolean
+  metrics?: boolean
+  checklist?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.MarketingCampaign$projectArgs<ExtArgs>
+  assets?: boolean | Prisma.MarketingCampaign$assetsArgs<ExtArgs>
+  _count?: boolean | Prisma.MarketingCampaignCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["marketingCampaign"]>
 
 export type MarketingCampaignSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -828,10 +1387,21 @@ export type MarketingCampaignSelectCreateManyAndReturn<ExtArgs extends runtime.T
   projectId?: boolean
   title?: boolean
   channel?: boolean
+  channels?: boolean
+  campaignType?: boolean
+  goal?: boolean
+  audience?: boolean
+  offer?: boolean
+  positioning?: boolean
   content?: boolean
   status?: boolean
   budget?: boolean
+  spent?: boolean
   scheduledAt?: boolean
+  startsAt?: boolean
+  endsAt?: boolean
+  metrics?: boolean
+  checklist?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -844,10 +1414,21 @@ export type MarketingCampaignSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   projectId?: boolean
   title?: boolean
   channel?: boolean
+  channels?: boolean
+  campaignType?: boolean
+  goal?: boolean
+  audience?: boolean
+  offer?: boolean
+  positioning?: boolean
   content?: boolean
   status?: boolean
   budget?: boolean
+  spent?: boolean
   scheduledAt?: boolean
+  startsAt?: boolean
+  endsAt?: boolean
+  metrics?: boolean
+  checklist?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -860,18 +1441,31 @@ export type MarketingCampaignSelectScalar = {
   projectId?: boolean
   title?: boolean
   channel?: boolean
+  channels?: boolean
+  campaignType?: boolean
+  goal?: boolean
+  audience?: boolean
+  offer?: boolean
+  positioning?: boolean
   content?: boolean
   status?: boolean
   budget?: boolean
+  spent?: boolean
   scheduledAt?: boolean
+  startsAt?: boolean
+  endsAt?: boolean
+  metrics?: boolean
+  checklist?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MarketingCampaignOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "projectId" | "title" | "channel" | "content" | "status" | "budget" | "scheduledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["marketingCampaign"]>
+export type MarketingCampaignOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "projectId" | "title" | "channel" | "channels" | "campaignType" | "goal" | "audience" | "offer" | "positioning" | "content" | "status" | "budget" | "spent" | "scheduledAt" | "startsAt" | "endsAt" | "metrics" | "checklist" | "createdAt" | "updatedAt", ExtArgs["result"]["marketingCampaign"]>
 export type MarketingCampaignInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.MarketingCampaign$projectArgs<ExtArgs>
+  assets?: boolean | Prisma.MarketingCampaign$assetsArgs<ExtArgs>
+  _count?: boolean | Prisma.MarketingCampaignCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MarketingCampaignIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -887,17 +1481,44 @@ export type $MarketingCampaignPayload<ExtArgs extends runtime.Types.Extensions.I
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     project: Prisma.$ProjectPayload<ExtArgs> | null
+    assets: Prisma.$CampaignAssetPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
     projectId: string | null
     title: string
+    /**
+     * Primary channel (legacy + display); full list lives in `channels`
+     */
     channel: string
+    channels: runtime.JsonValue | null
+    /**
+     * launch | feature | content | outreach | ads | retention
+     */
+    campaignType: string
+    goal: string | null
+    audience: string | null
+    offer: string | null
+    /**
+     * { tagline, oneLiner, angles: string[] }
+     */
+    positioning: runtime.JsonValue | null
     content: string | null
     status: string
     budget: number
+    spent: number
     scheduledAt: Date | null
+    startsAt: Date | null
+    endsAt: Date | null
+    /**
+     * { impressions, clicks, signups, conversions, notes }
+     */
+    metrics: runtime.JsonValue | null
+    /**
+     * [{ id, label, done }]
+     */
+    checklist: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["marketingCampaign"]>
@@ -1296,6 +1917,7 @@ export interface Prisma__MarketingCampaignClient<T, Null = never, ExtArgs extend
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   project<T extends Prisma.MarketingCampaign$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MarketingCampaign$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  assets<T extends Prisma.MarketingCampaign$assetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MarketingCampaign$assetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CampaignAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1330,10 +1952,21 @@ export interface MarketingCampaignFieldRefs {
   readonly projectId: Prisma.FieldRef<"MarketingCampaign", 'String'>
   readonly title: Prisma.FieldRef<"MarketingCampaign", 'String'>
   readonly channel: Prisma.FieldRef<"MarketingCampaign", 'String'>
+  readonly channels: Prisma.FieldRef<"MarketingCampaign", 'Json'>
+  readonly campaignType: Prisma.FieldRef<"MarketingCampaign", 'String'>
+  readonly goal: Prisma.FieldRef<"MarketingCampaign", 'String'>
+  readonly audience: Prisma.FieldRef<"MarketingCampaign", 'String'>
+  readonly offer: Prisma.FieldRef<"MarketingCampaign", 'String'>
+  readonly positioning: Prisma.FieldRef<"MarketingCampaign", 'Json'>
   readonly content: Prisma.FieldRef<"MarketingCampaign", 'String'>
   readonly status: Prisma.FieldRef<"MarketingCampaign", 'String'>
   readonly budget: Prisma.FieldRef<"MarketingCampaign", 'Float'>
+  readonly spent: Prisma.FieldRef<"MarketingCampaign", 'Float'>
   readonly scheduledAt: Prisma.FieldRef<"MarketingCampaign", 'DateTime'>
+  readonly startsAt: Prisma.FieldRef<"MarketingCampaign", 'DateTime'>
+  readonly endsAt: Prisma.FieldRef<"MarketingCampaign", 'DateTime'>
+  readonly metrics: Prisma.FieldRef<"MarketingCampaign", 'Json'>
+  readonly checklist: Prisma.FieldRef<"MarketingCampaign", 'Json'>
   readonly createdAt: Prisma.FieldRef<"MarketingCampaign", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"MarketingCampaign", 'DateTime'>
 }
@@ -1753,6 +2386,30 @@ export type MarketingCampaign$projectArgs<ExtArgs extends runtime.Types.Extensio
    */
   include?: Prisma.ProjectInclude<ExtArgs> | null
   where?: Prisma.ProjectWhereInput
+}
+
+/**
+ * MarketingCampaign.assets
+ */
+export type MarketingCampaign$assetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CampaignAsset
+   */
+  select?: Prisma.CampaignAssetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CampaignAsset
+   */
+  omit?: Prisma.CampaignAssetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CampaignAssetInclude<ExtArgs> | null
+  where?: Prisma.CampaignAssetWhereInput
+  orderBy?: Prisma.CampaignAssetOrderByWithRelationInput | Prisma.CampaignAssetOrderByWithRelationInput[]
+  cursor?: Prisma.CampaignAssetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CampaignAssetScalarFieldEnum | Prisma.CampaignAssetScalarFieldEnum[]
 }
 
 /**

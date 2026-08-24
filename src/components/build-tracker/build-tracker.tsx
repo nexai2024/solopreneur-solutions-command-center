@@ -36,11 +36,33 @@ function parseBuildTab(value: string | undefined): BuildTab {
   return "tasks";
 }
 
+/** Derive per-milestone task progress from linked board tasks. */
+function enrichMilestones(projects: BoardProject[]): BoardProject[] {
+  return projects.map((project) => ({
+    ...project,
+    milestones: project.milestones.map((m) => {
+      const linked = project.tasks.filter((t) => t.milestoneId === m.id);
+      const taskTotal = linked.length;
+      const taskDone = linked.filter((t) => t.status === "done").length;
+      return {
+        ...m,
+        taskTotal,
+        taskDone,
+        // Prefer task-driven completion when tasks are linked
+        isCompleted:
+          taskTotal > 0 ? taskDone === taskTotal : m.isCompleted,
+      };
+    }),
+  }));
+}
+
 export type BoardMilestone = {
   id: string;
   title: string;
   targetDate: string;
   isCompleted: boolean;
+  taskTotal?: number;
+  taskDone?: number;
 };
 
 export type { BoardTask };
@@ -113,6 +135,10 @@ export function BuildTracker({
   const canDragPipeline = role === "admin" || role === "dev" || role === "qa";
 
   useEffect(() => {
+    setProjects(enrichMilestones(initialProjects));
+  }, [initialProjects]);
+
+  useEffect(() => {
     if (initialProjectId && projects.some((p) => p.id === initialProjectId)) {
       setSelectedId(initialProjectId);
     }
@@ -160,10 +186,39 @@ export function BuildTracker({
 
   const handleTasksChange = (projectId: string, tasks: BoardTask[]) => {
     setProjects((prev) =>
-      prev.map((p) =>
-        p.id === projectId
-          ? { ...p, tasks, _count: { ...p._count, tasks: tasks.length } }
-          : p
+      enrichMilestones(
+        prev.map((p) =>
+          p.id === projectId
+            ? { ...p, tasks, _count: { ...p._count, tasks: tasks.length } }
+            : p
+        )
+      )
+    );
+  };
+
+  const handleMilestoneChange = (
+    projectId: string,
+    milestoneId: string,
+    patch: Partial<BoardMilestone>
+  ) => {
+    setProjects((prev) =>
+      enrichMilestones(
+        prev.map((p) => {
+          if (p.id !== projectId) return p;
+          const milestones = p.milestones.map((m) =>
+            m.id === milestoneId ? { ...m, ...patch } : m
+          );
+          // Checking a milestone complete also completes its linked tasks
+          const tasks =
+            patch.isCompleted === true
+              ? p.tasks.map((t) =>
+                  t.milestoneId === milestoneId
+                    ? { ...t, status: "done" as const, completedAt: new Date().toISOString() }
+                    : t
+                )
+              : p.tasks;
+          return { ...p, milestones, tasks };
+        })
       )
     );
   };
@@ -281,11 +336,23 @@ export function BuildTracker({
               <TabsContent value="tasks" className="space-y-8 mt-6">
                 {selected.milestones.length > 0 && (
                   <div className="space-y-3">
-                    <h3 className="text-sm font-semibold flex items-center gap-2">
-                      <Target className="h-4 w-4" />
-                      Launch milestones
-                    </h3>
-                    <MilestoneChecklist milestones={selected.milestones} compact />
+                    <div>
+                      <h3 className="text-sm font-semibold flex items-center gap-2">
+                        <Target className="h-4 w-4" />
+                        Launch milestones
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Complete the linked tasks on the board below to unlock each
+                        milestone — or check one off to mark its tasks done.
+                      </p>
+                    </div>
+                    <MilestoneChecklist
+                      milestones={selected.milestones}
+                      compact
+                      onMilestoneChange={(id, patch) =>
+                        handleMilestoneChange(selected.id, id, patch)
+                      }
+                    />
                   </div>
                 )}
                 <TaskKanbanBoard

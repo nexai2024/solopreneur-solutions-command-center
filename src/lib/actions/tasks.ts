@@ -4,6 +4,10 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 import { generateProjectStarterTasks } from "@/lib/ai/project/starter-tasks";
 import { appendAiNote } from "@/lib/actions/project-profile";
+import {
+  backfillTaskMilestoneLinks,
+  syncMilestoneCompletion,
+} from "@/lib/actions/milestones";
 import { revalidatePath } from "next/cache";
 import type { Prisma } from "../../../generated/prisma/client";
 import {
@@ -37,22 +41,49 @@ async function assertTaskAccess(taskId: string, userId: string) {
 
 export async function getProjectsWithTasks() {
   const user = await requireAuth();
-  const projects = await prisma.project.findMany({
-    where: { userId: user.id },
-    orderBy: { updatedAt: "desc" },
-    include: {
-      tasks: { orderBy: [{ status: "asc" }, { order: "asc" }] },
-      milestones: { orderBy: { targetDate: "asc" } },
-      ideas: { select: { id: true, title: true, aiScore: true, status: true } },
-      leads: { select: { id: true, title: true, status: true }, take: 3 },
-      githubConnection: true,
-      _count: { select: { tasks: true, milestones: true, ideas: true, leads: true } },
-    },
-  });
+
+  const load = () =>
+    prisma.project.findMany({
+      where: { userId: user.id },
+      orderBy: { updatedAt: "desc" },
+      include: {
+        tasks: { orderBy: [{ status: "asc" }, { order: "asc" }] },
+        milestones: { orderBy: { targetDate: "asc" } },
+        ideas: { select: { id: true, title: true, aiScore: true, status: true } },
+        leads: { select: { id: true, title: true, status: true }, take: 3 },
+        githubConnection: true,
+        _count: {
+          select: { tasks: true, milestones: true, ideas: true, leads: true },
+        },
+      },
+    });
+
+  let projects = await load();
+
+  let didBackfill = false;
+  for (const project of projects) {
+    const hasUnlinked =
+      project.milestones.length > 0 &&
+      project.tasks.some((t) => !t.milestoneId);
+    if (hasUnlinked) {
+      await backfillTaskMilestoneLinks(project.id, { revalidate: false });
+      didBackfill = true;
+    }
+  }
+
+  if (didBackfill) {
+    projects = await load();
+  }
 
   return projects.map((project) => ({
     ...project,
     tasks: project.tasks.map(toBoardTask),
+    milestones: project.milestones.map((m) => ({
+      id: m.id,
+      title: m.title,
+      targetDate: m.targetDate.toISOString(),
+      isCompleted: m.isCompleted,
+    })),
   }));
 }
 
@@ -70,32 +101,17 @@ export async function createStarterTasksForProject(
   projectDescription: string,
   ideaId?: string
 ) {
-  await assertProjectAccess(projectId, (await requireAuth()).id);
-
-  const existing = await prisma.task.count({ where: { projectId } });
-  if (existing > 0) return { created: 0 };
-
-  const generated = await generateProjectStarterTasks({
+  // Prefer linked pack (milestones + tasks). No-op if pack already exists.
+  const { createStarterPackForProject } = await import(
+    "@/lib/actions/milestones"
+  );
+  const pack = await createStarterPackForProject(
+    projectId,
     projectTitle,
     projectDescription,
-  });
-
-  await prisma.task.createMany({
-    data: generated.map((task, index) => ({
-      projectId,
-      ideaId: ideaId ?? null,
-      title: task.title,
-      description: task.description,
-      status: "todo",
-      priority: parseAiPriority(task.priority),
-      estimatedHours: task.estimatedHours,
-      order: index,
-    })),
-  });
-
-  revalidatePath("/dashboard/build-tracker");
-  revalidatePath("/dashboard");
-  return { created: generated.length };
+    { ideaId }
+  );
+  return { created: pack.tasksCreated };
 }
 
 export async function generateTasksForProject(projectId: string) {
@@ -145,6 +161,7 @@ export async function createTask(
     dueDate?: string;
     estimatedHours?: number;
     labels?: string[];
+    milestoneId?: string | null;
   }
 ) {
   const user = await requireAuth();
@@ -155,6 +172,13 @@ export async function createTask(
     throw new Error("Invalid priority");
   }
 
+  if (input.milestoneId) {
+    const milestone = await prisma.milestone.findFirst({
+      where: { id: input.milestoneId, projectId },
+    });
+    if (!milestone) throw new Error("Milestone not found");
+  }
+
   const maxOrder = await prisma.task.aggregate({
     where: { projectId, status: "todo" },
     _max: { order: true },
@@ -163,6 +187,7 @@ export async function createTask(
   const task = await prisma.task.create({
     data: {
       projectId,
+      milestoneId: input.milestoneId ?? null,
       title: input.title.trim(),
       description: input.description?.trim() || null,
       status: "todo",
@@ -173,6 +198,10 @@ export async function createTask(
       order: (maxOrder._max.order ?? -1) + 1,
     },
   });
+
+  if (task.milestoneId) {
+    await syncMilestoneCompletion(task.milestoneId);
+  }
 
   revalidatePath("/dashboard/build-tracker");
   revalidatePath("/dashboard");
@@ -190,6 +219,7 @@ export async function updateTask(
     estimatedHours?: number | null;
     labels?: string[];
     checklist?: ChecklistItem[];
+    milestoneId?: string | null;
   }
 ) {
   const user = await requireAuth();
@@ -200,6 +230,13 @@ export async function updateTask(
   }
   if (input.priority && !TASK_PRIORITIES.includes(input.priority)) {
     throw new Error("Invalid priority");
+  }
+
+  if (input.milestoneId) {
+    const milestone = await prisma.milestone.findFirst({
+      where: { id: input.milestoneId, projectId: existing.projectId },
+    });
+    if (!milestone) throw new Error("Milestone not found");
   }
 
   const nextStatus = input.status ?? normalizeStatus(existing.status);
@@ -229,9 +266,19 @@ export async function updateTask(
       ...(input.checklist !== undefined && {
         checklist: input.checklist as unknown as Prisma.InputJsonValue,
       }),
+      ...(input.milestoneId !== undefined && {
+        milestoneId: input.milestoneId,
+      }),
       completedAt,
     },
   });
+
+  const milestoneIds = new Set<string>();
+  if (existing.milestoneId) milestoneIds.add(existing.milestoneId);
+  if (task.milestoneId) milestoneIds.add(task.milestoneId);
+  for (const id of milestoneIds) {
+    await syncMilestoneCompletion(id);
+  }
 
   revalidatePath("/dashboard/build-tracker");
   revalidatePath("/dashboard");
@@ -254,14 +301,34 @@ export async function reorderTasks(
   const user = await requireAuth();
   await assertProjectAccess(projectId, user.id);
 
+  const affected = await prisma.task.findMany({
+    where: { id: { in: updates.map((u) => u.id) }, projectId },
+    select: { id: true, status: true, milestoneId: true, completedAt: true },
+  });
+  const byId = new Map(affected.map((t) => [t.id, t]));
+
   await prisma.$transaction(
-    updates.map((item) =>
-      prisma.task.update({
+    updates.map((item) => {
+      const prev = byId.get(item.id);
+      const completedAt =
+        item.status === "done" && prev?.status !== "done"
+          ? new Date()
+          : item.status !== "done"
+            ? null
+            : prev?.completedAt ?? null;
+      return prisma.task.update({
         where: { id: item.id },
-        data: { status: item.status, order: item.order },
-      })
-    )
+        data: { status: item.status, order: item.order, completedAt },
+      });
+    })
   );
+
+  const milestoneIds = new Set(
+    affected.map((t) => t.milestoneId).filter((id): id is string => Boolean(id))
+  );
+  for (const id of milestoneIds) {
+    await syncMilestoneCompletion(id);
+  }
 
   revalidatePath("/dashboard/build-tracker");
   revalidatePath("/dashboard");
@@ -269,8 +336,12 @@ export async function reorderTasks(
 
 export async function deleteTask(taskId: string) {
   const user = await requireAuth();
-  await assertTaskAccess(taskId, user.id);
+  const task = await assertTaskAccess(taskId, user.id);
+  const milestoneId = task.milestoneId;
   await prisma.task.delete({ where: { id: taskId } });
+  if (milestoneId) {
+    await syncMilestoneCompletion(milestoneId);
+  }
   revalidatePath("/dashboard/build-tracker");
   revalidatePath("/dashboard");
 }
@@ -287,6 +358,7 @@ export async function duplicateTask(taskId: string): Promise<BoardTask> {
   const copy = await prisma.task.create({
     data: {
       projectId: source.projectId,
+      milestoneId: source.milestoneId,
       ideaId: source.ideaId,
       title: `${source.title} (copy)`,
       description: source.description,
@@ -299,6 +371,10 @@ export async function duplicateTask(taskId: string): Promise<BoardTask> {
       order: (maxOrder._max.order ?? -1) + 1,
     },
   });
+
+  if (copy.milestoneId) {
+    await syncMilestoneCompletion(copy.milestoneId);
+  }
 
   revalidatePath("/dashboard/build-tracker");
   return toBoardTask(copy);

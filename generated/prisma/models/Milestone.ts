@@ -183,6 +183,7 @@ export type MilestoneWhereInput = {
   targetDate?: Prisma.DateTimeFilter<"Milestone"> | Date | string
   isCompleted?: Prisma.BoolFilter<"Milestone"> | boolean
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  tasks?: Prisma.TaskListRelationFilter
 }
 
 export type MilestoneOrderByWithRelationInput = {
@@ -192,6 +193,7 @@ export type MilestoneOrderByWithRelationInput = {
   targetDate?: Prisma.SortOrder
   isCompleted?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
+  tasks?: Prisma.TaskOrderByRelationAggregateInput
 }
 
 export type MilestoneWhereUniqueInput = Prisma.AtLeast<{
@@ -204,6 +206,7 @@ export type MilestoneWhereUniqueInput = Prisma.AtLeast<{
   targetDate?: Prisma.DateTimeFilter<"Milestone"> | Date | string
   isCompleted?: Prisma.BoolFilter<"Milestone"> | boolean
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
+  tasks?: Prisma.TaskListRelationFilter
 }, "id">
 
 export type MilestoneOrderByWithAggregationInput = {
@@ -234,6 +237,7 @@ export type MilestoneCreateInput = {
   targetDate: Date | string
   isCompleted?: boolean
   project: Prisma.ProjectCreateNestedOneWithoutMilestonesInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutMilestoneInput
 }
 
 export type MilestoneUncheckedCreateInput = {
@@ -242,6 +246,7 @@ export type MilestoneUncheckedCreateInput = {
   title: string
   targetDate: Date | string
   isCompleted?: boolean
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutMilestoneInput
 }
 
 export type MilestoneUpdateInput = {
@@ -250,6 +255,7 @@ export type MilestoneUpdateInput = {
   targetDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   project?: Prisma.ProjectUpdateOneRequiredWithoutMilestonesNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutMilestoneNestedInput
 }
 
 export type MilestoneUncheckedUpdateInput = {
@@ -258,6 +264,7 @@ export type MilestoneUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   targetDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutMilestoneNestedInput
 }
 
 export type MilestoneCreateManyInput = {
@@ -291,6 +298,11 @@ export type MilestoneListRelationFilter = {
 
 export type MilestoneOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type MilestoneNullableScalarRelationFilter = {
+  is?: Prisma.MilestoneWhereInput | null
+  isNot?: Prisma.MilestoneWhereInput | null
 }
 
 export type MilestoneCountOrderByAggregateInput = {
@@ -359,6 +371,22 @@ export type MilestoneUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.MilestoneScalarWhereInput | Prisma.MilestoneScalarWhereInput[]
 }
 
+export type MilestoneCreateNestedOneWithoutTasksInput = {
+  create?: Prisma.XOR<Prisma.MilestoneCreateWithoutTasksInput, Prisma.MilestoneUncheckedCreateWithoutTasksInput>
+  connectOrCreate?: Prisma.MilestoneCreateOrConnectWithoutTasksInput
+  connect?: Prisma.MilestoneWhereUniqueInput
+}
+
+export type MilestoneUpdateOneWithoutTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.MilestoneCreateWithoutTasksInput, Prisma.MilestoneUncheckedCreateWithoutTasksInput>
+  connectOrCreate?: Prisma.MilestoneCreateOrConnectWithoutTasksInput
+  upsert?: Prisma.MilestoneUpsertWithoutTasksInput
+  disconnect?: Prisma.MilestoneWhereInput | boolean
+  delete?: Prisma.MilestoneWhereInput | boolean
+  connect?: Prisma.MilestoneWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MilestoneUpdateToOneWithWhereWithoutTasksInput, Prisma.MilestoneUpdateWithoutTasksInput>, Prisma.MilestoneUncheckedUpdateWithoutTasksInput>
+}
+
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
@@ -368,6 +396,7 @@ export type MilestoneCreateWithoutProjectInput = {
   title: string
   targetDate: Date | string
   isCompleted?: boolean
+  tasks?: Prisma.TaskCreateNestedManyWithoutMilestoneInput
 }
 
 export type MilestoneUncheckedCreateWithoutProjectInput = {
@@ -375,6 +404,7 @@ export type MilestoneUncheckedCreateWithoutProjectInput = {
   title: string
   targetDate: Date | string
   isCompleted?: boolean
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutMilestoneInput
 }
 
 export type MilestoneCreateOrConnectWithoutProjectInput = {
@@ -414,6 +444,54 @@ export type MilestoneScalarWhereInput = {
   isCompleted?: Prisma.BoolFilter<"Milestone"> | boolean
 }
 
+export type MilestoneCreateWithoutTasksInput = {
+  id?: string
+  title: string
+  targetDate: Date | string
+  isCompleted?: boolean
+  project: Prisma.ProjectCreateNestedOneWithoutMilestonesInput
+}
+
+export type MilestoneUncheckedCreateWithoutTasksInput = {
+  id?: string
+  projectId: string
+  title: string
+  targetDate: Date | string
+  isCompleted?: boolean
+}
+
+export type MilestoneCreateOrConnectWithoutTasksInput = {
+  where: Prisma.MilestoneWhereUniqueInput
+  create: Prisma.XOR<Prisma.MilestoneCreateWithoutTasksInput, Prisma.MilestoneUncheckedCreateWithoutTasksInput>
+}
+
+export type MilestoneUpsertWithoutTasksInput = {
+  update: Prisma.XOR<Prisma.MilestoneUpdateWithoutTasksInput, Prisma.MilestoneUncheckedUpdateWithoutTasksInput>
+  create: Prisma.XOR<Prisma.MilestoneCreateWithoutTasksInput, Prisma.MilestoneUncheckedCreateWithoutTasksInput>
+  where?: Prisma.MilestoneWhereInput
+}
+
+export type MilestoneUpdateToOneWithWhereWithoutTasksInput = {
+  where?: Prisma.MilestoneWhereInput
+  data: Prisma.XOR<Prisma.MilestoneUpdateWithoutTasksInput, Prisma.MilestoneUncheckedUpdateWithoutTasksInput>
+}
+
+export type MilestoneUpdateWithoutTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  targetDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  project?: Prisma.ProjectUpdateOneRequiredWithoutMilestonesNestedInput
+}
+
+export type MilestoneUncheckedUpdateWithoutTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  targetDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
 export type MilestoneCreateManyProjectInput = {
   id?: string
   title: string
@@ -426,6 +504,7 @@ export type MilestoneUpdateWithoutProjectInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   targetDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tasks?: Prisma.TaskUpdateManyWithoutMilestoneNestedInput
 }
 
 export type MilestoneUncheckedUpdateWithoutProjectInput = {
@@ -433,6 +512,7 @@ export type MilestoneUncheckedUpdateWithoutProjectInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   targetDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutMilestoneNestedInput
 }
 
 export type MilestoneUncheckedUpdateManyWithoutProjectInput = {
@@ -443,6 +523,35 @@ export type MilestoneUncheckedUpdateManyWithoutProjectInput = {
 }
 
 
+/**
+ * Count Type MilestoneCountOutputType
+ */
+
+export type MilestoneCountOutputType = {
+  tasks: number
+}
+
+export type MilestoneCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  tasks?: boolean | MilestoneCountOutputTypeCountTasksArgs
+}
+
+/**
+ * MilestoneCountOutputType without action
+ */
+export type MilestoneCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MilestoneCountOutputType
+   */
+  select?: Prisma.MilestoneCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * MilestoneCountOutputType without action
+ */
+export type MilestoneCountOutputTypeCountTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskWhereInput
+}
+
 
 export type MilestoneSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -451,6 +560,8 @@ export type MilestoneSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   targetDate?: boolean
   isCompleted?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  tasks?: boolean | Prisma.Milestone$tasksArgs<ExtArgs>
+  _count?: boolean | Prisma.MilestoneCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["milestone"]>
 
 export type MilestoneSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -482,6 +593,8 @@ export type MilestoneSelectScalar = {
 export type MilestoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "title" | "targetDate" | "isCompleted", ExtArgs["result"]["milestone"]>
 export type MilestoneInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
+  tasks?: boolean | Prisma.Milestone$tasksArgs<ExtArgs>
+  _count?: boolean | Prisma.MilestoneCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MilestoneIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
@@ -494,6 +607,7 @@ export type $MilestonePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "Milestone"
   objects: {
     project: Prisma.$ProjectPayload<ExtArgs>
+    tasks: Prisma.$TaskPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -896,6 +1010,7 @@ readonly fields: MilestoneFieldRefs;
 export interface Prisma__MilestoneClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   project<T extends Prisma.ProjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProjectDefaultArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  tasks<T extends Prisma.Milestone$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Milestone$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1328,6 +1443,30 @@ export type MilestoneDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many Milestones to delete.
    */
   limit?: number
+}
+
+/**
+ * Milestone.tasks
+ */
+export type Milestone$tasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Task
+   */
+  select?: Prisma.TaskSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Task
+   */
+  omit?: Prisma.TaskOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaskInclude<ExtArgs> | null
+  where?: Prisma.TaskWhereInput
+  orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[]
+  cursor?: Prisma.TaskWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
 }
 
 /**

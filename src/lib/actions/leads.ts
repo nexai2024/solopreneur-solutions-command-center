@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 import { findLeadsForNiche } from "@/lib/ai/lead-finder";
 import { draftHelpfulReply } from "@/lib/ai/lead-reply";
+import { normalizeLeadUrl } from "@/lib/leads/normalize-url";
 import { revalidatePath } from "next/cache";
 import type { Prisma } from "../../../generated/prisma/client";
 import { promoteToProjectBundle } from "./promote";
@@ -61,6 +62,59 @@ function toLeadDTO(lead: {
   };
 }
 
+function revalidateLeads() {
+  revalidatePath("/dashboard/lead-finder");
+  revalidatePath("/dashboard");
+}
+
+/** Keep newest lead per normalized URL; drop older duplicates for this user. */
+async function dedupeLeadsForUser(userId: string): Promise<number> {
+  const leads = await prisma.lead.findMany({
+    where: { userId, NOT: { url: null } },
+    select: { id: true, url: true, createdAt: true },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+  });
+
+  const deleteIds: string[] = [];
+  const normalizedToKeeper = new Map<string, string>();
+  const normalizeUpdates: Array<{ id: string; url: string }> = [];
+
+  for (const lead of leads) {
+    const normalized = normalizeLeadUrl(lead.url);
+    if (!normalized) continue;
+
+    if (lead.url !== normalized) {
+      normalizeUpdates.push({ id: lead.id, url: normalized });
+    }
+
+    if (normalizedToKeeper.has(normalized)) {
+      deleteIds.push(lead.id);
+    } else {
+      normalizedToKeeper.set(normalized, lead.id);
+    }
+  }
+
+  for (const row of normalizeUpdates) {
+    if (deleteIds.includes(row.id)) continue;
+    try {
+      await prisma.lead.update({
+        where: { id: row.id },
+        data: { url: row.url },
+      });
+    } catch {
+      deleteIds.push(row.id);
+    }
+  }
+
+  if (deleteIds.length > 0) {
+    await prisma.lead.deleteMany({
+      where: { userId, id: { in: deleteIds } },
+    });
+  }
+
+  return deleteIds.length;
+}
+
 export async function getLeads(projectId?: string | null) {
   const result = await getLeadsPaginated({ projectId, limit: 100 });
   return result.items;
@@ -72,6 +126,9 @@ export async function getLeadsPaginated(input?: {
   limit?: number;
 }): Promise<PaginatedLeads> {
   const user = await requireAuth();
+  // Heal historical duplicates so the UI always matches unique DB leads
+  await dedupeLeadsForUser(user.id);
+
   const limit = Math.min(input?.limit ?? DEFAULT_PAGE_SIZE, 100);
 
   const leads = await prisma.lead.findMany({
@@ -116,65 +173,161 @@ export async function saveLead(input: {
   await assertOptionalProjectOwner(input.projectId, user.id);
   await assertWithinPlanLimits(user.id, "leads");
 
+  const url = normalizeLeadUrl(input.url);
+
+  if (url) {
+    const existing = await prisma.lead.findFirst({
+      where: { userId: user.id, url },
+    });
+    if (existing) {
+      const updated = await prisma.lead.update({
+        where: { id: existing.id },
+        data: {
+          title: input.title,
+          description: input.description ?? existing.description,
+          source: input.source ?? existing.source,
+          projectId: input.projectId ?? existing.projectId,
+          status: input.status ?? existing.status,
+          metadata: (input.metadata ??
+            (existing.metadata as object) ??
+            {}) as Prisma.InputJsonValue,
+        },
+      });
+      revalidateLeads();
+      return toLeadDTO(updated);
+    }
+  }
+
   const lead = await prisma.lead.create({
     data: {
       userId: user.id,
       title: input.title,
       description: input.description ?? null,
       source: input.source ?? null,
-      url: input.url ?? null,
+      url,
       projectId: input.projectId ?? null,
       status: input.status ?? "new",
       metadata: (input.metadata ?? {}) as Prisma.InputJsonValue,
     },
   });
-  revalidatePath("/dashboard/lead-finder");
-  revalidatePath("/dashboard");
+  revalidateLeads();
   return toLeadDTO(lead);
 }
 
 export async function searchLeadsWithAI(niche: string) {
   const user = await requireAuth();
   assertAiRateLimit(user.id);
-  await assertWithinPlanLimits(user.id, "leads");
+  await dedupeLeadsForUser(user.id);
 
   const results = await findLeadsForNiche(niche);
   const capped = results.slice(0, MAX_AI_LEADS);
-  const saved: LeadDTO[] = [];
 
-  for (const result of capped) {
-    const lead = await prisma.lead.create({
-      data: {
-        userId: user.id,
-        title: result.title,
-        description: result.description,
-        contactName: result.author || null,
-        source: result.source,
-        url: result.url || null,
-        status: "new",
-        metadata: {
-          relevance_score: result.relevance_score,
-          lead_type: result.lead_type,
-          author: result.author,
-          author_profile_url: result.author_profile_url,
-          post_body: result.post_body,
-          community: result.community,
-          platform: result.platform,
-          score: result.score,
-          comment_count: result.comment_count,
-          posted_at: result.posted_at,
-          intent: result.intent,
-          approach_angle: result.approach_angle,
-          niche,
-        } as Prisma.InputJsonValue,
-      },
-    });
-    saved.push(toLeadDTO(lead));
+  const existing = await prisma.lead.findMany({
+    where: { userId: user.id, url: { not: null } },
+    select: { id: true, url: true },
+  });
+  const urlToId = new Map<string, string>();
+  for (const row of existing) {
+    const key = normalizeLeadUrl(row.url);
+    if (key) urlToId.set(key, row.id);
   }
 
-  revalidatePath("/dashboard/lead-finder");
-  revalidatePath("/dashboard");
-  return saved;
+  const saved: LeadDTO[] = [];
+  const seenInBatch = new Set<string>();
+  let created = 0;
+  let skipped = 0;
+
+  for (const result of capped) {
+    const url = normalizeLeadUrl(result.url);
+    if (url) {
+      if (seenInBatch.has(url)) {
+        skipped += 1;
+        continue;
+      }
+      seenInBatch.add(url);
+    }
+
+    const metadata = {
+      relevance_score: result.relevance_score,
+      lead_type: result.lead_type,
+      author: result.author,
+      author_profile_url: result.author_profile_url,
+      post_body: result.post_body,
+      community: result.community,
+      platform: result.platform,
+      score: result.score,
+      comment_count: result.comment_count,
+      posted_at: result.posted_at,
+      intent: result.intent,
+      approach_angle: result.approach_angle,
+      niche,
+    } as Prisma.InputJsonValue;
+
+    if (url && urlToId.has(url)) {
+      const id = urlToId.get(url)!;
+      const updated = await prisma.lead.update({
+        where: { id },
+        data: {
+          title: result.title,
+          description: result.description,
+          contactName: result.author || null,
+          source: result.source,
+          url,
+          metadata,
+        },
+      });
+      saved.push(toLeadDTO(updated));
+      skipped += 1;
+      continue;
+    }
+
+    try {
+      await assertWithinPlanLimits(user.id, "leads");
+    } catch {
+      break;
+    }
+
+    try {
+      const lead = await prisma.lead.create({
+        data: {
+          userId: user.id,
+          title: result.title,
+          description: result.description,
+          contactName: result.author || null,
+          source: result.source,
+          url,
+          status: "new",
+          metadata,
+        },
+      });
+      if (url) urlToId.set(url, lead.id);
+      saved.push(toLeadDTO(lead));
+      created += 1;
+    } catch (err) {
+      // Race / unique (userId, url) — treat as already saved
+      if (
+        url &&
+        typeof err === "object" &&
+        err !== null &&
+        "code" in err &&
+        (err as { code: string }).code === "P2002"
+      ) {
+        const existingLead = await prisma.lead.findFirst({
+          where: { userId: user.id, url },
+        });
+        if (existingLead) {
+          urlToId.set(url, existingLead.id);
+          saved.push(toLeadDTO(existingLead));
+        }
+        skipped += 1;
+        continue;
+      }
+      throw err;
+    }
+  }
+
+  revalidateLeads();
+  return { leads: saved, created, skipped, total: saved.length };
 }
 
 export async function updateLeadStatus(id: string, status: LeadStatus) {
@@ -183,8 +336,7 @@ export async function updateLeadStatus(id: string, status: LeadStatus) {
     where: { id, userId: user.id },
     data: { status },
   });
-  revalidatePath("/dashboard/lead-finder");
-  revalidatePath("/dashboard");
+  revalidateLeads();
 }
 
 /** Mark lead contacted after copying a draft reply; logs outreach timestamps. */
@@ -214,16 +366,14 @@ export async function markLeadContactedFromCopy(id: string): Promise<LeadDTO> {
     },
   });
 
-  revalidatePath("/dashboard/lead-finder");
-  revalidatePath("/dashboard");
+  revalidateLeads();
   return toLeadDTO(updated);
 }
 
 export async function deleteLead(id: string) {
   const user = await requireAuth();
   await prisma.lead.deleteMany({ where: { id, userId: user.id } });
-  revalidatePath("/dashboard/lead-finder");
-  revalidatePath("/dashboard");
+  revalidateLeads();
 }
 
 export async function promoteLeadToProject(leadId: string) {

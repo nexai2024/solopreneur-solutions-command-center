@@ -1,11 +1,16 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Progress } from "@/components/ui/progress";
 import { ArrowUpRight, Target } from "lucide-react";
 import { HowDoILink } from "@/components/help/how-do-i-link";
 import { CollapsibleWidget } from "@/components/dashboard/collapsible-widget";
+import {
+  MilestoneChecklist,
+  type MilestoneItem,
+} from "@/components/milestones/milestone-checklist";
 
 type ProjectProgress = {
   projectId: string;
@@ -18,6 +23,7 @@ type ProjectProgress = {
     title: string;
     targetDate: string;
   } | null;
+  milestones: MilestoneItem[];
 };
 
 type UpcomingMilestone = {
@@ -26,6 +32,8 @@ type UpcomingMilestone = {
   targetDate: string;
   projectName: string;
   projectId: string;
+  taskTotal?: number;
+  taskDone?: number;
 };
 
 function projectTasksHref(projectId: string) {
@@ -45,6 +53,8 @@ export function MilestoneOverview({
   projectProgress: ProjectProgress[];
   upcoming: UpcomingMilestone[];
 }) {
+  const router = useRouter();
+
   if (total === 0) {
     return (
       <CollapsibleWidget
@@ -63,7 +73,7 @@ export function MilestoneOverview({
             <Link href="/dashboard/brainstorm" className="text-primary hover:underline">
               Promote a scored idea
             </Link>{" "}
-            to get a 30-day launch roadmap.
+            to get a 30-day launch roadmap with linked tasks.
           </p>
           <HowDoILink section="build-tracker" />
         </div>
@@ -87,7 +97,7 @@ export function MilestoneOverview({
           href="/dashboard/build-tracker?tab=tasks"
           className="text-sm text-primary hover:underline"
         >
-          Manage
+          Manage tasks
         </Link>
       }
       collapsedSummary={
@@ -105,32 +115,36 @@ export function MilestoneOverview({
           </span>
         </div>
         <Progress value={percent} className="h-2" />
+        <p className="text-xs text-muted-foreground mt-2">
+          Milestones unlock when their linked tasks are marked done in Build Tracker.
+          You can also check a milestone here to complete its remaining tasks.
+        </p>
       </div>
 
       {projectProgress.length > 0 && (
-        <div className="space-y-3">
+        <div className="space-y-5">
           <h3 className="text-sm font-semibold">By project</h3>
           {projectProgress.map((project) => (
-            <Link
-              key={project.projectId}
-              href={projectTasksHref(project.projectId)}
-              className="block space-y-2 rounded-md px-2 py-2 -mx-2 hover:bg-accent/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <div className="flex items-center justify-between text-sm gap-2">
-                <span className="font-medium truncate">{project.projectName}</span>
-                <span className="text-muted-foreground shrink-0 flex items-center gap-1">
-                  {project.completed}/{project.total}
-                  <ArrowUpRight className="h-3.5 w-3.5" />
+            <div key={project.projectId} className="space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <Link
+                  href={projectTasksHref(project.projectId)}
+                  className="text-sm font-medium hover:underline flex items-center gap-1 min-w-0"
+                >
+                  <span className="truncate">{project.projectName}</span>
+                  <ArrowUpRight className="h-3.5 w-3.5 shrink-0" />
+                </Link>
+                <span className="text-xs text-muted-foreground shrink-0">
+                  {project.completed}/{project.total} milestones
                 </span>
               </div>
               <Progress value={project.percent} className="h-1.5" />
-              {project.nextMilestone && (
-                <p className="text-xs text-muted-foreground">
-                  Next: {project.nextMilestone.title} ·{" "}
-                  {format(new Date(project.nextMilestone.targetDate), "MMM d")}
-                </p>
-              )}
-            </Link>
+              <MilestoneChecklist
+                milestones={project.milestones}
+                compact
+                onMilestoneChange={() => router.refresh()}
+              />
+            </div>
           ))}
         </div>
       )}
@@ -149,6 +163,9 @@ export function MilestoneOverview({
                     <p className="font-medium truncate">{milestone.title}</p>
                     <p className="text-xs text-muted-foreground truncate">
                       {milestone.projectName}
+                      {milestone.taskTotal
+                        ? ` · ${milestone.taskDone ?? 0}/${milestone.taskTotal} tasks`
+                        : ""}
                     </p>
                   </div>
                   <span className="text-xs text-muted-foreground shrink-0 flex items-center gap-1">

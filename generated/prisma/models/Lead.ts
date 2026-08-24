@@ -275,6 +275,7 @@ export type LeadOrderByWithRelationInput = {
 
 export type LeadWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId_url?: Prisma.LeadUserIdUrlCompoundUniqueInput
   AND?: Prisma.LeadWhereInput | Prisma.LeadWhereInput[]
   OR?: Prisma.LeadWhereInput[]
   NOT?: Prisma.LeadWhereInput | Prisma.LeadWhereInput[]
@@ -293,7 +294,7 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
-}, "id">
+}, "id" | "userId_url">
 
 export type LeadOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -460,6 +461,11 @@ export type LeadListRelationFilter = {
 
 export type LeadOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type LeadUserIdUrlCompoundUniqueInput = {
+  userId: string
+  url: string
 }
 
 export type LeadCountOrderByAggregateInput = {

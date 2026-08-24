@@ -50,12 +50,7 @@ export default async function BuildTrackerPage({
         buildMetrics,
         monitoring,
         profile,
-        milestones: project.milestones.map((milestone) => ({
-          id: milestone.id,
-          title: milestone.title,
-          targetDate: milestone.targetDate.toISOString(),
-          isCompleted: milestone.isCompleted,
-        })),
+        milestones: project.milestones,
         tasks: project.tasks,
         _count: project._count,
       };

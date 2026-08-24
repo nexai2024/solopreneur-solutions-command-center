@@ -5,7 +5,7 @@ import { PrismaClient } from "../../generated/prisma/client";
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined };
 
 /** Bump when schema adds fields/models so stale Next.js singletons are discarded. */
-const PRISMA_SCHEMA_EPOCH = 2;
+const PRISMA_SCHEMA_EPOCH = 3;
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
@@ -20,6 +20,7 @@ type PrismaDelegates = PrismaClient & {
   buildRelease?: { findMany?: unknown };
   growthWeeklyPlan?: { findMany?: unknown };
   launchPlaybookProgress?: { findMany?: unknown };
+  campaignAsset?: { findMany?: unknown };
 };
 
 /** Recreate when schema adds models the hot-reloaded singleton doesn't know about. */
@@ -28,7 +29,8 @@ function isPrismaClientReady(client: PrismaClient): boolean {
   return (
     typeof c.buildRelease?.findMany === "function" &&
     typeof c.growthWeeklyPlan?.findMany === "function" &&
-    typeof c.launchPlaybookProgress?.findMany === "function"
+    typeof c.launchPlaybookProgress?.findMany === "function" &&
+    typeof c.campaignAsset?.findMany === "function"
   );
 }
 

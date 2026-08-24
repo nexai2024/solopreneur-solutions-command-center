@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { MarketingCampaign } from '@/lib/revenue';
 import { Badge } from '@/components/ui/badge';
 import { Megaphone, ExternalLink } from 'lucide-react';
@@ -36,16 +37,25 @@ export function CampaignSummary({ campaigns }: CampaignSummaryProps) {
                   {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(campaign.budget)}
                 </p>
               </div>
-              <button className="flex items-center gap-1.5 text-xs font-medium text-[hsl(var(--os-cyan))] hover:underline">
-                View Details
+              <Link
+                href="/dashboard/growth-engine?tab=campaigns"
+                className="flex items-center gap-1.5 text-xs font-medium text-[hsl(var(--os-cyan))] hover:underline"
+              >
+                Open in Growth
                 <ExternalLink className="w-3 h-3" />
-              </button>
+              </Link>
             </div>
           </div>
         ))
       ) : (
-        <div className="col-span-full py-12 text-center bg-secondary/5 rounded-xl border border-dashed border-border">
+        <div className="col-span-full py-12 text-center bg-secondary/5 rounded-xl border border-dashed border-border space-y-2">
           <p className="text-sm text-muted-foreground">No marketing campaigns created yet.</p>
+          <Link
+            href="/dashboard/growth-engine?tab=campaigns"
+            className="text-xs text-[hsl(var(--os-cyan))] hover:underline"
+          >
+            Create a campaign pack →
+          </Link>
         </div>
       )}
     </div>

@@ -88,6 +88,11 @@ export type LaunchPlaybookProgress = Prisma.LaunchPlaybookProgressModel
  */
 export type MarketingCampaign = Prisma.MarketingCampaignModel
 /**
+ * Model CampaignAsset
+ * 
+ */
+export type CampaignAsset = Prisma.CampaignAssetModel
+/**
  * Model RevenueCustomer
  * 
  */

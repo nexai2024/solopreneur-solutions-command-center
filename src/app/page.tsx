@@ -84,7 +84,7 @@ export default function HomePage() {
               <SignInButton mode="modal">
                 <Button size="lg">
                   Get started
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  {/* <ArrowRight className="ml-2 h-4 w-4" /> */}
                 </Button>
               </SignInButton>
             </SignedOut>

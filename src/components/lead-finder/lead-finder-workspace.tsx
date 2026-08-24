@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { UserPlus } from "lucide-react";
 import { LeadSearchForm } from "@/components/lead-finder/lead-search-form";
@@ -9,6 +9,7 @@ import { ManualLeadDialog } from "@/components/lead-finder/manual-lead-dialog";
 import {
   deleteLead,
   draftLeadReply,
+  getLeads,
   markLeadContactedFromCopy,
   promoteLeadToProject,
   saveLead,
@@ -43,6 +44,11 @@ export function LeadFinderWorkspace({
   const [draftingId, setDraftingId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  // Keep client list in sync with server props (navigation / revalidate)
+  useEffect(() => {
+    setLeads(initialLeads);
+  }, [initialLeads]);
+
   const voiceProjectId =
     projectFilter !== "all" && projectFilter !== "unassigned"
       ? projectFilter
@@ -55,13 +61,24 @@ export function LeadFinderWorkspace({
         ? leads.filter((l) => !l.project_id)
         : leads.filter((l) => l.project_id === projectFilter);
 
+  const reloadLeads = async () => {
+    const all = await getLeads();
+    setLeads(all);
+  };
+
   const handleSearch = async (niche: string) => {
     startTransition(async () => {
       try {
-        const found = await searchLeadsWithAI(niche);
-        setLeads((prev) => [...found, ...prev]);
+        const result = await searchLeadsWithAI(niche);
+        await reloadLeads();
+        const parts = [
+          result.created > 0 ? `${result.created} new` : null,
+          result.skipped > 0 ? `${result.skipped} already saved` : null,
+        ].filter(Boolean);
         toast.success(
-          `Found ${found.length} leads (${found.filter((l) => l.metadata?.lead_type === "post").length} live posts)`
+          parts.length > 0
+            ? `Lead search done — ${parts.join(", ")}`
+            : "No matching posts found"
         );
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "Search failed");
@@ -135,14 +152,17 @@ export function LeadFinderWorkspace({
     status?: LeadStatus;
   }) => {
     if (!partial.title) return;
-    const lead = await saveLead({
+    await saveLead({
       title: partial.title,
       description: partial.description,
       source: partial.source,
       url: partial.url,
-      projectId: projectFilter !== "all" && projectFilter !== "unassigned" ? projectFilter : undefined,
+      projectId:
+        projectFilter !== "all" && projectFilter !== "unassigned"
+          ? projectFilter
+          : undefined,
     });
-    setLeads((prev) => [lead, ...prev]);
+    await reloadLeads();
     toast.success("Lead saved");
   };
 
@@ -169,6 +189,10 @@ export function LeadFinderWorkspace({
             <UserPlus className="h-4 w-4 mr-2" />
             Add manually
           </Button>
+          <p className="text-sm text-muted-foreground">
+            {filtered.length} lead{filtered.length !== 1 ? "s" : ""}
+            {projectFilter !== "all" ? " in this filter" : ""}
+          </p>
         </div>
       </div>
 
