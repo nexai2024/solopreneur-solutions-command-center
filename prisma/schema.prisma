@@ -16,6 +16,11 @@ model User {
   role               String              @default("admin")
   stripeCustomerId   String?             @unique
   subscriptionStatus String?             @default("free")
+  /// Public portfolio slug for /p/[slug]
+  portfolioSlug      String?             @unique
+  portfolioPublic    Boolean             @default(false)
+  portfolioHeadline  String?
+  portfolioBio       String?             @db.Text
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
 
@@ -53,6 +58,15 @@ model Project {
   brandVoiceTone  Json?
   brandVoiceAvoid Json?
   brandAudience   String?
+  /// Public / portfolio
+  publicSlug          String?
+  portfolioVisible    Boolean  @default(true)
+  portfolioBlurb      String?  @db.Text
+  /// Early access landing
+  earlyAccessSlug     String?  @unique
+  earlyAccessEnabled  Boolean  @default(false)
+  earlyAccessHeadline String?
+  earlyAccessBody     String?  @db.Text
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -74,7 +88,10 @@ model Project {
   buildReleases        BuildRelease[]
   envVars              ProjectEnvVar[]
   deployments          ProjectDeployment[]
+  artifacts            ProjectArtifact[]
+  features             ProjectFeature[]
 
+  @@unique([userId, publicSlug])
   @@index([userId])
   @@schema("app")
 }
@@ -190,6 +207,8 @@ model Task {
   milestoneId    String?
   milestone      Milestone? @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
   ideaId         String?
+  featureId      String?
+  feature        ProjectFeature? @relation(fields: [featureId], references: [id], onDelete: SetNull)
   title          String
   description    String?    @db.Text
   status         String     @default("todo")
@@ -206,6 +225,7 @@ model Task {
   @@index([projectId])
   @@index([projectId, status])
   @@index([milestoneId])
+  @@index([featureId])
   @@schema("app")
 }
 
@@ -674,5 +694,56 @@ model ProjectDeployment {
 
   @@index([projectId, deployedAt])
   @@index([projectId, environment])
+  @@schema("app")
+}
+
+/// Durable project marketing/product assets (copy, brand, media, docs, links).
+model ProjectArtifact {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId      String
+  title       String
+  /// short_description | long_description | value_proposition | feature_list | hero_text | tagline | logo | image | video | slideshow | form | markdown | document | google_doc | link | other
+  kind        String
+  /// text | markdown | html | url | image | video | file | json
+  format      String   @default("text")
+  /// Inline copy / markdown / JSON payload
+  body        String?  @db.Text
+  /// External link or blob download URL
+  url         String?
+  mimeType    String?
+  sizeBytes   Int?
+  fileName    String?
+  tags        Json?
+  metadata    Json?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([projectId, kind])
+  @@index([userId])
+  @@schema("app")
+}
+
+/// Product feature backlog per project (MVP / Production / Planned / Nice to have).
+model ProjectFeature {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  description String?  @db.Text
+  /// MVP | Production | Planned | Nice to have
+  category    String   @default("MVP")
+  /// todo | in_progress | done | cut
+  status      String   @default("todo")
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tasks       Task[]
+
+  @@index([projectId])
+  @@index([projectId, category])
   @@schema("app")
 }

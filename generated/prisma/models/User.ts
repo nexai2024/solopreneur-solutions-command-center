@@ -32,6 +32,10 @@ export type UserMinAggregateOutputType = {
   role: string | null
   stripeCustomerId: string | null
   subscriptionStatus: string | null
+  portfolioSlug: string | null
+  portfolioPublic: boolean | null
+  portfolioHeadline: string | null
+  portfolioBio: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +48,10 @@ export type UserMaxAggregateOutputType = {
   role: string | null
   stripeCustomerId: string | null
   subscriptionStatus: string | null
+  portfolioSlug: string | null
+  portfolioPublic: boolean | null
+  portfolioHeadline: string | null
+  portfolioBio: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +64,10 @@ export type UserCountAggregateOutputType = {
   role: number
   stripeCustomerId: number
   subscriptionStatus: number
+  portfolioSlug: number
+  portfolioPublic: number
+  portfolioHeadline: number
+  portfolioBio: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -70,6 +82,10 @@ export type UserMinAggregateInputType = {
   role?: true
   stripeCustomerId?: true
   subscriptionStatus?: true
+  portfolioSlug?: true
+  portfolioPublic?: true
+  portfolioHeadline?: true
+  portfolioBio?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +98,10 @@ export type UserMaxAggregateInputType = {
   role?: true
   stripeCustomerId?: true
   subscriptionStatus?: true
+  portfolioSlug?: true
+  portfolioPublic?: true
+  portfolioHeadline?: true
+  portfolioBio?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +114,10 @@ export type UserCountAggregateInputType = {
   role?: true
   stripeCustomerId?: true
   subscriptionStatus?: true
+  portfolioSlug?: true
+  portfolioPublic?: true
+  portfolioHeadline?: true
+  portfolioBio?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -179,6 +203,10 @@ export type UserGroupByOutputType = {
   role: string
   stripeCustomerId: string | null
   subscriptionStatus: string | null
+  portfolioSlug: string | null
+  portfolioPublic: boolean
+  portfolioHeadline: string | null
+  portfolioBio: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -212,6 +240,10 @@ export type UserWhereInput = {
   role?: Prisma.StringFilter<"User"> | string
   stripeCustomerId?: Prisma.StringNullableFilter<"User"> | string | null
   subscriptionStatus?: Prisma.StringNullableFilter<"User"> | string | null
+  portfolioSlug?: Prisma.StringNullableFilter<"User"> | string | null
+  portfolioPublic?: Prisma.BoolFilter<"User"> | boolean
+  portfolioHeadline?: Prisma.StringNullableFilter<"User"> | string | null
+  portfolioBio?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   projects?: Prisma.ProjectListRelationFilter
@@ -236,6 +268,10 @@ export type UserOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   subscriptionStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  portfolioSlug?: Prisma.SortOrderInput | Prisma.SortOrder
+  portfolioPublic?: Prisma.SortOrder
+  portfolioHeadline?: Prisma.SortOrderInput | Prisma.SortOrder
+  portfolioBio?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   projects?: Prisma.ProjectOrderByRelationAggregateInput
@@ -257,12 +293,16 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   clerkId?: string
   email?: string
   stripeCustomerId?: string
+  portfolioSlug?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.StringFilter<"User"> | string
   subscriptionStatus?: Prisma.StringNullableFilter<"User"> | string | null
+  portfolioPublic?: Prisma.BoolFilter<"User"> | boolean
+  portfolioHeadline?: Prisma.StringNullableFilter<"User"> | string | null
+  portfolioBio?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   projects?: Prisma.ProjectListRelationFilter
@@ -277,7 +317,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   githubConnections?: Prisma.GithubConnectionListRelationFilter
   buildReleases?: Prisma.BuildReleaseListRelationFilter
   vercelConnections?: Prisma.VercelConnectionListRelationFilter
-}, "id" | "clerkId" | "email" | "stripeCustomerId">
+}, "id" | "clerkId" | "email" | "stripeCustomerId" | "portfolioSlug">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -287,6 +327,10 @@ export type UserOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   subscriptionStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  portfolioSlug?: Prisma.SortOrderInput | Prisma.SortOrder
+  portfolioPublic?: Prisma.SortOrder
+  portfolioHeadline?: Prisma.SortOrderInput | Prisma.SortOrder
+  portfolioBio?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -305,6 +349,10 @@ export type UserScalarWhereWithAggregatesInput = {
   role?: Prisma.StringWithAggregatesFilter<"User"> | string
   stripeCustomerId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   subscriptionStatus?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  portfolioSlug?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  portfolioPublic?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  portfolioHeadline?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  portfolioBio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -317,6 +365,10 @@ export type UserCreateInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -341,6 +393,10 @@ export type UserUncheckedCreateInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -365,6 +421,10 @@ export type UserUpdateInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -389,6 +449,10 @@ export type UserUncheckedUpdateInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -413,6 +477,10 @@ export type UserCreateManyInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -425,6 +493,10 @@ export type UserUpdateManyMutationInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -437,6 +509,10 @@ export type UserUncheckedUpdateManyInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -449,6 +525,10 @@ export type UserCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrder
   subscriptionStatus?: Prisma.SortOrder
+  portfolioSlug?: Prisma.SortOrder
+  portfolioPublic?: Prisma.SortOrder
+  portfolioHeadline?: Prisma.SortOrder
+  portfolioBio?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -461,6 +541,10 @@ export type UserMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrder
   subscriptionStatus?: Prisma.SortOrder
+  portfolioSlug?: Prisma.SortOrder
+  portfolioPublic?: Prisma.SortOrder
+  portfolioHeadline?: Prisma.SortOrder
+  portfolioBio?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -473,6 +557,10 @@ export type UserMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrder
   subscriptionStatus?: Prisma.SortOrder
+  portfolioSlug?: Prisma.SortOrder
+  portfolioPublic?: Prisma.SortOrder
+  portfolioHeadline?: Prisma.SortOrder
+  portfolioBio?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -488,6 +576,10 @@ export type StringFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -670,6 +762,10 @@ export type UserCreateWithoutProjectsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   ideas?: Prisma.IdeaCreateNestedManyWithoutUserInput
@@ -693,6 +789,10 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   ideas?: Prisma.IdeaUncheckedCreateNestedManyWithoutUserInput
@@ -732,6 +832,10 @@ export type UserUpdateWithoutProjectsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ideas?: Prisma.IdeaUpdateManyWithoutUserNestedInput
@@ -755,6 +859,10 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ideas?: Prisma.IdeaUncheckedUpdateManyWithoutUserNestedInput
@@ -778,6 +886,10 @@ export type UserCreateWithoutIdeasInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -801,6 +913,10 @@ export type UserUncheckedCreateWithoutIdeasInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -840,6 +956,10 @@ export type UserUpdateWithoutIdeasInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -863,6 +983,10 @@ export type UserUncheckedUpdateWithoutIdeasInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -886,6 +1010,10 @@ export type UserCreateWithoutBrainstormSessionsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -909,6 +1037,10 @@ export type UserUncheckedCreateWithoutBrainstormSessionsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -948,6 +1080,10 @@ export type UserUpdateWithoutBrainstormSessionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -971,6 +1107,10 @@ export type UserUncheckedUpdateWithoutBrainstormSessionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -994,6 +1134,10 @@ export type UserCreateWithoutLeadsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1017,6 +1161,10 @@ export type UserUncheckedCreateWithoutLeadsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1056,6 +1204,10 @@ export type UserUpdateWithoutLeadsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1079,6 +1231,10 @@ export type UserUncheckedUpdateWithoutLeadsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1102,6 +1258,10 @@ export type UserCreateWithoutMarketingCampaignsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1125,6 +1285,10 @@ export type UserUncheckedCreateWithoutMarketingCampaignsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1164,6 +1328,10 @@ export type UserUpdateWithoutMarketingCampaignsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1187,6 +1355,10 @@ export type UserUncheckedUpdateWithoutMarketingCampaignsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1210,6 +1382,10 @@ export type UserCreateWithoutRevenueCustomersInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1233,6 +1409,10 @@ export type UserUncheckedCreateWithoutRevenueCustomersInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1272,6 +1452,10 @@ export type UserUpdateWithoutRevenueCustomersInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1295,6 +1479,10 @@ export type UserUncheckedUpdateWithoutRevenueCustomersInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1318,6 +1506,10 @@ export type UserCreateWithoutRevenuePlansInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1341,6 +1533,10 @@ export type UserUncheckedCreateWithoutRevenuePlansInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1380,6 +1576,10 @@ export type UserUpdateWithoutRevenuePlansInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1403,6 +1603,10 @@ export type UserUncheckedUpdateWithoutRevenuePlansInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1426,6 +1630,10 @@ export type UserCreateWithoutRevenueSubscriptionsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1449,6 +1657,10 @@ export type UserUncheckedCreateWithoutRevenueSubscriptionsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1488,6 +1700,10 @@ export type UserUpdateWithoutRevenueSubscriptionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1511,6 +1727,10 @@ export type UserUncheckedUpdateWithoutRevenueSubscriptionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1534,6 +1754,10 @@ export type UserCreateWithoutTransactionsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1557,6 +1781,10 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1596,6 +1824,10 @@ export type UserUpdateWithoutTransactionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1619,6 +1851,10 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1642,6 +1878,10 @@ export type UserCreateWithoutGithubConnectionsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1665,6 +1905,10 @@ export type UserUncheckedCreateWithoutGithubConnectionsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1704,6 +1948,10 @@ export type UserUpdateWithoutGithubConnectionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1727,6 +1975,10 @@ export type UserUncheckedUpdateWithoutGithubConnectionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1750,6 +2002,10 @@ export type UserCreateWithoutBuildReleasesInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1773,6 +2029,10 @@ export type UserUncheckedCreateWithoutBuildReleasesInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1812,6 +2072,10 @@ export type UserUpdateWithoutBuildReleasesInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1835,6 +2099,10 @@ export type UserUncheckedUpdateWithoutBuildReleasesInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -1858,6 +2126,10 @@ export type UserCreateWithoutVercelConnectionsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -1881,6 +2153,10 @@ export type UserUncheckedCreateWithoutVercelConnectionsInput = {
   role?: string
   stripeCustomerId?: string | null
   subscriptionStatus?: string | null
+  portfolioSlug?: string | null
+  portfolioPublic?: boolean
+  portfolioHeadline?: string | null
+  portfolioBio?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -1920,6 +2196,10 @@ export type UserUpdateWithoutVercelConnectionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -1943,6 +2223,10 @@ export type UserUncheckedUpdateWithoutVercelConnectionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -2096,6 +2380,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   role?: boolean
   stripeCustomerId?: boolean
   subscriptionStatus?: boolean
+  portfolioSlug?: boolean
+  portfolioPublic?: boolean
+  portfolioHeadline?: boolean
+  portfolioBio?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
@@ -2121,6 +2409,10 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   stripeCustomerId?: boolean
   subscriptionStatus?: boolean
+  portfolioSlug?: boolean
+  portfolioPublic?: boolean
+  portfolioHeadline?: boolean
+  portfolioBio?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -2133,6 +2425,10 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   stripeCustomerId?: boolean
   subscriptionStatus?: boolean
+  portfolioSlug?: boolean
+  portfolioPublic?: boolean
+  portfolioHeadline?: boolean
+  portfolioBio?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -2145,11 +2441,15 @@ export type UserSelectScalar = {
   role?: boolean
   stripeCustomerId?: boolean
   subscriptionStatus?: boolean
+  portfolioSlug?: boolean
+  portfolioPublic?: boolean
+  portfolioHeadline?: boolean
+  portfolioBio?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkId" | "email" | "name" | "role" | "stripeCustomerId" | "subscriptionStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkId" | "email" | "name" | "role" | "stripeCustomerId" | "subscriptionStatus" | "portfolioSlug" | "portfolioPublic" | "portfolioHeadline" | "portfolioBio" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   ideas?: boolean | Prisma.User$ideasArgs<ExtArgs>
@@ -2192,6 +2492,13 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     role: string
     stripeCustomerId: string | null
     subscriptionStatus: string | null
+    /**
+     * Public portfolio slug for /p/[slug]
+     */
+    portfolioSlug: string | null
+    portfolioPublic: boolean
+    portfolioHeadline: string | null
+    portfolioBio: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2636,6 +2943,10 @@ export interface UserFieldRefs {
   readonly role: Prisma.FieldRef<"User", 'String'>
   readonly stripeCustomerId: Prisma.FieldRef<"User", 'String'>
   readonly subscriptionStatus: Prisma.FieldRef<"User", 'String'>
+  readonly portfolioSlug: Prisma.FieldRef<"User", 'String'>
+  readonly portfolioPublic: Prisma.FieldRef<"User", 'Boolean'>
+  readonly portfolioHeadline: Prisma.FieldRef<"User", 'String'>
+  readonly portfolioBio: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

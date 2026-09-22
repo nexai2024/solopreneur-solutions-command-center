@@ -37,6 +37,13 @@ export type ProjectMinAggregateOutputType = {
   devNotes: string | null
   aiNotes: string | null
   brandAudience: string | null
+  publicSlug: string | null
+  portfolioVisible: boolean | null
+  portfolioBlurb: string | null
+  earlyAccessSlug: string | null
+  earlyAccessEnabled: boolean | null
+  earlyAccessHeadline: string | null
+  earlyAccessBody: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +61,13 @@ export type ProjectMaxAggregateOutputType = {
   devNotes: string | null
   aiNotes: string | null
   brandAudience: string | null
+  publicSlug: string | null
+  portfolioVisible: boolean | null
+  portfolioBlurb: string | null
+  earlyAccessSlug: string | null
+  earlyAccessEnabled: boolean | null
+  earlyAccessHeadline: string | null
+  earlyAccessBody: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -75,6 +89,13 @@ export type ProjectCountAggregateOutputType = {
   brandVoiceTone: number
   brandVoiceAvoid: number
   brandAudience: number
+  publicSlug: number
+  portfolioVisible: number
+  portfolioBlurb: number
+  earlyAccessSlug: number
+  earlyAccessEnabled: number
+  earlyAccessHeadline: number
+  earlyAccessBody: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -94,6 +115,13 @@ export type ProjectMinAggregateInputType = {
   devNotes?: true
   aiNotes?: true
   brandAudience?: true
+  publicSlug?: true
+  portfolioVisible?: true
+  portfolioBlurb?: true
+  earlyAccessSlug?: true
+  earlyAccessEnabled?: true
+  earlyAccessHeadline?: true
+  earlyAccessBody?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -111,6 +139,13 @@ export type ProjectMaxAggregateInputType = {
   devNotes?: true
   aiNotes?: true
   brandAudience?: true
+  publicSlug?: true
+  portfolioVisible?: true
+  portfolioBlurb?: true
+  earlyAccessSlug?: true
+  earlyAccessEnabled?: true
+  earlyAccessHeadline?: true
+  earlyAccessBody?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -132,6 +167,13 @@ export type ProjectCountAggregateInputType = {
   brandVoiceTone?: true
   brandVoiceAvoid?: true
   brandAudience?: true
+  publicSlug?: true
+  portfolioVisible?: true
+  portfolioBlurb?: true
+  earlyAccessSlug?: true
+  earlyAccessEnabled?: true
+  earlyAccessHeadline?: true
+  earlyAccessBody?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -226,6 +268,13 @@ export type ProjectGroupByOutputType = {
   brandVoiceTone: runtime.JsonValue | null
   brandVoiceAvoid: runtime.JsonValue | null
   brandAudience: string | null
+  publicSlug: string | null
+  portfolioVisible: boolean
+  portfolioBlurb: string | null
+  earlyAccessSlug: string | null
+  earlyAccessEnabled: boolean
+  earlyAccessHeadline: string | null
+  earlyAccessBody: string | null
   createdAt: Date
   updatedAt: Date
   _count: ProjectCountAggregateOutputType | null
@@ -268,6 +317,13 @@ export type ProjectWhereInput = {
   brandVoiceTone?: Prisma.JsonNullableFilter<"Project">
   brandVoiceAvoid?: Prisma.JsonNullableFilter<"Project">
   brandAudience?: Prisma.StringNullableFilter<"Project"> | string | null
+  publicSlug?: Prisma.StringNullableFilter<"Project"> | string | null
+  portfolioVisible?: Prisma.BoolFilter<"Project"> | boolean
+  portfolioBlurb?: Prisma.StringNullableFilter<"Project"> | string | null
+  earlyAccessSlug?: Prisma.StringNullableFilter<"Project"> | string | null
+  earlyAccessEnabled?: Prisma.BoolFilter<"Project"> | boolean
+  earlyAccessHeadline?: Prisma.StringNullableFilter<"Project"> | string | null
+  earlyAccessBody?: Prisma.StringNullableFilter<"Project"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -289,6 +345,8 @@ export type ProjectWhereInput = {
   buildReleases?: Prisma.BuildReleaseListRelationFilter
   envVars?: Prisma.ProjectEnvVarListRelationFilter
   deployments?: Prisma.ProjectDeploymentListRelationFilter
+  artifacts?: Prisma.ProjectArtifactListRelationFilter
+  features?: Prisma.ProjectFeatureListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -308,6 +366,13 @@ export type ProjectOrderByWithRelationInput = {
   brandVoiceTone?: Prisma.SortOrderInput | Prisma.SortOrder
   brandVoiceAvoid?: Prisma.SortOrderInput | Prisma.SortOrder
   brandAudience?: Prisma.SortOrderInput | Prisma.SortOrder
+  publicSlug?: Prisma.SortOrderInput | Prisma.SortOrder
+  portfolioVisible?: Prisma.SortOrder
+  portfolioBlurb?: Prisma.SortOrderInput | Prisma.SortOrder
+  earlyAccessSlug?: Prisma.SortOrderInput | Prisma.SortOrder
+  earlyAccessEnabled?: Prisma.SortOrder
+  earlyAccessHeadline?: Prisma.SortOrderInput | Prisma.SortOrder
+  earlyAccessBody?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -329,10 +394,14 @@ export type ProjectOrderByWithRelationInput = {
   buildReleases?: Prisma.BuildReleaseOrderByRelationAggregateInput
   envVars?: Prisma.ProjectEnvVarOrderByRelationAggregateInput
   deployments?: Prisma.ProjectDeploymentOrderByRelationAggregateInput
+  artifacts?: Prisma.ProjectArtifactOrderByRelationAggregateInput
+  features?: Prisma.ProjectFeatureOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  earlyAccessSlug?: string
+  userId_publicSlug?: Prisma.ProjectUserIdPublicSlugCompoundUniqueInput
   AND?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
   OR?: Prisma.ProjectWhereInput[]
   NOT?: Prisma.ProjectWhereInput | Prisma.ProjectWhereInput[]
@@ -351,6 +420,12 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   brandVoiceTone?: Prisma.JsonNullableFilter<"Project">
   brandVoiceAvoid?: Prisma.JsonNullableFilter<"Project">
   brandAudience?: Prisma.StringNullableFilter<"Project"> | string | null
+  publicSlug?: Prisma.StringNullableFilter<"Project"> | string | null
+  portfolioVisible?: Prisma.BoolFilter<"Project"> | boolean
+  portfolioBlurb?: Prisma.StringNullableFilter<"Project"> | string | null
+  earlyAccessEnabled?: Prisma.BoolFilter<"Project"> | boolean
+  earlyAccessHeadline?: Prisma.StringNullableFilter<"Project"> | string | null
+  earlyAccessBody?: Prisma.StringNullableFilter<"Project"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -372,7 +447,9 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   buildReleases?: Prisma.BuildReleaseListRelationFilter
   envVars?: Prisma.ProjectEnvVarListRelationFilter
   deployments?: Prisma.ProjectDeploymentListRelationFilter
-}, "id">
+  artifacts?: Prisma.ProjectArtifactListRelationFilter
+  features?: Prisma.ProjectFeatureListRelationFilter
+}, "id" | "earlyAccessSlug" | "userId_publicSlug">
 
 export type ProjectOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -391,6 +468,13 @@ export type ProjectOrderByWithAggregationInput = {
   brandVoiceTone?: Prisma.SortOrderInput | Prisma.SortOrder
   brandVoiceAvoid?: Prisma.SortOrderInput | Prisma.SortOrder
   brandAudience?: Prisma.SortOrderInput | Prisma.SortOrder
+  publicSlug?: Prisma.SortOrderInput | Prisma.SortOrder
+  portfolioVisible?: Prisma.SortOrder
+  portfolioBlurb?: Prisma.SortOrderInput | Prisma.SortOrder
+  earlyAccessSlug?: Prisma.SortOrderInput | Prisma.SortOrder
+  earlyAccessEnabled?: Prisma.SortOrder
+  earlyAccessHeadline?: Prisma.SortOrderInput | Prisma.SortOrder
+  earlyAccessBody?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
@@ -418,6 +502,13 @@ export type ProjectScalarWhereWithAggregatesInput = {
   brandVoiceTone?: Prisma.JsonNullableWithAggregatesFilter<"Project">
   brandVoiceAvoid?: Prisma.JsonNullableWithAggregatesFilter<"Project">
   brandAudience?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  publicSlug?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  portfolioVisible?: Prisma.BoolWithAggregatesFilter<"Project"> | boolean
+  portfolioBlurb?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  earlyAccessSlug?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  earlyAccessEnabled?: Prisma.BoolWithAggregatesFilter<"Project"> | boolean
+  earlyAccessHeadline?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  earlyAccessBody?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
 }
@@ -438,6 +529,13 @@ export type ProjectCreateInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -459,6 +557,8 @@ export type ProjectCreateInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -478,6 +578,13 @@ export type ProjectUncheckedCreateInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -498,6 +605,8 @@ export type ProjectUncheckedCreateInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -516,6 +625,13 @@ export type ProjectUpdateInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -537,6 +653,8 @@ export type ProjectUpdateInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -556,6 +674,13 @@ export type ProjectUncheckedUpdateInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -576,6 +701,8 @@ export type ProjectUncheckedUpdateInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -595,6 +722,13 @@ export type ProjectCreateManyInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -615,6 +749,13 @@ export type ProjectUpdateManyMutationInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -636,6 +777,13 @@ export type ProjectUncheckedUpdateManyInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -648,6 +796,11 @@ export type ProjectListRelationFilter = {
 
 export type ProjectOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ProjectUserIdPublicSlugCompoundUniqueInput = {
+  userId: string
+  publicSlug: string
 }
 
 export type ProjectCountOrderByAggregateInput = {
@@ -667,6 +820,13 @@ export type ProjectCountOrderByAggregateInput = {
   brandVoiceTone?: Prisma.SortOrder
   brandVoiceAvoid?: Prisma.SortOrder
   brandAudience?: Prisma.SortOrder
+  publicSlug?: Prisma.SortOrder
+  portfolioVisible?: Prisma.SortOrder
+  portfolioBlurb?: Prisma.SortOrder
+  earlyAccessSlug?: Prisma.SortOrder
+  earlyAccessEnabled?: Prisma.SortOrder
+  earlyAccessHeadline?: Prisma.SortOrder
+  earlyAccessBody?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -684,6 +844,13 @@ export type ProjectMaxOrderByAggregateInput = {
   devNotes?: Prisma.SortOrder
   aiNotes?: Prisma.SortOrder
   brandAudience?: Prisma.SortOrder
+  publicSlug?: Prisma.SortOrder
+  portfolioVisible?: Prisma.SortOrder
+  portfolioBlurb?: Prisma.SortOrder
+  earlyAccessSlug?: Prisma.SortOrder
+  earlyAccessEnabled?: Prisma.SortOrder
+  earlyAccessHeadline?: Prisma.SortOrder
+  earlyAccessBody?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -701,6 +868,13 @@ export type ProjectMinOrderByAggregateInput = {
   devNotes?: Prisma.SortOrder
   aiNotes?: Prisma.SortOrder
   brandAudience?: Prisma.SortOrder
+  publicSlug?: Prisma.SortOrder
+  portfolioVisible?: Prisma.SortOrder
+  portfolioBlurb?: Prisma.SortOrder
+  earlyAccessSlug?: Prisma.SortOrder
+  earlyAccessEnabled?: Prisma.SortOrder
+  earlyAccessHeadline?: Prisma.SortOrder
+  earlyAccessBody?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1015,6 +1189,34 @@ export type ProjectUpdateOneRequiredWithoutDeploymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutDeploymentsInput, Prisma.ProjectUpdateWithoutDeploymentsInput>, Prisma.ProjectUncheckedUpdateWithoutDeploymentsInput>
 }
 
+export type ProjectCreateNestedOneWithoutArtifactsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutArtifactsInput, Prisma.ProjectUncheckedCreateWithoutArtifactsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutArtifactsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutArtifactsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutArtifactsInput, Prisma.ProjectUncheckedCreateWithoutArtifactsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutArtifactsInput
+  upsert?: Prisma.ProjectUpsertWithoutArtifactsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutArtifactsInput, Prisma.ProjectUpdateWithoutArtifactsInput>, Prisma.ProjectUncheckedUpdateWithoutArtifactsInput>
+}
+
+export type ProjectCreateNestedOneWithoutFeaturesInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutFeaturesInput, Prisma.ProjectUncheckedCreateWithoutFeaturesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutFeaturesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutFeaturesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutFeaturesInput, Prisma.ProjectUncheckedCreateWithoutFeaturesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutFeaturesInput
+  upsert?: Prisma.ProjectUpsertWithoutFeaturesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutFeaturesInput, Prisma.ProjectUpdateWithoutFeaturesInput>, Prisma.ProjectUncheckedUpdateWithoutFeaturesInput>
+}
+
 export type ProjectCreateWithoutUserInput = {
   id?: string
   name: string
@@ -1031,6 +1233,13 @@ export type ProjectCreateWithoutUserInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneCreateNestedManyWithoutProjectInput
@@ -1051,6 +1260,8 @@ export type ProjectCreateWithoutUserInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutUserInput = {
@@ -1069,6 +1280,13 @@ export type ProjectUncheckedCreateWithoutUserInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -1089,6 +1307,8 @@ export type ProjectUncheckedCreateWithoutUserInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutUserInput = {
@@ -1137,6 +1357,13 @@ export type ProjectScalarWhereInput = {
   brandVoiceTone?: Prisma.JsonNullableFilter<"Project">
   brandVoiceAvoid?: Prisma.JsonNullableFilter<"Project">
   brandAudience?: Prisma.StringNullableFilter<"Project"> | string | null
+  publicSlug?: Prisma.StringNullableFilter<"Project"> | string | null
+  portfolioVisible?: Prisma.BoolFilter<"Project"> | boolean
+  portfolioBlurb?: Prisma.StringNullableFilter<"Project"> | string | null
+  earlyAccessSlug?: Prisma.StringNullableFilter<"Project"> | string | null
+  earlyAccessEnabled?: Prisma.BoolFilter<"Project"> | boolean
+  earlyAccessHeadline?: Prisma.StringNullableFilter<"Project"> | string | null
+  earlyAccessBody?: Prisma.StringNullableFilter<"Project"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
 }
@@ -1157,6 +1384,13 @@ export type ProjectCreateWithoutIdeasInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -1177,6 +1411,8 @@ export type ProjectCreateWithoutIdeasInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutIdeasInput = {
@@ -1196,6 +1432,13 @@ export type ProjectUncheckedCreateWithoutIdeasInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -1215,6 +1458,8 @@ export type ProjectUncheckedCreateWithoutIdeasInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutIdeasInput = {
@@ -1249,6 +1494,13 @@ export type ProjectUpdateWithoutIdeasInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -1269,6 +1521,8 @@ export type ProjectUpdateWithoutIdeasInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutIdeasInput = {
@@ -1288,6 +1542,13 @@ export type ProjectUncheckedUpdateWithoutIdeasInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -1307,6 +1568,8 @@ export type ProjectUncheckedUpdateWithoutIdeasInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutLeadsInput = {
@@ -1325,6 +1588,13 @@ export type ProjectCreateWithoutLeadsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -1345,6 +1615,8 @@ export type ProjectCreateWithoutLeadsInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutLeadsInput = {
@@ -1364,6 +1636,13 @@ export type ProjectUncheckedCreateWithoutLeadsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -1383,6 +1662,8 @@ export type ProjectUncheckedCreateWithoutLeadsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutLeadsInput = {
@@ -1417,6 +1698,13 @@ export type ProjectUpdateWithoutLeadsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -1437,6 +1725,8 @@ export type ProjectUpdateWithoutLeadsInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutLeadsInput = {
@@ -1456,6 +1746,13 @@ export type ProjectUncheckedUpdateWithoutLeadsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -1475,6 +1772,8 @@ export type ProjectUncheckedUpdateWithoutLeadsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutTasksInput = {
@@ -1493,6 +1792,13 @@ export type ProjectCreateWithoutTasksInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -1513,6 +1819,8 @@ export type ProjectCreateWithoutTasksInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -1532,6 +1840,13 @@ export type ProjectUncheckedCreateWithoutTasksInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -1551,6 +1866,8 @@ export type ProjectUncheckedCreateWithoutTasksInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutTasksInput = {
@@ -1585,6 +1902,13 @@ export type ProjectUpdateWithoutTasksInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -1605,6 +1929,8 @@ export type ProjectUpdateWithoutTasksInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -1624,6 +1950,13 @@ export type ProjectUncheckedUpdateWithoutTasksInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -1643,6 +1976,8 @@ export type ProjectUncheckedUpdateWithoutTasksInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutMilestonesInput = {
@@ -1661,6 +1996,13 @@ export type ProjectCreateWithoutMilestonesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -1681,6 +2023,8 @@ export type ProjectCreateWithoutMilestonesInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutMilestonesInput = {
@@ -1700,6 +2044,13 @@ export type ProjectUncheckedCreateWithoutMilestonesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
@@ -1719,6 +2070,8 @@ export type ProjectUncheckedCreateWithoutMilestonesInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutMilestonesInput = {
@@ -1753,6 +2106,13 @@ export type ProjectUpdateWithoutMilestonesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -1773,6 +2133,8 @@ export type ProjectUpdateWithoutMilestonesInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutMilestonesInput = {
@@ -1792,6 +2154,13 @@ export type ProjectUncheckedUpdateWithoutMilestonesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
@@ -1811,6 +2180,8 @@ export type ProjectUncheckedUpdateWithoutMilestonesInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutSeoKeywordsInput = {
@@ -1829,6 +2200,13 @@ export type ProjectCreateWithoutSeoKeywordsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -1849,6 +2227,8 @@ export type ProjectCreateWithoutSeoKeywordsInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutSeoKeywordsInput = {
@@ -1868,6 +2248,13 @@ export type ProjectUncheckedCreateWithoutSeoKeywordsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -1887,6 +2274,8 @@ export type ProjectUncheckedCreateWithoutSeoKeywordsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutSeoKeywordsInput = {
@@ -1921,6 +2310,13 @@ export type ProjectUpdateWithoutSeoKeywordsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -1941,6 +2337,8 @@ export type ProjectUpdateWithoutSeoKeywordsInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutSeoKeywordsInput = {
@@ -1960,6 +2358,13 @@ export type ProjectUncheckedUpdateWithoutSeoKeywordsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -1979,6 +2384,8 @@ export type ProjectUncheckedUpdateWithoutSeoKeywordsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutContentItemsInput = {
@@ -1997,6 +2404,13 @@ export type ProjectCreateWithoutContentItemsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -2017,6 +2431,8 @@ export type ProjectCreateWithoutContentItemsInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutContentItemsInput = {
@@ -2036,6 +2452,13 @@ export type ProjectUncheckedCreateWithoutContentItemsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -2055,6 +2478,8 @@ export type ProjectUncheckedCreateWithoutContentItemsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutContentItemsInput = {
@@ -2089,6 +2514,13 @@ export type ProjectUpdateWithoutContentItemsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -2109,6 +2541,8 @@ export type ProjectUpdateWithoutContentItemsInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutContentItemsInput = {
@@ -2128,6 +2562,13 @@ export type ProjectUncheckedUpdateWithoutContentItemsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -2147,6 +2588,8 @@ export type ProjectUncheckedUpdateWithoutContentItemsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutGrowthWeeklyPlansInput = {
@@ -2165,6 +2608,13 @@ export type ProjectCreateWithoutGrowthWeeklyPlansInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -2185,6 +2635,8 @@ export type ProjectCreateWithoutGrowthWeeklyPlansInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutGrowthWeeklyPlansInput = {
@@ -2204,6 +2656,13 @@ export type ProjectUncheckedCreateWithoutGrowthWeeklyPlansInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -2223,6 +2682,8 @@ export type ProjectUncheckedCreateWithoutGrowthWeeklyPlansInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutGrowthWeeklyPlansInput = {
@@ -2257,6 +2718,13 @@ export type ProjectUpdateWithoutGrowthWeeklyPlansInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -2277,6 +2745,8 @@ export type ProjectUpdateWithoutGrowthWeeklyPlansInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutGrowthWeeklyPlansInput = {
@@ -2296,6 +2766,13 @@ export type ProjectUncheckedUpdateWithoutGrowthWeeklyPlansInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -2315,6 +2792,8 @@ export type ProjectUncheckedUpdateWithoutGrowthWeeklyPlansInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutLaunchPlaybooksInput = {
@@ -2333,6 +2812,13 @@ export type ProjectCreateWithoutLaunchPlaybooksInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -2353,6 +2839,8 @@ export type ProjectCreateWithoutLaunchPlaybooksInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutLaunchPlaybooksInput = {
@@ -2372,6 +2860,13 @@ export type ProjectUncheckedCreateWithoutLaunchPlaybooksInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -2391,6 +2886,8 @@ export type ProjectUncheckedCreateWithoutLaunchPlaybooksInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutLaunchPlaybooksInput = {
@@ -2425,6 +2922,13 @@ export type ProjectUpdateWithoutLaunchPlaybooksInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -2445,6 +2949,8 @@ export type ProjectUpdateWithoutLaunchPlaybooksInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutLaunchPlaybooksInput = {
@@ -2464,6 +2970,13 @@ export type ProjectUncheckedUpdateWithoutLaunchPlaybooksInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -2483,6 +2996,8 @@ export type ProjectUncheckedUpdateWithoutLaunchPlaybooksInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutMarketingCampaignsInput = {
@@ -2501,6 +3016,13 @@ export type ProjectCreateWithoutMarketingCampaignsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -2521,6 +3043,8 @@ export type ProjectCreateWithoutMarketingCampaignsInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutMarketingCampaignsInput = {
@@ -2540,6 +3064,13 @@ export type ProjectUncheckedCreateWithoutMarketingCampaignsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -2559,6 +3090,8 @@ export type ProjectUncheckedCreateWithoutMarketingCampaignsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutMarketingCampaignsInput = {
@@ -2593,6 +3126,13 @@ export type ProjectUpdateWithoutMarketingCampaignsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -2613,6 +3153,8 @@ export type ProjectUpdateWithoutMarketingCampaignsInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutMarketingCampaignsInput = {
@@ -2632,6 +3174,13 @@ export type ProjectUncheckedUpdateWithoutMarketingCampaignsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -2651,6 +3200,8 @@ export type ProjectUncheckedUpdateWithoutMarketingCampaignsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutGithubConnectionInput = {
@@ -2669,6 +3220,13 @@ export type ProjectCreateWithoutGithubConnectionInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -2689,6 +3247,8 @@ export type ProjectCreateWithoutGithubConnectionInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutGithubConnectionInput = {
@@ -2708,6 +3268,13 @@ export type ProjectUncheckedCreateWithoutGithubConnectionInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -2727,6 +3294,8 @@ export type ProjectUncheckedCreateWithoutGithubConnectionInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutGithubConnectionInput = {
@@ -2761,6 +3330,13 @@ export type ProjectUpdateWithoutGithubConnectionInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -2781,6 +3357,8 @@ export type ProjectUpdateWithoutGithubConnectionInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutGithubConnectionInput = {
@@ -2800,6 +3378,13 @@ export type ProjectUncheckedUpdateWithoutGithubConnectionInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -2819,6 +3404,8 @@ export type ProjectUncheckedUpdateWithoutGithubConnectionInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutRepoCommitsInput = {
@@ -2837,6 +3424,13 @@ export type ProjectCreateWithoutRepoCommitsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -2857,6 +3451,8 @@ export type ProjectCreateWithoutRepoCommitsInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutRepoCommitsInput = {
@@ -2876,6 +3472,13 @@ export type ProjectUncheckedCreateWithoutRepoCommitsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -2895,6 +3498,8 @@ export type ProjectUncheckedCreateWithoutRepoCommitsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutRepoCommitsInput = {
@@ -2929,6 +3534,13 @@ export type ProjectUpdateWithoutRepoCommitsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -2949,6 +3561,8 @@ export type ProjectUpdateWithoutRepoCommitsInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutRepoCommitsInput = {
@@ -2968,6 +3582,13 @@ export type ProjectUncheckedUpdateWithoutRepoCommitsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -2987,6 +3608,8 @@ export type ProjectUncheckedUpdateWithoutRepoCommitsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutRepoBuildsInput = {
@@ -3005,6 +3628,13 @@ export type ProjectCreateWithoutRepoBuildsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -3025,6 +3655,8 @@ export type ProjectCreateWithoutRepoBuildsInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutRepoBuildsInput = {
@@ -3044,6 +3676,13 @@ export type ProjectUncheckedCreateWithoutRepoBuildsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -3063,6 +3702,8 @@ export type ProjectUncheckedCreateWithoutRepoBuildsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutRepoBuildsInput = {
@@ -3097,6 +3738,13 @@ export type ProjectUpdateWithoutRepoBuildsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -3117,6 +3765,8 @@ export type ProjectUpdateWithoutRepoBuildsInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutRepoBuildsInput = {
@@ -3136,6 +3786,13 @@ export type ProjectUncheckedUpdateWithoutRepoBuildsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -3155,6 +3812,8 @@ export type ProjectUncheckedUpdateWithoutRepoBuildsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutRepoReleasesInput = {
@@ -3173,6 +3832,13 @@ export type ProjectCreateWithoutRepoReleasesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -3193,6 +3859,8 @@ export type ProjectCreateWithoutRepoReleasesInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutRepoReleasesInput = {
@@ -3212,6 +3880,13 @@ export type ProjectUncheckedCreateWithoutRepoReleasesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -3231,6 +3906,8 @@ export type ProjectUncheckedCreateWithoutRepoReleasesInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutRepoReleasesInput = {
@@ -3265,6 +3942,13 @@ export type ProjectUpdateWithoutRepoReleasesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -3285,6 +3969,8 @@ export type ProjectUpdateWithoutRepoReleasesInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutRepoReleasesInput = {
@@ -3304,6 +3990,13 @@ export type ProjectUncheckedUpdateWithoutRepoReleasesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -3323,6 +4016,8 @@ export type ProjectUncheckedUpdateWithoutRepoReleasesInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutRepoPullRequestsInput = {
@@ -3341,6 +4036,13 @@ export type ProjectCreateWithoutRepoPullRequestsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -3361,6 +4063,8 @@ export type ProjectCreateWithoutRepoPullRequestsInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutRepoPullRequestsInput = {
@@ -3380,6 +4084,13 @@ export type ProjectUncheckedCreateWithoutRepoPullRequestsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -3399,6 +4110,8 @@ export type ProjectUncheckedCreateWithoutRepoPullRequestsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutRepoPullRequestsInput = {
@@ -3433,6 +4146,13 @@ export type ProjectUpdateWithoutRepoPullRequestsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -3453,6 +4173,8 @@ export type ProjectUpdateWithoutRepoPullRequestsInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutRepoPullRequestsInput = {
@@ -3472,6 +4194,13 @@ export type ProjectUncheckedUpdateWithoutRepoPullRequestsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -3491,6 +4220,8 @@ export type ProjectUncheckedUpdateWithoutRepoPullRequestsInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutBuildReleasesInput = {
@@ -3509,6 +4240,13 @@ export type ProjectCreateWithoutBuildReleasesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -3529,6 +4267,8 @@ export type ProjectCreateWithoutBuildReleasesInput = {
   repoPullRequests?: Prisma.RepoPullRequestCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutBuildReleasesInput = {
@@ -3548,6 +4288,13 @@ export type ProjectUncheckedCreateWithoutBuildReleasesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -3567,6 +4314,8 @@ export type ProjectUncheckedCreateWithoutBuildReleasesInput = {
   repoPullRequests?: Prisma.RepoPullRequestUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutBuildReleasesInput = {
@@ -3601,6 +4350,13 @@ export type ProjectUpdateWithoutBuildReleasesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -3621,6 +4377,8 @@ export type ProjectUpdateWithoutBuildReleasesInput = {
   repoPullRequests?: Prisma.RepoPullRequestUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutBuildReleasesInput = {
@@ -3640,6 +4398,13 @@ export type ProjectUncheckedUpdateWithoutBuildReleasesInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -3659,6 +4424,8 @@ export type ProjectUncheckedUpdateWithoutBuildReleasesInput = {
   repoPullRequests?: Prisma.RepoPullRequestUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutVercelConnectionInput = {
@@ -3677,6 +4444,13 @@ export type ProjectCreateWithoutVercelConnectionInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -3697,6 +4471,8 @@ export type ProjectCreateWithoutVercelConnectionInput = {
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutVercelConnectionInput = {
@@ -3716,6 +4492,13 @@ export type ProjectUncheckedCreateWithoutVercelConnectionInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -3735,6 +4518,8 @@ export type ProjectUncheckedCreateWithoutVercelConnectionInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutVercelConnectionInput = {
@@ -3769,6 +4554,13 @@ export type ProjectUpdateWithoutVercelConnectionInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -3789,6 +4581,8 @@ export type ProjectUpdateWithoutVercelConnectionInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutVercelConnectionInput = {
@@ -3808,6 +4602,13 @@ export type ProjectUncheckedUpdateWithoutVercelConnectionInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -3827,6 +4628,8 @@ export type ProjectUncheckedUpdateWithoutVercelConnectionInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutEnvVarsInput = {
@@ -3845,6 +4648,13 @@ export type ProjectCreateWithoutEnvVarsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -3865,6 +4675,8 @@ export type ProjectCreateWithoutEnvVarsInput = {
   repoPullRequests?: Prisma.RepoPullRequestCreateNestedManyWithoutProjectInput
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutEnvVarsInput = {
@@ -3884,6 +4696,13 @@ export type ProjectUncheckedCreateWithoutEnvVarsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -3903,6 +4722,8 @@ export type ProjectUncheckedCreateWithoutEnvVarsInput = {
   repoPullRequests?: Prisma.RepoPullRequestUncheckedCreateNestedManyWithoutProjectInput
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutEnvVarsInput = {
@@ -3937,6 +4758,13 @@ export type ProjectUpdateWithoutEnvVarsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -3957,6 +4785,8 @@ export type ProjectUpdateWithoutEnvVarsInput = {
   repoPullRequests?: Prisma.RepoPullRequestUpdateManyWithoutProjectNestedInput
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutEnvVarsInput = {
@@ -3976,6 +4806,13 @@ export type ProjectUncheckedUpdateWithoutEnvVarsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -3995,6 +4832,8 @@ export type ProjectUncheckedUpdateWithoutEnvVarsInput = {
   repoPullRequests?: Prisma.RepoPullRequestUncheckedUpdateManyWithoutProjectNestedInput
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutDeploymentsInput = {
@@ -4013,6 +4852,13 @@ export type ProjectCreateWithoutDeploymentsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProjectsInput
@@ -4033,6 +4879,8 @@ export type ProjectCreateWithoutDeploymentsInput = {
   repoPullRequests?: Prisma.RepoPullRequestCreateNestedManyWithoutProjectInput
   buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDeploymentsInput = {
@@ -4052,6 +4900,13 @@ export type ProjectUncheckedCreateWithoutDeploymentsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
@@ -4071,6 +4926,8 @@ export type ProjectUncheckedCreateWithoutDeploymentsInput = {
   repoPullRequests?: Prisma.RepoPullRequestUncheckedCreateNestedManyWithoutProjectInput
   buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
   envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDeploymentsInput = {
@@ -4105,6 +4962,13 @@ export type ProjectUpdateWithoutDeploymentsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
@@ -4125,6 +4989,8 @@ export type ProjectUpdateWithoutDeploymentsInput = {
   repoPullRequests?: Prisma.RepoPullRequestUpdateManyWithoutProjectNestedInput
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDeploymentsInput = {
@@ -4144,6 +5010,13 @@ export type ProjectUncheckedUpdateWithoutDeploymentsInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -4163,9 +5036,11 @@ export type ProjectUncheckedUpdateWithoutDeploymentsInput = {
   repoPullRequests?: Prisma.RepoPullRequestUncheckedUpdateManyWithoutProjectNestedInput
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
-export type ProjectCreateManyUserInput = {
+export type ProjectCreateWithoutArtifactsInput = {
   id?: string
   name: string
   description?: string | null
@@ -4181,11 +5056,101 @@ export type ProjectCreateManyUserInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  milestones?: Prisma.MilestoneCreateNestedManyWithoutProjectInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
+  leads?: Prisma.LeadCreateNestedManyWithoutProjectInput
+  ideas?: Prisma.IdeaCreateNestedManyWithoutProjectInput
+  seoKeywords?: Prisma.SeoKeywordCreateNestedManyWithoutProjectInput
+  contentItems?: Prisma.ContentItemCreateNestedManyWithoutProjectInput
+  growthWeeklyPlans?: Prisma.GrowthWeeklyPlanCreateNestedManyWithoutProjectInput
+  launchPlaybooks?: Prisma.LaunchPlaybookProgressCreateNestedManyWithoutProjectInput
+  marketingCampaigns?: Prisma.MarketingCampaignCreateNestedManyWithoutProjectInput
+  githubConnection?: Prisma.GithubConnectionCreateNestedOneWithoutProjectInput
+  vercelConnection?: Prisma.VercelConnectionCreateNestedOneWithoutProjectInput
+  repoCommits?: Prisma.RepoCommitCreateNestedManyWithoutProjectInput
+  repoBuilds?: Prisma.RepoBuildCreateNestedManyWithoutProjectInput
+  repoReleases?: Prisma.RepoReleaseCreateNestedManyWithoutProjectInput
+  repoPullRequests?: Prisma.RepoPullRequestCreateNestedManyWithoutProjectInput
+  buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
+  envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
+  deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureCreateNestedManyWithoutProjectInput
 }
 
-export type ProjectUpdateWithoutUserInput = {
+export type ProjectUncheckedCreateWithoutArtifactsInput = {
+  id?: string
+  userId: string
+  name: string
+  description?: string | null
+  repoUrl?: string | null
+  status?: string
+  currentVersion?: string | null
+  productionUrl?: string | null
+  hostingProvider?: string | null
+  techStack?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  toolsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  devNotes?: string | null
+  aiNotes?: string | null
+  brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutProjectInput
+  ideas?: Prisma.IdeaUncheckedCreateNestedManyWithoutProjectInput
+  seoKeywords?: Prisma.SeoKeywordUncheckedCreateNestedManyWithoutProjectInput
+  contentItems?: Prisma.ContentItemUncheckedCreateNestedManyWithoutProjectInput
+  growthWeeklyPlans?: Prisma.GrowthWeeklyPlanUncheckedCreateNestedManyWithoutProjectInput
+  launchPlaybooks?: Prisma.LaunchPlaybookProgressUncheckedCreateNestedManyWithoutProjectInput
+  marketingCampaigns?: Prisma.MarketingCampaignUncheckedCreateNestedManyWithoutProjectInput
+  githubConnection?: Prisma.GithubConnectionUncheckedCreateNestedOneWithoutProjectInput
+  vercelConnection?: Prisma.VercelConnectionUncheckedCreateNestedOneWithoutProjectInput
+  repoCommits?: Prisma.RepoCommitUncheckedCreateNestedManyWithoutProjectInput
+  repoBuilds?: Prisma.RepoBuildUncheckedCreateNestedManyWithoutProjectInput
+  repoReleases?: Prisma.RepoReleaseUncheckedCreateNestedManyWithoutProjectInput
+  repoPullRequests?: Prisma.RepoPullRequestUncheckedCreateNestedManyWithoutProjectInput
+  buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
+  envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
+  deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  features?: Prisma.ProjectFeatureUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutArtifactsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutArtifactsInput, Prisma.ProjectUncheckedCreateWithoutArtifactsInput>
+}
+
+export type ProjectUpsertWithoutArtifactsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutArtifactsInput, Prisma.ProjectUncheckedUpdateWithoutArtifactsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutArtifactsInput, Prisma.ProjectUncheckedCreateWithoutArtifactsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutArtifactsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutArtifactsInput, Prisma.ProjectUncheckedUpdateWithoutArtifactsInput>
+}
+
+export type ProjectUpdateWithoutArtifactsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4201,8 +5166,16 @@ export type ProjectUpdateWithoutUserInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
   milestones?: Prisma.MilestoneUpdateManyWithoutProjectNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
   leads?: Prisma.LeadUpdateManyWithoutProjectNestedInput
@@ -4221,10 +5194,12 @@ export type ProjectUpdateWithoutUserInput = {
   buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
 }
 
-export type ProjectUncheckedUpdateWithoutUserInput = {
+export type ProjectUncheckedUpdateWithoutArtifactsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4239,6 +5214,13 @@ export type ProjectUncheckedUpdateWithoutUserInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
@@ -4259,6 +5241,332 @@ export type ProjectUncheckedUpdateWithoutUserInput = {
   buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
   envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
   deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutFeaturesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  repoUrl?: string | null
+  status?: string
+  currentVersion?: string | null
+  productionUrl?: string | null
+  hostingProvider?: string | null
+  techStack?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  toolsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  devNotes?: string | null
+  aiNotes?: string | null
+  brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutProjectsInput
+  milestones?: Prisma.MilestoneCreateNestedManyWithoutProjectInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
+  leads?: Prisma.LeadCreateNestedManyWithoutProjectInput
+  ideas?: Prisma.IdeaCreateNestedManyWithoutProjectInput
+  seoKeywords?: Prisma.SeoKeywordCreateNestedManyWithoutProjectInput
+  contentItems?: Prisma.ContentItemCreateNestedManyWithoutProjectInput
+  growthWeeklyPlans?: Prisma.GrowthWeeklyPlanCreateNestedManyWithoutProjectInput
+  launchPlaybooks?: Prisma.LaunchPlaybookProgressCreateNestedManyWithoutProjectInput
+  marketingCampaigns?: Prisma.MarketingCampaignCreateNestedManyWithoutProjectInput
+  githubConnection?: Prisma.GithubConnectionCreateNestedOneWithoutProjectInput
+  vercelConnection?: Prisma.VercelConnectionCreateNestedOneWithoutProjectInput
+  repoCommits?: Prisma.RepoCommitCreateNestedManyWithoutProjectInput
+  repoBuilds?: Prisma.RepoBuildCreateNestedManyWithoutProjectInput
+  repoReleases?: Prisma.RepoReleaseCreateNestedManyWithoutProjectInput
+  repoPullRequests?: Prisma.RepoPullRequestCreateNestedManyWithoutProjectInput
+  buildReleases?: Prisma.BuildReleaseCreateNestedManyWithoutProjectInput
+  envVars?: Prisma.ProjectEnvVarCreateNestedManyWithoutProjectInput
+  deployments?: Prisma.ProjectDeploymentCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutFeaturesInput = {
+  id?: string
+  userId: string
+  name: string
+  description?: string | null
+  repoUrl?: string | null
+  status?: string
+  currentVersion?: string | null
+  productionUrl?: string | null
+  hostingProvider?: string | null
+  techStack?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  toolsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  devNotes?: string | null
+  aiNotes?: string | null
+  brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  milestones?: Prisma.MilestoneUncheckedCreateNestedManyWithoutProjectInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutProjectInput
+  ideas?: Prisma.IdeaUncheckedCreateNestedManyWithoutProjectInput
+  seoKeywords?: Prisma.SeoKeywordUncheckedCreateNestedManyWithoutProjectInput
+  contentItems?: Prisma.ContentItemUncheckedCreateNestedManyWithoutProjectInput
+  growthWeeklyPlans?: Prisma.GrowthWeeklyPlanUncheckedCreateNestedManyWithoutProjectInput
+  launchPlaybooks?: Prisma.LaunchPlaybookProgressUncheckedCreateNestedManyWithoutProjectInput
+  marketingCampaigns?: Prisma.MarketingCampaignUncheckedCreateNestedManyWithoutProjectInput
+  githubConnection?: Prisma.GithubConnectionUncheckedCreateNestedOneWithoutProjectInput
+  vercelConnection?: Prisma.VercelConnectionUncheckedCreateNestedOneWithoutProjectInput
+  repoCommits?: Prisma.RepoCommitUncheckedCreateNestedManyWithoutProjectInput
+  repoBuilds?: Prisma.RepoBuildUncheckedCreateNestedManyWithoutProjectInput
+  repoReleases?: Prisma.RepoReleaseUncheckedCreateNestedManyWithoutProjectInput
+  repoPullRequests?: Prisma.RepoPullRequestUncheckedCreateNestedManyWithoutProjectInput
+  buildReleases?: Prisma.BuildReleaseUncheckedCreateNestedManyWithoutProjectInput
+  envVars?: Prisma.ProjectEnvVarUncheckedCreateNestedManyWithoutProjectInput
+  deployments?: Prisma.ProjectDeploymentUncheckedCreateNestedManyWithoutProjectInput
+  artifacts?: Prisma.ProjectArtifactUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutFeaturesInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutFeaturesInput, Prisma.ProjectUncheckedCreateWithoutFeaturesInput>
+}
+
+export type ProjectUpsertWithoutFeaturesInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutFeaturesInput, Prisma.ProjectUncheckedUpdateWithoutFeaturesInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutFeaturesInput, Prisma.ProjectUncheckedCreateWithoutFeaturesInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutFeaturesInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutFeaturesInput, Prisma.ProjectUncheckedUpdateWithoutFeaturesInput>
+}
+
+export type ProjectUpdateWithoutFeaturesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hostingProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  techStack?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  toolsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  devNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutProjectsNestedInput
+  milestones?: Prisma.MilestoneUpdateManyWithoutProjectNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutProjectNestedInput
+  ideas?: Prisma.IdeaUpdateManyWithoutProjectNestedInput
+  seoKeywords?: Prisma.SeoKeywordUpdateManyWithoutProjectNestedInput
+  contentItems?: Prisma.ContentItemUpdateManyWithoutProjectNestedInput
+  growthWeeklyPlans?: Prisma.GrowthWeeklyPlanUpdateManyWithoutProjectNestedInput
+  launchPlaybooks?: Prisma.LaunchPlaybookProgressUpdateManyWithoutProjectNestedInput
+  marketingCampaigns?: Prisma.MarketingCampaignUpdateManyWithoutProjectNestedInput
+  githubConnection?: Prisma.GithubConnectionUpdateOneWithoutProjectNestedInput
+  vercelConnection?: Prisma.VercelConnectionUpdateOneWithoutProjectNestedInput
+  repoCommits?: Prisma.RepoCommitUpdateManyWithoutProjectNestedInput
+  repoBuilds?: Prisma.RepoBuildUpdateManyWithoutProjectNestedInput
+  repoReleases?: Prisma.RepoReleaseUpdateManyWithoutProjectNestedInput
+  repoPullRequests?: Prisma.RepoPullRequestUpdateManyWithoutProjectNestedInput
+  buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
+  envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
+  deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutFeaturesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hostingProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  techStack?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  toolsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  devNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutProjectNestedInput
+  ideas?: Prisma.IdeaUncheckedUpdateManyWithoutProjectNestedInput
+  seoKeywords?: Prisma.SeoKeywordUncheckedUpdateManyWithoutProjectNestedInput
+  contentItems?: Prisma.ContentItemUncheckedUpdateManyWithoutProjectNestedInput
+  growthWeeklyPlans?: Prisma.GrowthWeeklyPlanUncheckedUpdateManyWithoutProjectNestedInput
+  launchPlaybooks?: Prisma.LaunchPlaybookProgressUncheckedUpdateManyWithoutProjectNestedInput
+  marketingCampaigns?: Prisma.MarketingCampaignUncheckedUpdateManyWithoutProjectNestedInput
+  githubConnection?: Prisma.GithubConnectionUncheckedUpdateOneWithoutProjectNestedInput
+  vercelConnection?: Prisma.VercelConnectionUncheckedUpdateOneWithoutProjectNestedInput
+  repoCommits?: Prisma.RepoCommitUncheckedUpdateManyWithoutProjectNestedInput
+  repoBuilds?: Prisma.RepoBuildUncheckedUpdateManyWithoutProjectNestedInput
+  repoReleases?: Prisma.RepoReleaseUncheckedUpdateManyWithoutProjectNestedInput
+  repoPullRequests?: Prisma.RepoPullRequestUncheckedUpdateManyWithoutProjectNestedInput
+  buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
+  envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
+  deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateManyUserInput = {
+  id?: string
+  name: string
+  description?: string | null
+  repoUrl?: string | null
+  status?: string
+  currentVersion?: string | null
+  productionUrl?: string | null
+  hostingProvider?: string | null
+  techStack?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  toolsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  devNotes?: string | null
+  aiNotes?: string | null
+  brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandAudience?: string | null
+  publicSlug?: string | null
+  portfolioVisible?: boolean
+  portfolioBlurb?: string | null
+  earlyAccessSlug?: string | null
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: string | null
+  earlyAccessBody?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProjectUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hostingProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  techStack?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  toolsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  devNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  milestones?: Prisma.MilestoneUpdateManyWithoutProjectNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutProjectNestedInput
+  ideas?: Prisma.IdeaUpdateManyWithoutProjectNestedInput
+  seoKeywords?: Prisma.SeoKeywordUpdateManyWithoutProjectNestedInput
+  contentItems?: Prisma.ContentItemUpdateManyWithoutProjectNestedInput
+  growthWeeklyPlans?: Prisma.GrowthWeeklyPlanUpdateManyWithoutProjectNestedInput
+  launchPlaybooks?: Prisma.LaunchPlaybookProgressUpdateManyWithoutProjectNestedInput
+  marketingCampaigns?: Prisma.MarketingCampaignUpdateManyWithoutProjectNestedInput
+  githubConnection?: Prisma.GithubConnectionUpdateOneWithoutProjectNestedInput
+  vercelConnection?: Prisma.VercelConnectionUpdateOneWithoutProjectNestedInput
+  repoCommits?: Prisma.RepoCommitUpdateManyWithoutProjectNestedInput
+  repoBuilds?: Prisma.RepoBuildUpdateManyWithoutProjectNestedInput
+  repoReleases?: Prisma.RepoReleaseUpdateManyWithoutProjectNestedInput
+  repoPullRequests?: Prisma.RepoPullRequestUpdateManyWithoutProjectNestedInput
+  buildReleases?: Prisma.BuildReleaseUpdateManyWithoutProjectNestedInput
+  envVars?: Prisma.ProjectEnvVarUpdateManyWithoutProjectNestedInput
+  deployments?: Prisma.ProjectDeploymentUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hostingProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  techStack?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  toolsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  devNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  milestones?: Prisma.MilestoneUncheckedUpdateManyWithoutProjectNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutProjectNestedInput
+  ideas?: Prisma.IdeaUncheckedUpdateManyWithoutProjectNestedInput
+  seoKeywords?: Prisma.SeoKeywordUncheckedUpdateManyWithoutProjectNestedInput
+  contentItems?: Prisma.ContentItemUncheckedUpdateManyWithoutProjectNestedInput
+  growthWeeklyPlans?: Prisma.GrowthWeeklyPlanUncheckedUpdateManyWithoutProjectNestedInput
+  launchPlaybooks?: Prisma.LaunchPlaybookProgressUncheckedUpdateManyWithoutProjectNestedInput
+  marketingCampaigns?: Prisma.MarketingCampaignUncheckedUpdateManyWithoutProjectNestedInput
+  githubConnection?: Prisma.GithubConnectionUncheckedUpdateOneWithoutProjectNestedInput
+  vercelConnection?: Prisma.VercelConnectionUncheckedUpdateOneWithoutProjectNestedInput
+  repoCommits?: Prisma.RepoCommitUncheckedUpdateManyWithoutProjectNestedInput
+  repoBuilds?: Prisma.RepoBuildUncheckedUpdateManyWithoutProjectNestedInput
+  repoReleases?: Prisma.RepoReleaseUncheckedUpdateManyWithoutProjectNestedInput
+  repoPullRequests?: Prisma.RepoPullRequestUncheckedUpdateManyWithoutProjectNestedInput
+  buildReleases?: Prisma.BuildReleaseUncheckedUpdateManyWithoutProjectNestedInput
+  envVars?: Prisma.ProjectEnvVarUncheckedUpdateManyWithoutProjectNestedInput
+  deployments?: Prisma.ProjectDeploymentUncheckedUpdateManyWithoutProjectNestedInput
+  artifacts?: Prisma.ProjectArtifactUncheckedUpdateManyWithoutProjectNestedInput
+  features?: Prisma.ProjectFeatureUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutUserInput = {
@@ -4277,6 +5585,13 @@ export type ProjectUncheckedUpdateManyWithoutUserInput = {
   brandVoiceTone?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandVoiceAvoid?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   brandAudience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  portfolioVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  portfolioBlurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  earlyAccessHeadline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  earlyAccessBody?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -4303,6 +5618,8 @@ export type ProjectCountOutputType = {
   buildReleases: number
   envVars: number
   deployments: number
+  artifacts: number
+  features: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4322,6 +5639,8 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   buildReleases?: boolean | ProjectCountOutputTypeCountBuildReleasesArgs
   envVars?: boolean | ProjectCountOutputTypeCountEnvVarsArgs
   deployments?: boolean | ProjectCountOutputTypeCountDeploymentsArgs
+  artifacts?: boolean | ProjectCountOutputTypeCountArtifactsArgs
+  features?: boolean | ProjectCountOutputTypeCountFeaturesArgs
 }
 
 /**
@@ -4446,6 +5765,20 @@ export type ProjectCountOutputTypeCountDeploymentsArgs<ExtArgs extends runtime.T
   where?: Prisma.ProjectDeploymentWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountArtifactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectArtifactWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountFeaturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectFeatureWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -4464,6 +5797,13 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   brandVoiceTone?: boolean
   brandVoiceAvoid?: boolean
   brandAudience?: boolean
+  publicSlug?: boolean
+  portfolioVisible?: boolean
+  portfolioBlurb?: boolean
+  earlyAccessSlug?: boolean
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: boolean
+  earlyAccessBody?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -4485,6 +5825,8 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   buildReleases?: boolean | Prisma.Project$buildReleasesArgs<ExtArgs>
   envVars?: boolean | Prisma.Project$envVarsArgs<ExtArgs>
   deployments?: boolean | Prisma.Project$deploymentsArgs<ExtArgs>
+  artifacts?: boolean | Prisma.Project$artifactsArgs<ExtArgs>
+  features?: boolean | Prisma.Project$featuresArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -4505,6 +5847,13 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   brandVoiceTone?: boolean
   brandVoiceAvoid?: boolean
   brandAudience?: boolean
+  publicSlug?: boolean
+  portfolioVisible?: boolean
+  portfolioBlurb?: boolean
+  earlyAccessSlug?: boolean
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: boolean
+  earlyAccessBody?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -4527,6 +5876,13 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   brandVoiceTone?: boolean
   brandVoiceAvoid?: boolean
   brandAudience?: boolean
+  publicSlug?: boolean
+  portfolioVisible?: boolean
+  portfolioBlurb?: boolean
+  earlyAccessSlug?: boolean
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: boolean
+  earlyAccessBody?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -4549,11 +5905,18 @@ export type ProjectSelectScalar = {
   brandVoiceTone?: boolean
   brandVoiceAvoid?: boolean
   brandAudience?: boolean
+  publicSlug?: boolean
+  portfolioVisible?: boolean
+  portfolioBlurb?: boolean
+  earlyAccessSlug?: boolean
+  earlyAccessEnabled?: boolean
+  earlyAccessHeadline?: boolean
+  earlyAccessBody?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "description" | "repoUrl" | "status" | "currentVersion" | "productionUrl" | "hostingProvider" | "techStack" | "toolsUsed" | "devNotes" | "aiNotes" | "brandVoiceTone" | "brandVoiceAvoid" | "brandAudience" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "description" | "repoUrl" | "status" | "currentVersion" | "productionUrl" | "hostingProvider" | "techStack" | "toolsUsed" | "devNotes" | "aiNotes" | "brandVoiceTone" | "brandVoiceAvoid" | "brandAudience" | "publicSlug" | "portfolioVisible" | "portfolioBlurb" | "earlyAccessSlug" | "earlyAccessEnabled" | "earlyAccessHeadline" | "earlyAccessBody" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   milestones?: boolean | Prisma.Project$milestonesArgs<ExtArgs>
@@ -4574,6 +5937,8 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   buildReleases?: boolean | Prisma.Project$buildReleasesArgs<ExtArgs>
   envVars?: boolean | Prisma.Project$envVarsArgs<ExtArgs>
   deployments?: boolean | Prisma.Project$deploymentsArgs<ExtArgs>
+  artifacts?: boolean | Prisma.Project$artifactsArgs<ExtArgs>
+  features?: boolean | Prisma.Project$featuresArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4605,6 +5970,8 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     buildReleases: Prisma.$BuildReleasePayload<ExtArgs>[]
     envVars: Prisma.$ProjectEnvVarPayload<ExtArgs>[]
     deployments: Prisma.$ProjectDeploymentPayload<ExtArgs>[]
+    artifacts: Prisma.$ProjectArtifactPayload<ExtArgs>[]
+    features: Prisma.$ProjectFeaturePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4623,6 +5990,19 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     brandVoiceTone: runtime.JsonValue | null
     brandVoiceAvoid: runtime.JsonValue | null
     brandAudience: string | null
+    /**
+     * Public / portfolio
+     */
+    publicSlug: string | null
+    portfolioVisible: boolean
+    portfolioBlurb: string | null
+    /**
+     * Early access landing
+     */
+    earlyAccessSlug: string | null
+    earlyAccessEnabled: boolean
+    earlyAccessHeadline: string | null
+    earlyAccessBody: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["project"]>
@@ -5038,6 +6418,8 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   buildReleases<T extends Prisma.Project$buildReleasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$buildReleasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BuildReleasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   envVars<T extends Prisma.Project$envVarsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$envVarsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectEnvVarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deployments<T extends Prisma.Project$deploymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$deploymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectDeploymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  artifacts<T extends Prisma.Project$artifactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$artifactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectArtifactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  features<T extends Prisma.Project$featuresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$featuresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectFeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5083,6 +6465,13 @@ export interface ProjectFieldRefs {
   readonly brandVoiceTone: Prisma.FieldRef<"Project", 'Json'>
   readonly brandVoiceAvoid: Prisma.FieldRef<"Project", 'Json'>
   readonly brandAudience: Prisma.FieldRef<"Project", 'String'>
+  readonly publicSlug: Prisma.FieldRef<"Project", 'String'>
+  readonly portfolioVisible: Prisma.FieldRef<"Project", 'Boolean'>
+  readonly portfolioBlurb: Prisma.FieldRef<"Project", 'String'>
+  readonly earlyAccessSlug: Prisma.FieldRef<"Project", 'String'>
+  readonly earlyAccessEnabled: Prisma.FieldRef<"Project", 'Boolean'>
+  readonly earlyAccessHeadline: Prisma.FieldRef<"Project", 'String'>
+  readonly earlyAccessBody: Prisma.FieldRef<"Project", 'String'>
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Project", 'DateTime'>
 }
@@ -5905,6 +7294,54 @@ export type Project$deploymentsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.ProjectDeploymentScalarFieldEnum | Prisma.ProjectDeploymentScalarFieldEnum[]
+}
+
+/**
+ * Project.artifacts
+ */
+export type Project$artifactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectArtifact
+   */
+  select?: Prisma.ProjectArtifactSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectArtifact
+   */
+  omit?: Prisma.ProjectArtifactOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectArtifactInclude<ExtArgs> | null
+  where?: Prisma.ProjectArtifactWhereInput
+  orderBy?: Prisma.ProjectArtifactOrderByWithRelationInput | Prisma.ProjectArtifactOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectArtifactWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectArtifactScalarFieldEnum | Prisma.ProjectArtifactScalarFieldEnum[]
+}
+
+/**
+ * Project.features
+ */
+export type Project$featuresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectFeature
+   */
+  select?: Prisma.ProjectFeatureSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectFeature
+   */
+  omit?: Prisma.ProjectFeatureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectFeatureInclude<ExtArgs> | null
+  where?: Prisma.ProjectFeatureWhereInput
+  orderBy?: Prisma.ProjectFeatureOrderByWithRelationInput | Prisma.ProjectFeatureOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectFeatureWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectFeatureScalarFieldEnum | Prisma.ProjectFeatureScalarFieldEnum[]
 }
 
 /**

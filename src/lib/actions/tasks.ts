@@ -9,6 +9,7 @@ import {
   syncMilestoneCompletion,
 } from "@/lib/actions/milestones";
 import { revalidatePath } from "next/cache";
+import { broadcastEvent } from "@/lib/realtime";
 import type { Prisma } from "../../../generated/prisma/client";
 import {
   type BoardTask,
@@ -202,6 +203,18 @@ export async function createTask(
   if (task.milestoneId) {
     await syncMilestoneCompletion(task.milestoneId);
   }
+
+  // Broadcast real-time event
+  broadcastEvent(
+    "task.created",
+    {
+      taskId: task.id,
+      projectId,
+      title: task.title,
+      status: task.status,
+    },
+    user.id
+  );
 
   revalidatePath("/dashboard/build-tracker");
   revalidatePath("/dashboard");

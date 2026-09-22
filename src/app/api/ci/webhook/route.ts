@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import type { BuildPipelineStatus } from "@/lib/build-rbac";
+import {
+  rateLimitWebhook,
+  getClientIp,
+} from "@/lib/webhook-rate-limit";
 
 export const runtime = "nodejs";
 
@@ -36,6 +40,16 @@ export async function POST(request: Request) {
   const secret = process.env.CI_WEBHOOK_SECRET;
   if (!secret) {
     return NextResponse.json({ error: "CI_WEBHOOK_SECRET not configured" }, { status: 503 });
+  }
+
+  // Rate limit by IP
+  const clientIp = getClientIp(request);
+  const rateLimitError = rateLimitWebhook(clientIp, "ci");
+  if (rateLimitError) {
+    return NextResponse.json(
+      { error: rateLimitError.error },
+      { status: rateLimitError.status }
+    );
   }
 
   let body: CIWebhookPayload;

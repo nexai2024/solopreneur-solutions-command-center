@@ -81,7 +81,9 @@ export const ModelName = {
   BuildArtifact: 'BuildArtifact',
   VercelConnection: 'VercelConnection',
   ProjectEnvVar: 'ProjectEnvVar',
-  ProjectDeployment: 'ProjectDeployment'
+  ProjectDeployment: 'ProjectDeployment',
+  ProjectArtifact: 'ProjectArtifact',
+  ProjectFeature: 'ProjectFeature'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -108,6 +110,10 @@ export const UserScalarFieldEnum = {
   role: 'role',
   stripeCustomerId: 'stripeCustomerId',
   subscriptionStatus: 'subscriptionStatus',
+  portfolioSlug: 'portfolioSlug',
+  portfolioPublic: 'portfolioPublic',
+  portfolioHeadline: 'portfolioHeadline',
+  portfolioBio: 'portfolioBio',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -132,6 +138,13 @@ export const ProjectScalarFieldEnum = {
   brandVoiceTone: 'brandVoiceTone',
   brandVoiceAvoid: 'brandVoiceAvoid',
   brandAudience: 'brandAudience',
+  publicSlug: 'publicSlug',
+  portfolioVisible: 'portfolioVisible',
+  portfolioBlurb: 'portfolioBlurb',
+  earlyAccessSlug: 'earlyAccessSlug',
+  earlyAccessEnabled: 'earlyAccessEnabled',
+  earlyAccessHeadline: 'earlyAccessHeadline',
+  earlyAccessBody: 'earlyAccessBody',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -231,6 +244,7 @@ export const TaskScalarFieldEnum = {
   projectId: 'projectId',
   milestoneId: 'milestoneId',
   ideaId: 'ideaId',
+  featureId: 'featureId',
   title: 'title',
   description: 'description',
   status: 'status',
@@ -646,6 +660,43 @@ export const ProjectDeploymentScalarFieldEnum = {
 } as const
 
 export type ProjectDeploymentScalarFieldEnum = (typeof ProjectDeploymentScalarFieldEnum)[keyof typeof ProjectDeploymentScalarFieldEnum]
+
+
+export const ProjectArtifactScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  userId: 'userId',
+  title: 'title',
+  kind: 'kind',
+  format: 'format',
+  body: 'body',
+  url: 'url',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  fileName: 'fileName',
+  tags: 'tags',
+  metadata: 'metadata',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectArtifactScalarFieldEnum = (typeof ProjectArtifactScalarFieldEnum)[keyof typeof ProjectArtifactScalarFieldEnum]
+
+
+export const ProjectFeatureScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  status: 'status',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectFeatureScalarFieldEnum = (typeof ProjectFeatureScalarFieldEnum)[keyof typeof ProjectFeatureScalarFieldEnum]
 
 
 export const SortOrder = {

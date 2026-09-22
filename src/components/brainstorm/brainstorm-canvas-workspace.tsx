@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Archive, Loader2, Plus, Sparkles } from "lucide-react";
+import { Archive, GitMerge, Loader2, Plus, Sparkles, X } from "lucide-react";
 import { SessionPanel } from "@/components/brainstorm/session-panel";
 import { NodeCard } from "@/components/brainstorm/node-card";
 import { BrainstormCopilot } from "@/components/brainstorm/brainstorm-copilot";
@@ -13,6 +14,7 @@ import {
   deleteBrainstormNode,
   deleteBrainstormSession,
   getBrainstormNodes,
+  mergeBrainstormNodes,
   runBrainstormAI,
   updateBrainstormNode,
   generateIdeasForSession,
@@ -53,6 +55,7 @@ export function BrainstormCanvasWorkspace({
   initialSessions: BrainstormSessionDTO[];
 }) {
   const { user } = useUser();
+  const router = useRouter();
   const userId = user?.id ?? "local";
 
   const [sessions, setSessions] = useState<BrainstormSession[]>(
@@ -70,6 +73,9 @@ export function BrainstormCanvasWorkspace({
   const [aiPrompt, setAiPrompt] = useState("");
   const [generatingIdeas, setGeneratingIdeas] = useState(false);
   const [focusedNodeContent, setFocusedNodeContent] = useState<string | undefined>();
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [merging, setMerging] = useState(false);
+  const [includeSiblings, setIncludeSiblings] = useState(true);
 
   const [explodingId, setExplodingId] = useState<string | null>(null);
   const [validatingId, setValidatingId] = useState<string | null>(null);
@@ -97,7 +103,119 @@ export function BrainstormCanvasWorkspace({
 
   useEffect(() => {
     if (activeSessionId) reloadNodes(activeSessionId);
+    setSelectedIds(new Set());
   }, [activeSessionId, reloadNodes]);
+
+  const toggleSelect = useCallback(
+    (nodeId: string) => {
+      const node = nodes.find((n) => n.id === nodeId);
+      const wasSelected = selectedIds.has(nodeId);
+
+      if (wasSelected) {
+        setSelectedIds((prev) => {
+          const next = new Set(prev);
+          next.delete(nodeId);
+          return next;
+        });
+        return;
+      }
+
+      const isFeatureLike =
+        node?.node_type === "Feature" || node?.node_type === "User Story";
+
+      const autoAdded: string[] = [];
+      if (includeSiblings && node?.parent_id && isFeatureLike) {
+        for (const sibling of nodes) {
+          if (
+            sibling.parent_id === node.parent_id &&
+            (sibling.node_type === "Feature" || sibling.node_type === "User Story") &&
+            sibling.status !== "archived" &&
+            sibling.id !== nodeId &&
+            !selectedIds.has(sibling.id)
+          ) {
+            autoAdded.push(sibling.id);
+          }
+        }
+      }
+
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        next.add(nodeId);
+        for (const id of autoAdded) next.add(id);
+        return next;
+      });
+
+      if (autoAdded.length > 0) {
+        toast.message(
+          `Included ${autoAdded.length} sibling feature${autoAdded.length === 1 ? "" : "s"}`,
+          {
+            action: {
+              label: "Just this one",
+              onClick: () => {
+                setSelectedIds((prev) => {
+                  const next = new Set(prev);
+                  for (const id of autoAdded) next.delete(id);
+                  return next;
+                });
+              },
+            },
+          }
+        );
+      }
+    },
+    [nodes, selectedIds, includeSiblings]
+  );
+
+  const handleMerge = (promote: boolean) => {
+    if (selectedIds.size < 2) {
+      toast.error("Select at least two nodes to merge");
+      return;
+    }
+    setMerging(true);
+    startTransition(async () => {
+      try {
+        const result = await mergeBrainstormNodes([...selectedIds], {
+          promote,
+          archiveSources: true,
+        });
+        setSelectedIds(new Set());
+        if (activeSessionId) await reloadNodes(activeSessionId);
+        if (result.project) {
+          const score =
+            result.node.viability_score != null
+              ? ` · score ${result.node.viability_score}`
+              : "";
+          toast.success(
+            `Merged into “${result.project.name}” and promoted${score}`,
+            {
+              action: {
+                label: "Generate artifacts",
+                onClick: () =>
+                  router.push(
+                    `/dashboard/build-tracker?projectId=${result.project!.id}&tab=artifacts`
+                  ),
+              },
+            }
+          );
+          router.push(
+            `/dashboard/build-tracker?projectId=${result.project.id}&tab=artifacts`
+          );
+        } else {
+          const score =
+            result.node.viability_score != null
+              ? ` · scored ${result.node.viability_score}`
+              : "";
+          toast.success(
+            `Merged into “${result.node.title || result.node.content.slice(0, 60)}”${score}`
+          );
+        }
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Merge failed");
+      } finally {
+        setMerging(false);
+      }
+    });
+  };
 
   const handleCreateSession = async (title: string) => {
     setCreatingSession(true);
@@ -382,6 +500,56 @@ export function BrainstormCanvasWorkspace({
               {showArchived ? "Hide archived" : "Show archived"}
             </Button>
           </div>
+          {selectedIds.size > 0 && (
+            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-[hsl(var(--os-cyan)/0.3)] bg-[hsl(var(--os-cyan)/0.08)] px-3 py-2">
+              <span className="text-xs text-muted-foreground">
+                {selectedIds.size} node{selectedIds.size === 1 ? "" : "s"} selected
+              </span>
+              <label className="inline-flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={includeSiblings}
+                  onChange={(e) => setIncludeSiblings(e.target.checked)}
+                  className="h-3.5 w-3.5 rounded border-border accent-[hsl(var(--os-cyan))]"
+                />
+                Auto-include sibling features
+              </label>
+              <Button
+                size="sm"
+                variant="secondary"
+                disabled={merging || selectedIds.size < 2}
+                onClick={() => handleMerge(false)}
+              >
+                {merging ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                ) : (
+                  <GitMerge className="h-4 w-4 mr-1" />
+                )}
+                Merge selected
+              </Button>
+              <Button
+                size="sm"
+                disabled={merging || selectedIds.size < 2}
+                onClick={() => handleMerge(true)}
+              >
+                {merging ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                ) : (
+                  <GitMerge className="h-4 w-4 mr-1" />
+                )}
+                Merge &amp; promote
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                disabled={merging}
+                onClick={() => setSelectedIds(new Set())}
+              >
+                <X className="h-4 w-4 mr-1" />
+                Clear
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
@@ -412,6 +580,8 @@ export function BrainstormCanvasWorkspace({
                   node={node}
                   childNodes={children}
                   depth={0}
+                  isSelected={(id) => selectedIds.has(id)}
+                  onToggleSelect={toggleSelect}
                   onExplode={(n) =>
                     runAI(n, "explode", setExplodingId, "explosion")
                   }

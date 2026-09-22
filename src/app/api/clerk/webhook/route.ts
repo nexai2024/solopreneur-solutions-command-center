@@ -3,6 +3,10 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { logger } from "@/lib/logger";
+import {
+  rateLimitWebhook,
+  getClientIp,
+} from "@/lib/webhook-rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +25,17 @@ export async function POST(request: Request) {
   const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
   if (!webhookSecret) {
     return NextResponse.json({ error: "CLERK_WEBHOOK_SECRET not configured" }, { status: 503 });
+  }
+
+  // Rate limit by IP
+  const clientIp = getClientIp(request);
+  const rateLimitError = rateLimitWebhook(clientIp, "clerk");
+  if (rateLimitError) {
+    logger.warn("Clerk webhook rate limited", { route: "/api/clerk/webhook", ip: clientIp });
+    return NextResponse.json(
+      { error: rateLimitError.error },
+      { status: rateLimitError.status }
+    );
   }
 
   const headerPayload = await headers();

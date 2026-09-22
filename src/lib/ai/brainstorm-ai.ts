@@ -234,3 +234,142 @@ function clamp(value: number, min: number, max: number, fallback: number) {
   if (typeof value !== "number" || Number.isNaN(value)) return fallback;
   return Math.min(max, Math.max(min, Math.round(value)));
 }
+
+export type MergeIdeaInput = {
+  id: string;
+  title: string;
+  content: string;
+  nodeType: string;
+  coreProblem: string | null;
+  proposedSolution: string | null;
+  targetUserPersona: string | null;
+  features: string[];
+};
+
+export type MergedIdeaSynthesis = {
+  title: string;
+  content: string;
+  coreProblem: string;
+  proposedSolution: string;
+  targetUserPersona: string;
+  combinedFeatures: string[];
+  rationale: string;
+  strategy: string;
+};
+
+/**
+ * Synthesize multiple brainstorm nodes into one product concept using role-aware merge logic.
+ */
+export async function synthesizeMergedIdea(
+  ideas: MergeIdeaInput[]
+): Promise<MergedIdeaSynthesis> {
+  const {
+    planMerge,
+    buildStructuralMerge,
+    formatMergePrompt,
+  } = await import("@/lib/brainstorm-merge");
+
+  const plan = planMerge(ideas);
+  const structural = buildStructuralMerge(plan);
+
+  // Single Idea + features only: keep structural result (Idea spine, features attached)
+  if (plan.strategy === "enrich_primary_idea" && !structural.needsAiPolish) {
+    return {
+      title: structural.title,
+      content: structural.content,
+      coreProblem: structural.coreProblem,
+      proposedSolution: structural.proposedSolution,
+      targetUserPersona: structural.targetUserPersona,
+      combinedFeatures: structural.combinedFeatures,
+      rationale: structural.rationale,
+      strategy: plan.strategy,
+    };
+  }
+
+  try {
+    const response = await aiComplete({
+      model: AI_MODEL_ADVANCED,
+      jsonMode: true,
+      systemPrompt: `You are a product strategist for solopreneurs. Merge brainstorm canvas nodes into ONE coherent product Idea.
+
+Role rules (strict):
+- Idea nodes are the primary entity (product concept). Never demote an Idea into a feature.
+- Feature / User Story / Task nodes become entries in combinedFeatures under the Idea.
+- Research / Risk / Marketing enrich the pitch, problem, solution, or risks — they are NOT features.
+- If exactly one primary Idea exists, preserve its identity (title can be lightly polished but must remain the same product).
+- If multiple Ideas exist, synthesize them into one peer-level concept.
+- If no Idea exists, invent a parent Idea that owns the features/context.
+
+Return valid JSON only.`,
+      prompt: `${formatMergePrompt(plan)}
+
+Return JSON:
+{
+  "title": "product name for the resulting Idea",
+  "content": "2-4 sentence pitch; weave research/marketing/risks where relevant",
+  "coreProblem": "unified problem (keep primary Idea's problem when enriching)",
+  "proposedSolution": "unified solution",
+  "targetUserPersona": "primary persona",
+  "combinedFeatures": ["feature labels to attach under the Idea", "..."],
+  "rationale": "1-2 sentences explaining the role-aware merge"
+}
+
+Required: combinedFeatures must include these when provided: ${JSON.stringify(structural.combinedFeatures)}`,
+    });
+
+    const parsed = JSON.parse(response) as Partial<MergedIdeaSynthesis>;
+    if (!parsed.title || !parsed.content) {
+      throw new Error("Incomplete merge synthesis");
+    }
+
+    // For enrich_primary_idea, never let AI replace the Idea title with a feature mashup
+    const title =
+      plan.strategy === "enrich_primary_idea"
+        ? structural.title
+        : parsed.title.trim();
+
+    // Prefer AI features but always union with planned feature labels
+    const aiFeatures = (parsed.combinedFeatures ?? []).filter(Boolean);
+    const combinedFeatures = [
+      ...new Map(
+        [...structural.combinedFeatures, ...aiFeatures].map((f) => [
+          f.trim().toLowerCase(),
+          f.trim(),
+        ])
+      ).values(),
+    ].slice(0, 16);
+
+    return {
+      title,
+      content: parsed.content.trim(),
+      coreProblem:
+        plan.strategy === "enrich_primary_idea" && structural.coreProblem
+          ? structural.coreProblem
+          : parsed.coreProblem?.trim() || structural.coreProblem,
+      proposedSolution:
+        plan.strategy === "enrich_primary_idea" && structural.proposedSolution
+          ? structural.proposedSolution
+          : parsed.proposedSolution?.trim() || structural.proposedSolution,
+      targetUserPersona:
+        plan.strategy === "enrich_primary_idea" && structural.targetUserPersona
+          ? structural.targetUserPersona
+          : parsed.targetUserPersona?.trim() || structural.targetUserPersona,
+      combinedFeatures,
+      rationale: parsed.rationale?.trim() || structural.rationale,
+      strategy: plan.strategy,
+    };
+  } catch {
+    return {
+      title: structural.title,
+      content: structural.content,
+      coreProblem: structural.coreProblem,
+      proposedSolution: structural.proposedSolution,
+      targetUserPersona: structural.targetUserPersona,
+      combinedFeatures: structural.combinedFeatures,
+      rationale: structural.rationale,
+      strategy: plan.strategy,
+    };
+  }
+}
+
+

@@ -25,6 +25,8 @@ interface NodeCardProps {
   node: BrainstormNode;
   childNodes?: BrainstormNode[];
   depth: number;
+  isSelected?: (nodeId: string) => boolean;
+  onToggleSelect?: (nodeId: string) => void;
   onExplode: (node: BrainstormNode) => Promise<void>;
   onValidate: (node: BrainstormNode) => Promise<void>;
   onAnalyze: (node: BrainstormNode) => Promise<void>;
@@ -113,6 +115,8 @@ export function NodeCard({
   node,
   childNodes = [],
   depth,
+  isSelected,
+  onToggleSelect,
   onExplode,
   onValidate,
   onAnalyze,
@@ -231,9 +235,19 @@ export function NodeCard({
     setPromoting(true);
     try {
       const project = await promoteBrainstormNodeToProject(node.id);
-      toast.success('Promoted to project!');
+      toast.success("Promoted to project — generate messaging in Artifacts", {
+        action: {
+          label: "Open Artifacts",
+          onClick: () =>
+            router.push(
+              `/dashboard/build-tracker?projectId=${project.id}&tab=artifacts`
+            ),
+        },
+      });
       if (onPromote) onPromote(project.id);
-      router.push('/dashboard/build-tracker');
+      router.push(
+        `/dashboard/build-tracker?projectId=${project.id}&tab=artifacts`
+      );
     } catch (error) {
       console.error('Promotion error:', error);
       toast.error('Failed to promote to project');
@@ -302,6 +316,8 @@ export function NodeCard({
     toast.success(`Status updated to ${newStatus}`);
   };
 
+  const selected = isSelected?.(node.id) ?? false;
+
   return (
     <div className={`node-appear ${depth > 0 ? 'ml-6 mt-2' : 'mt-0'} ${isArchived && !showArchived ? 'hidden' : ''}`}>
       {/* Connector line */}
@@ -309,11 +325,23 @@ export function NodeCard({
         <div className="absolute left-0 -ml-3 mt-5 w-3 h-px bg-border opacity-60" />
       )}
 
-      <div className={`relative border rounded-xl p-4 transition-all duration-200 hover:shadow-md ${colorClass} ${node.type === 'ai_generated' ? 'node-ai-pulse' : ''} ${isArchived ? 'opacity-60 grayscale-[0.5]' : ''}`}
+      <div className={`relative border rounded-xl p-4 transition-all duration-200 hover:shadow-md ${colorClass} ${node.type === 'ai_generated' ? 'node-ai-pulse' : ''} ${isArchived ? 'opacity-60 grayscale-[0.5]' : ''} ${selected ? 'ring-2 ring-[hsl(var(--os-cyan))] border-[hsl(var(--os-cyan)/0.5)]' : ''}`}
         onMouseEnter={() => onFocus?.(node)}
       >
         {/* Header row */}
         <div className="flex items-start gap-3">
+          {/* Multi-select for Idea nodes (merge into project) */}
+          {onToggleSelect && !isArchived && (
+            <input
+              type="checkbox"
+              checked={selected}
+              onChange={() => onToggleSelect(node.id)}
+              title="Select to merge with other nodes"
+              className="mt-1 h-4 w-4 shrink-0 rounded border-border accent-[hsl(var(--os-cyan))] cursor-pointer"
+              onClick={(e) => e.stopPropagation()}
+            />
+          )}
+
           {/* Expand/collapse if has children */}
           <button
             onClick={() => hasChildren && setExpanded(e => !e)}
@@ -347,6 +375,11 @@ export function NodeCard({
               {node.type === 'ai_generated' && (
                 <span className="inline-flex items-center gap-1 text-[10px] text-[hsl(var(--os-cyan))] bg-[hsl(var(--os-cyan)/0.1)] border border-[hsl(var(--os-cyan)/0.2)] rounded-md px-1.5 py-0.5 font-medium shrink-0">
                   <Sparkles className="w-2.5 h-2.5" /> AI
+                </span>
+              )}
+              {node.metadata?.merged_from_ids && Array.isArray(node.metadata.merged_from_ids) && (
+                <span className="inline-flex items-center gap-1 text-[10px] text-[hsl(var(--os-emerald))] bg-[hsl(var(--os-emerald)/0.1)] border border-[hsl(var(--os-emerald)/0.2)] rounded-md px-1.5 py-0.5 font-medium shrink-0">
+                  <GitBranch className="w-2.5 h-2.5" /> Merged
                 </span>
               )}
               {isArchived && (
@@ -427,8 +460,14 @@ export function NodeCard({
               <>
                 {isPromoted ? (
                   <button
-                    onClick={() => router.push('/dashboard/build-tracker')}
-                    title="View Project in Build Tracker"
+                    onClick={() =>
+                      router.push(
+                        promotedProjectId
+                          ? `/dashboard/build-tracker?projectId=${promotedProjectId}&tab=artifacts`
+                          : "/dashboard/build-tracker"
+                      )
+                    }
+                    title="View Artifacts in Build Tracker"
                     className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-[hsl(var(--os-cyan))] bg-[hsl(var(--os-cyan)/0.08)] hover:bg-[hsl(var(--os-cyan)/0.15)] border border-[hsl(var(--os-cyan)/0.25)] transition-all font-medium"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
@@ -1182,6 +1221,8 @@ export function NodeCard({
                 node={child}
                 childNodes={grandChildren}
                 depth={depth + 1}
+                isSelected={isSelected}
+                onToggleSelect={onToggleSelect}
                 onExplode={onExplode}
                 onValidate={onValidate}
                 onAnalyze={onAnalyze}

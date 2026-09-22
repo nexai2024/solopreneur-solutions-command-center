@@ -1,4 +1,4 @@
-import { getOpenAIClient, AI_MODEL_ADVANCED } from './ai-config';
+import { getOpenAIClient, AI_MODEL_ADVANCED, chatCompletionWithRetry } from './ai-config';
 
 /**
  * SOLOOS IDEA SCORING FRAMEWORK
@@ -187,7 +187,7 @@ export async function scoreIdea(
   const isRescore = !!(context?.previousScores && context?.completedImprovements?.length);
 
   try {
-    const openai = getOpenAIClient();
+    // Using chatCompletionWithRetry for retry support
 
     const rescoreInstructions = isRescore ? `
 
@@ -355,7 +355,7 @@ IMPORTANT for improvements:
 - estimatedImpact should be realistic (1-20 range) — how many points total the improvement could add
 - Categories: features (product changes), niche (market focus), positioning (how it's framed), techStack (technology choices), pricing (monetization model), marketing (go-to-market), partnerships (strategic alliances), timing (launch timing)`;
 
-    const response = await openai.chat.completions.create({
+    const response = await chatCompletionWithRetry({
       model: AI_MODEL_ADVANCED,
       messages: [
         { role: "system", content: systemPrompt },
@@ -467,9 +467,9 @@ export async function quickValidation(title: string, description: string): Promi
   quickTake: string;
 } | null> {
   try {
-    const openai = getOpenAIClient();
+    // Using chatCompletionWithRetry for retry support
 
-    const response = await openai.chat.completions.create({
+    const response = await chatCompletionWithRetry({
       model: AI_MODEL_ADVANCED,
       messages: [
         {
@@ -511,13 +511,13 @@ export async function getNextSteps(idea: {
   focusArea: string;
 } | null> {
   try {
-    const openai = getOpenAIClient();
+    // Using chatCompletionWithRetry for retry support
 
     const validationProgress = idea.validationItems?.length
       ? idea.validationItems.filter(v => v.isCompleted).length / idea.validationItems.length
       : 0;
 
-    const response = await openai.chat.completions.create({
+    const response = await chatCompletionWithRetry({
       model: AI_MODEL_ADVANCED,
       messages: [
         {

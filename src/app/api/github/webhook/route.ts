@@ -6,6 +6,10 @@ import {
   retryWebhookDelivery,
 } from "@/lib/github/webhook-processor";
 import { getGithubConnectionByFullName } from "@/lib/github/token";
+import {
+  rateLimitWebhook,
+  getClientIp,
+} from "@/lib/webhook-rate-limit";
 
 export const runtime = "nodejs";
 
@@ -89,6 +93,16 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "GITHUB_WEBHOOK_SECRET not configured" },
       { status: 503 }
+    );
+  }
+
+  // Rate limit by IP to prevent DoS
+  const clientIp = getClientIp(request);
+  const rateLimitError = rateLimitWebhook(clientIp, "github");
+  if (rateLimitError) {
+    return NextResponse.json(
+      { error: rateLimitError.error },
+      { status: rateLimitError.status }
     );
   }
 

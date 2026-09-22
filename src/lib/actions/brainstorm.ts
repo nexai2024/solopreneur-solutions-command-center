@@ -284,13 +284,15 @@ export async function autoFillNodeVetting(nodeId: string) {
   if (!node) throw new Error("Node not found");
 
   const { autoFillVettingFields } = await import("@/lib/ai/brainstorm-ai");
+  const { calculateViabilityScore } = await import("@/lib/brainstorm");
   const sessionContext = node.session.nodes.map((n) => n.content).filter(Boolean).join("; ");
   const vetting = await autoFillVettingFields(node.content ?? node.label, sessionContext);
 
-  const viabilityScore =
-    vetting.estimated_complexity * 0.2 +
-    vetting.market_need_intensity * 0.5 +
-    vetting.tech_stack_familiarity * 0.3;
+  const viabilityScore = calculateViabilityScore(
+    vetting.estimated_complexity,
+    vetting.market_need_intensity,
+    vetting.tech_stack_familiarity
+  );
 
   const updated = await prisma.brainstormNode.update({
     where: { id: nodeId },
@@ -298,7 +300,7 @@ export async function autoFillNodeVetting(nodeId: string) {
       coreProblem: vetting.core_problem,
       proposedSolution: vetting.proposed_solution,
       targetUserPersona: vetting.target_user_persona,
-      viabilityScore: Math.round(viabilityScore * 10) / 10,
+      viabilityScore,
       metadata: {
         ...((node.metadata as Record<string, unknown>) ?? {}),
         estimated_complexity: vetting.estimated_complexity,
@@ -310,6 +312,7 @@ export async function autoFillNodeVetting(nodeId: string) {
         dependency_risk: vetting.dependency_risk,
         idea_status: "Vetting",
         ai_summary: vetting.summary,
+        viability_score: viabilityScore,
       } as Prisma.InputJsonValue,
     },
   });
@@ -471,4 +474,228 @@ export async function askBrainstormCopilot(
 export async function promoteBrainstormNodeToProject(nodeId: string) {
   const result = await promoteToProjectBundle({ type: "brainstorm_node", nodeId });
   return result.project;
+}
+
+/**
+ * Merge 2+ brainstorm nodes (any type) into one synthesized root Idea.
+ * Optionally promote the merge straight into a Build Tracker project.
+ */
+export async function mergeBrainstormNodes(
+  nodeIds: string[],
+  opts?: { promote?: boolean; archiveSources?: boolean }
+): Promise<{
+  node: BrainstormNodeDTO;
+  project: { id: string; name: string; description: string | null; status: string } | null;
+}> {
+  const user = await requireAuth();
+  assertAiRateLimit(user.id);
+
+  const uniqueIds = [...new Set(nodeIds)].filter(Boolean);
+  if (uniqueIds.length < 2) {
+    throw new Error("Select at least two nodes to merge");
+  }
+
+  const nodes = await prisma.brainstormNode.findMany({
+    where: {
+      id: { in: uniqueIds },
+      session: { userId: user.id },
+      status: { not: "archived" },
+    },
+  });
+
+  if (nodes.length < 2) {
+    throw new Error("Could not find enough nodes to merge (check ownership / archived)");
+  }
+
+  const sessionId = nodes[0]!.sessionId;
+  if (nodes.some((n) => n.sessionId !== sessionId)) {
+    throw new Error("All nodes must be in the same brainstorm session");
+  }
+
+  const childFeatures = await prisma.brainstormNode.findMany({
+    where: {
+      parentId: { in: nodes.map((n) => n.id) },
+      status: { not: "archived" },
+      nodeType: { in: ["Feature", "User Story"] },
+    },
+    select: { parentId: true, label: true, content: true },
+  });
+
+  const featuresByParent = new Map<string, string[]>();
+  for (const child of childFeatures) {
+    if (!child.parentId) continue;
+    const list = featuresByParent.get(child.parentId) ?? [];
+    list.push(child.label || child.content || "");
+    featuresByParent.set(child.parentId, list.filter(Boolean));
+  }
+
+  const { synthesizeMergedIdea } = await import("@/lib/ai/brainstorm-ai");
+
+  const synthesis = await synthesizeMergedIdea(
+    nodes.map((n) => ({
+      id: n.id,
+      title: n.label || n.content?.slice(0, 80) || "Untitled",
+      content: n.content || n.label,
+      nodeType: n.nodeType,
+      coreProblem: n.coreProblem,
+      proposedSolution: n.proposedSolution,
+      targetUserPersona: n.targetUserPersona,
+      features: featuresByParent.get(n.id) ?? [],
+    }))
+  );
+
+  const featureLines =
+    synthesis.combinedFeatures.length > 0
+      ? `\n\nCombined features:\n${synthesis.combinedFeatures.map((f) => `• ${f}`).join("\n")}`
+      : "";
+
+  const content = `${synthesis.content}${featureLines}\n\nMerge rationale: ${synthesis.rationale}`;
+
+  const merged = await prisma.brainstormNode.create({
+    data: {
+      sessionId,
+      parentId: null,
+      label: synthesis.title.slice(0, 100),
+      content,
+      type: "ai_generated",
+      nodeType: "Idea",
+      coreProblem: synthesis.coreProblem || null,
+      proposedSolution: synthesis.proposedSolution || null,
+      targetUserPersona: synthesis.targetUserPersona || null,
+      metadata: {
+        idea_status: "Ready for Project Creation",
+        merged_from_ids: nodes.map((n) => n.id),
+        merged_from_titles: nodes.map((n) => n.label),
+        merged_from_types: nodes.map((n) => n.nodeType),
+        merge_strategy: synthesis.strategy,
+        combined_features: synthesis.combinedFeatures,
+        merge_rationale: synthesis.rationale,
+        ai_summary: synthesis.rationale,
+      } as Prisma.InputJsonValue,
+    },
+  });
+
+  // Attach must-have features as child Feature nodes
+  for (const [index, feature] of synthesis.combinedFeatures.slice(0, 8).entries()) {
+    await prisma.brainstormNode.create({
+      data: {
+        sessionId,
+        parentId: merged.id,
+        label: feature.slice(0, 100),
+        content: feature,
+        type: "ai_generated",
+        nodeType: "Feature",
+        positionY: index,
+      },
+    });
+  }
+
+  const archiveSources = opts?.archiveSources !== false;
+  if (archiveSources) {
+    for (const source of nodes) {
+      const meta = (source.metadata as Record<string, unknown>) ?? {};
+      await prisma.brainstormNode.update({
+        where: { id: source.id },
+        data: {
+          status: "archived",
+          metadata: {
+            ...meta,
+            merged_into_id: merged.id,
+            merged_into_title: synthesis.title,
+          } as Prisma.InputJsonValue,
+        },
+      });
+    }
+  }
+
+  await prisma.brainstormSession.update({
+    where: { id: sessionId },
+    data: { updatedAt: new Date() },
+  });
+
+  // Auto-vetting/score so the merged concept is project-ready without a second click.
+  // Soft-fail: merge still succeeds if scoring fails.
+  let scoredNode = merged;
+  try {
+    const { autoFillVettingFields } = await import("@/lib/ai/brainstorm-ai");
+    const { calculateViabilityScore } = await import("@/lib/brainstorm");
+
+    const contextNodes = await prisma.brainstormNode.findMany({
+      where: { sessionId, status: { not: "archived" } },
+      take: 12,
+      select: { content: true, label: true },
+      orderBy: { createdAt: "desc" },
+    });
+    const sessionContext = contextNodes
+      .map((n) => n.content ?? n.label)
+      .filter(Boolean)
+      .join("; ");
+
+    const vetting = await autoFillVettingFields(
+      content,
+      sessionContext || undefined
+    );
+    const viabilityScore = calculateViabilityScore(
+      vetting.estimated_complexity,
+      vetting.market_need_intensity,
+      vetting.tech_stack_familiarity
+    );
+    const existingMeta = (merged.metadata as Record<string, unknown>) ?? {};
+
+    scoredNode = await prisma.brainstormNode.update({
+      where: { id: merged.id },
+      data: {
+        // Keep merge synthesis for problem/solution/persona when present
+        coreProblem: merged.coreProblem || vetting.core_problem || null,
+        proposedSolution: merged.proposedSolution || vetting.proposed_solution || null,
+        targetUserPersona:
+          merged.targetUserPersona || vetting.target_user_persona || null,
+        viabilityScore,
+        metadata: {
+          ...existingMeta,
+          estimated_complexity: vetting.estimated_complexity,
+          market_need_intensity: vetting.market_need_intensity,
+          tech_stack_familiarity: vetting.tech_stack_familiarity,
+          monetization_potential: vetting.monetization_potential,
+          time_to_mvp_days: vetting.time_to_mvp_days,
+          target_technology: vetting.target_technology,
+          dependency_risk: vetting.dependency_risk,
+          idea_status: "Ready for Project Creation",
+          viability_score: viabilityScore,
+          ai_summary: vetting.summary || existingMeta.ai_summary || synthesis.rationale,
+          auto_vetted_after_merge: true,
+        } as Prisma.InputJsonValue,
+      },
+    });
+  } catch {
+    // Scoring is best-effort — merged node remains usable
+  }
+
+  let project: {
+    id: string;
+    name: string;
+    description: string | null;
+    status: string;
+  } | null = null;
+
+  if (opts?.promote) {
+    const result = await promoteToProjectBundle({
+      type: "brainstorm_node",
+      nodeId: scoredNode.id,
+    });
+    project = result.project;
+  }
+
+  revalidatePath("/dashboard/brainstorm");
+  if (project) {
+    revalidatePath("/dashboard/build-tracker");
+    revalidatePath("/dashboard");
+  }
+
+  // Reload merged node with fresh metadata (promote stamps ids)
+  const fresh = await prisma.brainstormNode.findUniqueOrThrow({
+    where: { id: scoredNode.id },
+  });
+
+  return { node: toNodeDTO(fresh), project };
 }

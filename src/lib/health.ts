@@ -6,6 +6,12 @@ export type HealthCheckResult = {
   status: "healthy" | "degraded" | "unhealthy";
   timestamp: string;
   checks: Record<string, HealthCheckStatus>;
+  // Database pool statistics (if available)
+  databasePool: {
+    total: number;
+    active: number;
+    idle: number;
+  } | null;
 };
 
 function envPresent(name: string): HealthCheckStatus {
@@ -24,9 +30,34 @@ export async function runHealthChecks(): Promise<HealthCheckResult> {
     githubWebhook: envPresent("GITHUB_WEBHOOK_SECRET"),
   };
 
+  let databasePool: { total: number; active: number; idle: number } | null = null;
+
   try {
     await prisma.$queryRaw`SELECT 1`;
     checks.database = "ok";
+
+    // Get pool statistics for monitoring
+    try {
+      const adapter = prisma as unknown as {
+        $adapter?: {
+          $pool?: {
+            totalCount?: () => number;
+            idleCount?: () => number;
+            waitingCount?: () => number;
+          };
+        };
+      };
+      const pool = adapter.$adapter?.$pool;
+      if (pool) {
+        databasePool = {
+          total: typeof pool.totalCount === "function" ? pool.totalCount() : 0,
+          active: typeof pool.totalCount === "function" ? pool.totalCount() - (typeof pool.idleCount === "function" ? pool.idleCount() : 0) : 0,
+          idle: typeof pool.idleCount === "function" ? pool.idleCount() : 0,
+        };
+      }
+    } catch {
+      // Pool stats not available, continue without them
+    }
   } catch {
     checks.database = "error";
   }
@@ -42,6 +73,7 @@ export async function runHealthChecks(): Promise<HealthCheckResult> {
     status: !criticalOk ? "unhealthy" : hasWarnings ? "degraded" : "healthy",
     timestamp: new Date().toISOString(),
     checks,
+    databasePool,
   };
 }
 

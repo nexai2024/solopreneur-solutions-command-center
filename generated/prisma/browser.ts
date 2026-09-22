@@ -172,3 +172,13 @@ export type ProjectEnvVar = Prisma.ProjectEnvVarModel
  * 
  */
 export type ProjectDeployment = Prisma.ProjectDeploymentModel
+/**
+ * Model ProjectArtifact
+ * Durable project marketing/product assets (copy, brand, media, docs, links).
+ */
+export type ProjectArtifact = Prisma.ProjectArtifactModel
+/**
+ * Model ProjectFeature
+ * Product feature backlog per project (MVP / Production / Planned / Nice to have).
+ */
+export type ProjectFeature = Prisma.ProjectFeatureModel

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   createIdea,
@@ -55,6 +56,7 @@ function scoreColor(score: number | null) {
 }
 
 export function IdeaWorkspace({ initialIdeas }: IdeaWorkspaceProps) {
+  const router = useRouter();
   const [ideas, setIdeas] = useState(initialIdeas);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -109,7 +111,16 @@ export function IdeaWorkspace({ initialIdeas }: IdeaWorkspaceProps) {
               : i
           )
         );
-        toast.success(`Promoted to project: ${project.name} — starter tasks & milestones added`);
+        toast.success(`Promoted to project: ${project.name}`, {
+          description: "Starter tasks added — generate messaging artifacts next.",
+          action: {
+            label: "Generate artifacts",
+            onClick: () =>
+              router.push(
+                `/dashboard/build-tracker?projectId=${project.id}&tab=artifacts`
+              ),
+          },
+        });
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "Promotion failed");
       } finally {

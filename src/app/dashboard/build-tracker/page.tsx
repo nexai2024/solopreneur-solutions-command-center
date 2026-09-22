@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getProjectsWithTasks } from "@/lib/actions/tasks";
 import { getBuildReleasesForProject, getBuildMetrics } from "@/lib/actions/build-library";
+import { listProjectArtifacts } from "@/lib/actions/project-artifacts";
+import { listProjectFeatures } from "@/lib/actions/project-features";
 import { getRepoMonitoringSnapshot } from "@/lib/actions/repo-monitoring";
 import { getProjectProfile } from "@/lib/actions/project-profile";
 import { requireAuth } from "@/lib/auth";
@@ -22,14 +24,17 @@ export default async function BuildTrackerPage({
 
   const boardProjects = await Promise.all(
     projects.map(async (project) => {
-      const [builds, buildMetrics, monitoring, profile] = await Promise.all([
-        getBuildReleasesForProject(project.id),
-        getBuildMetrics(project.id),
-        project.githubConnection
-          ? getRepoMonitoringSnapshot(project.id)
-          : Promise.resolve(null),
-        getProjectProfile(project.id),
-      ]);
+      const [builds, buildMetrics, monitoring, profile, artifacts, features] =
+        await Promise.all([
+          getBuildReleasesForProject(project.id),
+          getBuildMetrics(project.id),
+          project.githubConnection
+            ? getRepoMonitoringSnapshot(project.id)
+            : Promise.resolve(null),
+          getProjectProfile(project.id),
+          listProjectArtifacts(project.id),
+          listProjectFeatures(project.id),
+        ]);
 
       return {
         id: project.id,
@@ -47,6 +52,8 @@ export default async function BuildTrackerPage({
         ideas: project.ideas,
         leads: project.leads,
         builds,
+        artifacts,
+        features,
         buildMetrics,
         monitoring,
         profile,
@@ -62,8 +69,8 @@ export default async function BuildTrackerPage({
       <div>
         <h1 className="text-2xl font-bold">Build Tracker</h1>
         <p className="text-muted-foreground">
-          Tasks, milestones, build library, GitHub CI, Vercel deployments, env vars,
-          tech stack, and project notes — all in one place per project.
+          Features, tasks, milestones, artifacts, portfolio & early access, build
+          library, GitHub CI, and project profile — all in one place per project.
         </p>
       </div>
 

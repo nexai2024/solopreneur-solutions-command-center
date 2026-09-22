@@ -387,10 +387,6 @@ export type MilestoneUpdateOneWithoutTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MilestoneUpdateToOneWithWhereWithoutTasksInput, Prisma.MilestoneUpdateWithoutTasksInput>, Prisma.MilestoneUncheckedUpdateWithoutTasksInput>
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type MilestoneCreateWithoutProjectInput = {
   id?: string
   title: string

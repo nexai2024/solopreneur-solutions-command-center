@@ -427,7 +427,9 @@ export const ModelName = {
   BuildArtifact: 'BuildArtifact',
   VercelConnection: 'VercelConnection',
   ProjectEnvVar: 'ProjectEnvVar',
-  ProjectDeployment: 'ProjectDeployment'
+  ProjectDeployment: 'ProjectDeployment',
+  ProjectArtifact: 'ProjectArtifact',
+  ProjectFeature: 'ProjectFeature'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -443,7 +445,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "project" | "idea" | "brainstormSession" | "brainstormCopilotMessage" | "brainstormNode" | "lead" | "task" | "milestone" | "seoKeyword" | "contentItem" | "growthWeeklyPlan" | "launchPlaybookProgress" | "marketingCampaign" | "campaignAsset" | "revenueCustomer" | "revenuePlan" | "revenueSubscription" | "transaction" | "stripeWebhookEvent" | "githubConnection" | "repoWebhookDelivery" | "repoCommit" | "repoBuild" | "repoRelease" | "repoPullRequest" | "buildRelease" | "buildArtifact" | "vercelConnection" | "projectEnvVar" | "projectDeployment"
+    modelProps: "user" | "project" | "idea" | "brainstormSession" | "brainstormCopilotMessage" | "brainstormNode" | "lead" | "task" | "milestone" | "seoKeyword" | "contentItem" | "growthWeeklyPlan" | "launchPlaybookProgress" | "marketingCampaign" | "campaignAsset" | "revenueCustomer" | "revenuePlan" | "revenueSubscription" | "transaction" | "stripeWebhookEvent" | "githubConnection" | "repoWebhookDelivery" | "repoCommit" | "repoBuild" | "repoRelease" | "repoPullRequest" | "buildRelease" | "buildArtifact" | "vercelConnection" | "projectEnvVar" | "projectDeployment" | "projectArtifact" | "projectFeature"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2741,6 +2743,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ProjectArtifact: {
+      payload: Prisma.$ProjectArtifactPayload<ExtArgs>
+      fields: Prisma.ProjectArtifactFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProjectArtifactFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectArtifactPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProjectArtifactFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectArtifactPayload>
+        }
+        findFirst: {
+          args: Prisma.ProjectArtifactFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectArtifactPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProjectArtifactFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectArtifactPayload>
+        }
+        findMany: {
+          args: Prisma.ProjectArtifactFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectArtifactPayload>[]
+        }
+        create: {
+          args: Prisma.ProjectArtifactCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectArtifactPayload>
+        }
+        createMany: {
+          args: Prisma.ProjectArtifactCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProjectArtifactCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectArtifactPayload>[]
+        }
+        delete: {
+          args: Prisma.ProjectArtifactDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectArtifactPayload>
+        }
+        update: {
+          args: Prisma.ProjectArtifactUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectArtifactPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProjectArtifactDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProjectArtifactUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProjectArtifactUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectArtifactPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProjectArtifactUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectArtifactPayload>
+        }
+        aggregate: {
+          args: Prisma.ProjectArtifactAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProjectArtifact>
+        }
+        groupBy: {
+          args: Prisma.ProjectArtifactGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectArtifactGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProjectArtifactCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectArtifactCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProjectFeature: {
+      payload: Prisma.$ProjectFeaturePayload<ExtArgs>
+      fields: Prisma.ProjectFeatureFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProjectFeatureFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFeaturePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProjectFeatureFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFeaturePayload>
+        }
+        findFirst: {
+          args: Prisma.ProjectFeatureFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFeaturePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProjectFeatureFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFeaturePayload>
+        }
+        findMany: {
+          args: Prisma.ProjectFeatureFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFeaturePayload>[]
+        }
+        create: {
+          args: Prisma.ProjectFeatureCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFeaturePayload>
+        }
+        createMany: {
+          args: Prisma.ProjectFeatureCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProjectFeatureCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFeaturePayload>[]
+        }
+        delete: {
+          args: Prisma.ProjectFeatureDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFeaturePayload>
+        }
+        update: {
+          args: Prisma.ProjectFeatureUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFeaturePayload>
+        }
+        deleteMany: {
+          args: Prisma.ProjectFeatureDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProjectFeatureUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProjectFeatureUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFeaturePayload>[]
+        }
+        upsert: {
+          args: Prisma.ProjectFeatureUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectFeaturePayload>
+        }
+        aggregate: {
+          args: Prisma.ProjectFeatureAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProjectFeature>
+        }
+        groupBy: {
+          args: Prisma.ProjectFeatureGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectFeatureGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProjectFeatureCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectFeatureCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2788,6 +2938,10 @@ export const UserScalarFieldEnum = {
   role: 'role',
   stripeCustomerId: 'stripeCustomerId',
   subscriptionStatus: 'subscriptionStatus',
+  portfolioSlug: 'portfolioSlug',
+  portfolioPublic: 'portfolioPublic',
+  portfolioHeadline: 'portfolioHeadline',
+  portfolioBio: 'portfolioBio',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2812,6 +2966,13 @@ export const ProjectScalarFieldEnum = {
   brandVoiceTone: 'brandVoiceTone',
   brandVoiceAvoid: 'brandVoiceAvoid',
   brandAudience: 'brandAudience',
+  publicSlug: 'publicSlug',
+  portfolioVisible: 'portfolioVisible',
+  portfolioBlurb: 'portfolioBlurb',
+  earlyAccessSlug: 'earlyAccessSlug',
+  earlyAccessEnabled: 'earlyAccessEnabled',
+  earlyAccessHeadline: 'earlyAccessHeadline',
+  earlyAccessBody: 'earlyAccessBody',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2911,6 +3072,7 @@ export const TaskScalarFieldEnum = {
   projectId: 'projectId',
   milestoneId: 'milestoneId',
   ideaId: 'ideaId',
+  featureId: 'featureId',
   title: 'title',
   description: 'description',
   status: 'status',
@@ -3328,6 +3490,43 @@ export const ProjectDeploymentScalarFieldEnum = {
 export type ProjectDeploymentScalarFieldEnum = (typeof ProjectDeploymentScalarFieldEnum)[keyof typeof ProjectDeploymentScalarFieldEnum]
 
 
+export const ProjectArtifactScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  userId: 'userId',
+  title: 'title',
+  kind: 'kind',
+  format: 'format',
+  body: 'body',
+  url: 'url',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  fileName: 'fileName',
+  tags: 'tags',
+  metadata: 'metadata',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectArtifactScalarFieldEnum = (typeof ProjectArtifactScalarFieldEnum)[keyof typeof ProjectArtifactScalarFieldEnum]
+
+
+export const ProjectFeatureScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  status: 'status',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectFeatureScalarFieldEnum = (typeof ProjectFeatureScalarFieldEnum)[keyof typeof ProjectFeatureScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3397,6 +3596,13 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -3449,13 +3655,6 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -3654,6 +3853,8 @@ export type GlobalOmitConfig = {
   vercelConnection?: Prisma.VercelConnectionOmit
   projectEnvVar?: Prisma.ProjectEnvVarOmit
   projectDeployment?: Prisma.ProjectDeploymentOmit
+  projectArtifact?: Prisma.ProjectArtifactOmit
+  projectFeature?: Prisma.ProjectFeatureOmit
 }
 
 /* Types for Logging */

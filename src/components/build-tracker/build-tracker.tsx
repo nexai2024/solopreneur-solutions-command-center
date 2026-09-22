@@ -10,13 +10,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { BoardTask } from "@/lib/task-types";
 import { MilestoneChecklist } from "@/components/milestones/milestone-checklist";
 import { NewProjectButton, ProjectToolbar } from "@/components/build-tracker/project-toolbar";
+import { ProjectImportButton } from "@/components/build-tracker/project-import-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BuildPipelineBoard } from "@/components/build-tracker/build-pipeline-board";
 import { BuildReleaseManager } from "@/components/build-tracker/build-release-manager";
 import { ProjectRepoSection } from "@/components/build-tracker/project-repo-section";
 import { ProjectProfileSection } from "@/components/build-tracker/project-profile-section";
+import { ProjectArtifactsPanel } from "@/components/build-tracker/project-artifacts-panel";
+import { ProjectFeaturesPanel } from "@/components/build-tracker/project-features-panel";
+import { GrowthAndPortfolioPanel } from "@/components/build-tracker/growth-portfolio-panel";
 import { TaskKanbanBoard } from "@/components/build-tracker/task-kanban-board";
 import type { BuildReleaseDTO } from "@/lib/actions/build-library";
+import type { ProjectArtifactDTO } from "@/lib/actions/project-artifacts";
+import type { ProjectFeatureDTO } from "@/lib/actions/project-features";
 import type { ProjectProfileDTO } from "@/lib/actions/project-profile";
 import type { RepoMonitoringSnapshot } from "@/lib/actions/repo-monitoring";
 import {
@@ -26,7 +32,15 @@ import {
 } from "@/lib/build-rbac";
 import { HowDoILink } from "@/components/help/how-do-i-link";
 
-const BUILD_TABS = ["tasks", "builds", "repository", "profile"] as const;
+const BUILD_TABS = [
+  "tasks",
+  "features",
+  "builds",
+  "artifacts",
+  "growth",
+  "repository",
+  "profile",
+] as const;
 type BuildTab = (typeof BUILD_TABS)[number];
 
 function parseBuildTab(value: string | undefined): BuildTab {
@@ -96,6 +110,8 @@ export type BoardProject = {
   ideas: BoardIdea[];
   leads: BoardLead[];
   builds: BuildReleaseDTO[];
+  artifacts: ProjectArtifactDTO[];
+  features: ProjectFeatureDTO[];
   buildMetrics: {
     totalBuilds: number;
     successRate: number | null;
@@ -238,7 +254,10 @@ export function BuildTracker({
       <div className="flex flex-col items-center gap-4 py-8">
         <p className="text-sm text-muted-foreground">No projects yet.</p>
         <HowDoILink section="build-tracker" />
-        <NewProjectButton />
+        <div className="flex flex-wrap gap-2">
+          <NewProjectButton />
+          <ProjectImportButton />
+        </div>
       </div>
     );
   }
@@ -263,6 +282,7 @@ export function BuildTracker({
           </Button>
         ))}
         <NewProjectButton />
+        <ProjectImportButton />
       </div>
 
       {selected && (
@@ -328,7 +348,10 @@ export function BuildTracker({
             <Tabs value={tab} onValueChange={selectTab}>
               <TabsList className="flex flex-wrap h-auto gap-1">
                 <TabsTrigger value="tasks">Tasks & milestones</TabsTrigger>
+                <TabsTrigger value="features">Features</TabsTrigger>
                 <TabsTrigger value="builds">Builds & releases</TabsTrigger>
+                <TabsTrigger value="artifacts">Artifacts</TabsTrigger>
+                <TabsTrigger value="growth">Growth & portfolio</TabsTrigger>
                 <TabsTrigger value="repository">Repository & CI</TabsTrigger>
                 <TabsTrigger value="profile">Project profile</TabsTrigger>
               </TabsList>
@@ -403,6 +426,27 @@ export function BuildTracker({
                   canDelete={canDelete}
                   metrics={selected.buildMetrics}
                 />
+              </TabsContent>
+
+              <TabsContent value="features" className="mt-6">
+                <ProjectFeaturesPanel
+                  key={selected.id}
+                  projectId={selected.id}
+                  initialFeatures={selected.features}
+                  onTaskCreated={() => router.refresh()}
+                />
+              </TabsContent>
+
+              <TabsContent value="artifacts" className="mt-6">
+                <ProjectArtifactsPanel
+                  key={selected.id}
+                  projectId={selected.id}
+                  initialArtifacts={selected.artifacts}
+                />
+              </TabsContent>
+
+              <TabsContent value="growth" className="mt-6">
+                <GrowthAndPortfolioPanel key={selected.id} projectId={selected.id} />
               </TabsContent>
 
               <TabsContent value="repository" className="mt-6">

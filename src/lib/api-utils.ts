@@ -1,16 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "./logger";
 import { getCurrentUser } from "./auth";
+import { ApiError } from "./api-error";
 
-export class ApiError extends Error {
-  constructor(
-    message: string,
-    public statusCode: number = 500
-  ) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
+export { ApiError };
 
 type RouteHandler = (
   req: NextRequest,

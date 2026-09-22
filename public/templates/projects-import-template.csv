@@ -1,0 +1,16 @@
+project_key,record_type,name,description,status,repo_url,production_url,hosting_provider,current_version,tech_stack,tools_used,brand_tone,brand_avoid,brand_audience,dev_notes,ai_notes,title,target_date,is_completed,milestone_title,priority,order,due_date,estimated_hours,ai_score,kind,format,body,url,tags,keyword,target_url,difficulty,search_volume,rank,type,channel,scheduled_at,content_body,hashtags,campaign_type,goal,audience,offer,budget,campaign_title,asset_type,day_offset,env_key,environment
+acme-copilot,project,Acme Copilot,AI writing assistant for solopreneurs,planning,https://github.com/acme/copilot,https://acme.example,Vercel,0.1.0,Next.js|Prisma|Clerk,Cursor|Figma,confident|clear,hype|jargon,Indie founders shipping alone,MVP focuses on weekly digest,Merged from brainstorm session,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+acme-copilot,idea,,Collect emails before public launch,promoted,,,,,,,,,,,,Waitlist launch,,,,,,,,78,,,,,,,,,,,,,,,,,,,,,,,,,
+acme-copilot,milestone,,,,,,,,,,,,,,,MVP ship,2026-10-15,false,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+acme-copilot,task,,Checkout + webhook for subscriptions,todo,,,,,,,,,,,,Wire Stripe checkout,,,MVP ship,high,1,,6,,,,,,,,,,,,,,,,,,,,,,,,,,
+acme-copilot,artifact,,,,,,,,,,,,,,,Homepage tagline,,,,,,,,,tagline,text,Ship faster alone,,homepage|ai,,,,,,,,,,,,,,,,,,,,
+acme-copilot,artifact,,,,,,,,,,,,,,,Short description,,,,,,,,,short_description,text,Acme Copilot drafts your weekly founder updates in minutes.,,,,,,,,,,,,,,,,,,,,,,
+acme-copilot,artifact,,,,,,,,,,,,,,,Value proposition,,,,,,,,,value_proposition,text,For solopreneurs who juggle product and marketing — stay consistent without a content team.,,,,,,,,,,,,,,,,,,,,,,
+acme-copilot,artifact,,,,,,,,,,,,,,,Feature list,,,,,,,,,feature_list,markdown,"- AI draft from notes
+- Brand voice presets
+- One-click publish checklist",,,,,,,,,,,,,,,,,,,,,,
+acme-copilot,seo,,,,,,,,,,,,,,,,,,,,,,,,,,,,,solopreneur writing assistant,https://acme.example,40,900,,,,,,,,,,,,,,,,
+acme-copilot,content,,,draft,,,,,,,,,,,,Why we built Acme,,,,,,,,,,,"Outline: problem, solution, waitlist CTA",,,,,,,,blog,blog,,,buildinpublic|saas,,,,,,,,,,
+acme-copilot,campaign,,,draft,,,,,,,,,,,,Launch week,,,,,,,,,,,,,,,,,,,,x,,,,launch,200 waitlist signups,Indie hackers on X,Early access,0,,,,,
+acme-copilot,campaign_asset,,,draft,,,,,,,,,,,,Day-0 tweet,,,,,,,,,,,Shipping Acme Copilot — AI drafts for founders who ship alone. Join the waitlist.,,,,,,,,,x,,,,,,,,,Launch week,post,0,,
+acme-copilot,env,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,OPENAI_API_KEY,production

@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { handleStripeWebhookEvent } from "@/lib/stripe/webhook-handler";
 import { logger } from "@/lib/logger";
+import {
+  rateLimitWebhook,
+  getClientIp,
+} from "@/lib/webhook-rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +17,17 @@ function getStripe() {
 }
 
 export async function POST(request: Request) {
+  // Rate limit before processing
+  const clientIp = getClientIp(request);
+  const rateLimitError = rateLimitWebhook(clientIp, "stripe");
+  if (rateLimitError) {
+    logger.warn("Stripe webhook rate limited", { route: "/api/stripe/webhook", ip: clientIp });
+    return NextResponse.json(
+      { error: rateLimitError.error },
+      { status: rateLimitError.status }
+    );
+  }
+
   const body = await request.text();
   const signature = (await headers()).get("stripe-signature");
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
