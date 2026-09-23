@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl="/">
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         {children}
         <Toaster position="bottom-right" />

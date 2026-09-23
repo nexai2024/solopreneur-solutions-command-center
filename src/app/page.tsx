@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import { InactiveSignOutToast } from "@/components/auth/inactive-sign-out-toast";
 import {
   Lightbulb,
   Kanban,
@@ -47,6 +49,9 @@ const features = [
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
+      <Suspense fallback={null}>
+        <InactiveSignOutToast />
+      </Suspense>
       <header className="border-b border-border">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">

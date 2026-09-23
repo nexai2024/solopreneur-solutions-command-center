@@ -10,7 +10,9 @@ import {
   LayoutDashboard,
   Settings,
   CircleHelp,
+  LogOut,
 } from "lucide-react";
+import { InactivityLogout } from "@/components/auth/inactivity-logout";
 
 const navigation = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -31,6 +33,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex h-screen bg-background text-foreground">
+      <InactivityLogout />
       {/* Sidebar Navigation */}
       <aside className="w-64 border-r border-border bg-card flex flex-col justify-between p-4">
         <div className="space-y-6">
@@ -61,6 +64,13 @@ export default function DashboardLayout({
         {/* User Account Controls */}
         <div className="space-y-3 pt-4 border-t border-border px-2">
           <UserButton showName />
+          <Link
+            href="/logout"
+            className="flex items-center gap-2 px-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            Log out
+          </Link>
           <div className="flex gap-3 text-xs text-muted-foreground">
             <Link href="/privacy" className="hover:text-foreground">
               Privacy
